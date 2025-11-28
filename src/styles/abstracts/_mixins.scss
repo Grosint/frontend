@@ -153,23 +153,19 @@
 @mixin spinner($size: 40px, $color: var(--color-primary)) {
   width: $size;
   height: $size;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  position: relative;
+
   // Handle actual color values vs CSS variables/currentColor
   @if type-of($color) == 'color' {
     border: 4px solid rgba($color, 0.2);
     border-top-color: $color;
   } @else {
-    // For CSS variables or currentColor, use the color directly
-    // and handle opacity with a pseudo-element or separate approach
+    // For CSS variables or currentColor, use border with opacity on pseudo-element
     border: 4px solid transparent;
     border-top-color: $color;
-    // Use box-shadow to create the lighter border effect for non-color values
-    box-shadow: 0 0 0 4px $color;
-    opacity: 0.2;
-    border-top-opacity: 1;
-    // Better approach: use the color directly and handle with CSS
-    border-color: $color;
-    border-top-color: $color;
-    opacity: 1;
+
     // Create lighter border effect using a pseudo-element
     &::after {
       content: '';
@@ -182,9 +178,6 @@
       pointer-events: none;
     }
   }
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  position: relative;
 }
 
 @keyframes spin {

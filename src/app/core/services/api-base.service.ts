@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, throwError, timer } from 'rxjs';
+import { Observable, throwError, timer } from 'rxjs';
 import { switchMap, retry, catchError, tap, finalize } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { AppStateStore } from './app-state.store';
@@ -33,16 +33,16 @@ export class ApiBaseService {
   ): Observable<T> {
     const id = taskId || `api-${Date.now()}`;
     const fullUrl = url.startsWith('http') ? url : `${this.apiUrl}${url}`;
-    
+
     // Ensure we get the body, not the full HttpEvent
     const requestOptions = {
       ...options,
       observe: 'body' as const
     };
 
-    return of(null).pipe(
+    return timer(0).pipe(
       tap(() => this.appState.startLoading(id)),
-      switchMap(() => this.http.request<T>(method, fullUrl, requestOptions)),
+      switchMap(() => this.http.request<T>(method, fullUrl, requestOptions) as Observable<T>),
       retry({
         count: 3,
         delay: (error, retryCount) => {
