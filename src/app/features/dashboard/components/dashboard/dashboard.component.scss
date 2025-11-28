@@ -1,0 +1,45 @@
+@import '../../../../../styles/abstracts/mixins';
+@import '../../../../../styles/abstracts/variables';
+
+.dashboard-container {
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+.dashboard-header {
+  @include flex-between;
+  padding: var(--spacing-lg);
+  background: var(--color-surface);
+  @include card-elevation(1);
+  margin-bottom: var(--spacing-lg);
+
+  h1 {
+    margin: 0;
+    font-size: var(--font-size-2xl);
+  }
+
+  .user-info {
+    @include flex-center;
+    gap: var(--spacing-md);
+  }
+}
+
+.dashboard-content {
+  @include container();
+  padding: var(--spacing-lg);
+}
+
+.dashboard-card {
+  background: var(--color-surface);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  @include card-elevation(1);
+
+  h2 {
+    margin-bottom: var(--spacing-md);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}

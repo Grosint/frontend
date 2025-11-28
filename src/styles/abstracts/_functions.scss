@@ -1,0 +1,55 @@
+// SCSS Functions
+
+// Calculate contrast ratio for accessibility
+@function contrast-ratio($color1, $color2) {
+  $l1: luminance($color1);
+  $l2: luminance($color2);
+  $ratio: ($l1 + 0.05) / ($l2 + 0.05);
+  @if $l2 > $l1 {
+    $ratio: 1 / $ratio;
+  }
+  @return $ratio;
+}
+
+// Calculate luminance
+@function luminance($color) {
+  $r: red($color) / 255;
+  $g: green($color) / 255;
+  $b: blue($color) / 255;
+
+  $r: if($r < 0.03928, $r / 12.92, pow(($r + 0.055) / 1.055, 2.4));
+  $g: if($g < 0.03928, $g / 12.92, pow(($g + 0.055) / 1.055, 2.4));
+  $b: if($b < 0.03928, $b / 12.92, pow(($b + 0.055) / 1.055, 2.4));
+
+  @return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+}
+
+// Power function
+@function pow($number, $exponent) {
+  $value: 1;
+  @if $exponent > 0 {
+    @for $i from 1 through $exponent {
+      $value: $value * $number;
+    }
+  }
+  @return $value;
+}
+
+// Get text color based on background
+@function text-color($bg-color) {
+  @if (luminance($bg-color) > 0.5) {
+    @return #000000;
+  } @else {
+    @return #ffffff;
+  }
+}
+
+// Strip unit from value
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+// Convert px to rem
+@function rem($pixels, $base: 16) {
+  @return (strip-unit($pixels) / $base) * 1rem;
+}

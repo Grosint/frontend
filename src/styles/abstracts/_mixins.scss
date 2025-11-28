@@ -1,0 +1,224 @@
+@import './variables';
+@import './breakpoints';
+
+// Button variant mixin
+@mixin button-variant($bg-color, $text-color: white) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  transition: background-color var(--transition-base), transform var(--transition-fast), filter var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover:not(:disabled) {
+    // For CSS variables (strings), use filter; for actual colors, use darken
+    @if type-of($bg-color) == 'color' {
+      background-color: darken($bg-color, 10%);
+    } @else if type-of($bg-color) == 'string' and str-index($bg-color, 'var(') {
+      // CSS variable detected - use filter for darkening
+      filter: brightness(0.9);
+    } @else {
+      filter: brightness(0.9);
+    }
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    @if type-of($bg-color) == 'color' {
+      background-color: darken($bg-color, 15%);
+    } @else if type-of($bg-color) == 'string' and str-index($bg-color, 'var(') {
+      filter: brightness(0.85);
+    } @else {
+      filter: brightness(0.85);
+    }
+    transform: translateY(0);
+  }
+
+  &:focus {
+    outline: none;
+    @if type-of($bg-color) == 'color' {
+      box-shadow: 0 0 0 3px rgba($bg-color, 0.25);
+    } @else {
+      // For CSS variables, use a generic focus shadow
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  // Touch optimization
+  @include touch-device {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+}
+
+// Card elevation mixin
+@mixin card-elevation($level: 1) {
+  @if $level == 1 {
+    box-shadow: var(--shadow-sm);
+  } @else if $level == 2 {
+    box-shadow: var(--shadow-md);
+  } @else if $level == 3 {
+    box-shadow: var(--shadow-lg);
+  } @else if $level == 4 {
+    box-shadow: var(--shadow-xl);
+  }
+
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// Truncate text mixin
+@mixin truncate-text($lines: 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @if $lines == 1 {
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+  }
+}
+
+// Flexbox utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Container mixin
+@mixin container($max-width: 1200px) {
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+
+  @include respond-above(md) {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+// Visually hidden (for accessibility)
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// Focus visible (for accessibility)
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Touch feedback
+@mixin touch-feedback {
+  @include touch-device {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+// Loading spinner
+@mixin spinner($size: 40px, $color: var(--color-primary)) {
+  width: $size;
+  height: $size;
+  // Handle actual color values vs CSS variables/currentColor
+  @if type-of($color) == 'color' {
+    border: 4px solid rgba($color, 0.2);
+    border-top-color: $color;
+  } @else {
+    // For CSS variables or currentColor, use the color directly
+    // and handle opacity with a pseudo-element or separate approach
+    border: 4px solid transparent;
+    border-top-color: $color;
+    // Use box-shadow to create the lighter border effect for non-color values
+    box-shadow: 0 0 0 4px $color;
+    opacity: 0.2;
+    border-top-opacity: 1;
+    // Better approach: use the color directly and handle with CSS
+    border-color: $color;
+    border-top-color: $color;
+    opacity: 1;
+    // Create lighter border effect using a pseudo-element
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 4px solid $color;
+      border-top-color: transparent;
+      border-radius: 50%;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+  }
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  position: relative;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Fade in animation
+@mixin fade-in($duration: var(--transition-base)) {
+  animation: fadeIn $duration ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Slide up animation
+@mixin slide-up($duration: var(--transition-base)) {
+  animation: slideUp $duration ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

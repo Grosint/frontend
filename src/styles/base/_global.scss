@@ -1,0 +1,113 @@
+@import '../abstracts/mixins';
+@import '../abstracts/variables';
+
+// Global styles
+
+// App root
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+// Container
+.container {
+  @include container();
+}
+
+// Utility classes for spacing
+@each $prop, $abbrev in (margin: m, padding: p) {
+  @each $size, $value in (
+    0: 0,
+    1: var(--spacing-xs),
+    2: var(--spacing-sm),
+    3: var(--spacing-md),
+    4: var(--spacing-lg),
+    5: var(--spacing-xl),
+    6: var(--spacing-2xl),
+    7: var(--spacing-3xl)
+  ) {
+    .#{$abbrev}-#{$size} { #{$prop}: $value !important; }
+    .#{$abbrev}t-#{$size} { #{$prop}-top: $value !important; }
+    .#{$abbrev}r-#{$size} { #{$prop}-right: $value !important; }
+    .#{$abbrev}b-#{$size} { #{$prop}-bottom: $value !important; }
+    .#{$abbrev}l-#{$size} { #{$prop}-left: $value !important; }
+    .#{$abbrev}x-#{$size} {
+      #{$prop}-left: $value !important;
+      #{$prop}-right: $value !important;
+    }
+    .#{$abbrev}y-#{$size} {
+      #{$prop}-top: $value !important;
+      #{$prop}-bottom: $value !important;
+    }
+  }
+}
+
+// Display utilities
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-inline { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+.d-flex { display: flex !important; }
+.d-grid { display: grid !important; }
+
+// Flex utilities
+.flex-center { @include flex-center; }
+.flex-between { @include flex-between; }
+.flex-column { @include flex-column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+// Responsive display utilities
+@each $breakpoint, $value in $breakpoints {
+  @if $breakpoint != xs {
+    @include respond-above($breakpoint) {
+      .d-#{$breakpoint}-none { display: none !important; }
+      .d-#{$breakpoint}-block { display: block !important; }
+      .d-#{$breakpoint}-flex { display: flex !important; }
+      .d-#{$breakpoint}-grid { display: grid !important; }
+    }
+  }
+}
+
+// Width utilities
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+.w-50 { width: 50%; }
+.w-25 { width: 25%; }
+.w-75 { width: 75%; }
+
+// Height utilities
+.h-full { height: 100%; }
+.h-auto { height: auto; }
+.h-screen { height: 100vh; }
+
+// Position utilities
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-sticky { position: sticky; }
+
+// Overflow utilities
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.overflow-scroll { overflow: scroll; }
+
+// Cursor utilities
+.cursor-pointer { cursor: pointer; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+// Loading state
+.loading {
+  @include spinner();
+  margin: 0 auto;
+}
+
+// Fade in animation
+.fade-in {
+  @include fade-in();
+}
+
+// Slide up animation
+.slide-up {
+  @include slide-up();
+}

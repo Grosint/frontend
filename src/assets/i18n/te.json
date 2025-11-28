@@ -1,0 +1,31 @@
+{
+  "common": {
+    "welcome": "స్వాగతం",
+    "login": "లాగిన్",
+    "logout": "లాగ్అవుట్",
+    "register": "నమోదు",
+    "email": "ఇమెయిల్",
+    "password": "పాస్వర్డ్",
+    "submit": "సమర్పించండి",
+    "cancel": "రద్దు చేయి",
+    "save": "సేవ్ చేయి",
+    "delete": "తొలగించు",
+    "edit": "సవరించు",
+    "loading": "లోడ్ అవుతోంది...",
+    "error": "దోషం",
+    "success": "విజయం"
+  },
+  "auth": {
+    "loginTitle": "మళ్లీ స్వాగతం",
+    "loginSubtitle": "మీ ఖాతాలోకి సైన్ ఇన్ చేయండి",
+    "emailRequired": "ఇమెయిల్ అవసరం",
+    "emailInvalid": "చెల్లని ఇమెయిల్ ఫార్మాట్",
+    "passwordRequired": "పాస్వర్డ్ అవసరం",
+    "passwordMinLength": "పాస్వర్డ్ కనీసం 6 అక్షరాలుగా ఉండాలి",
+    "loginFailed": "లాగిన్ విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి."
+  },
+  "dashboard": {
+    "title": "డాష్బోర్డ్",
+    "welcome": "GrosInt కు స్వాగతం"
+  }
+}
