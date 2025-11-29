@@ -8,5 +8,10 @@ export const environment = {
   gaTrackingId: '',
   newRelicAppId: '',
   defaultLanguage: 'en',
-  supportedLanguages: ['en', 'hi', 'ta', 'te', 'kn', 'ml', 'mr', 'bn', 'gu', 'pa']
+  supportedLanguages: ['en', 'hi', 'ta', 'te', 'kn', 'ml', 'mr', 'bn', 'gu', 'pa'],
+  // Logging configuration
+  logLevel: 0, // DEBUG level for development (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
+  remoteLogLevel: 2, // Only send WARN and above to remote services
+  loggingEndpoint: '', // Custom logging API endpoint (e.g., '/api/logs')
+  enableRemoteLogging: false, // Enable remote logging in development
 };

@@ -6,7 +6,7 @@ import { User } from '../models/user.model';
  * Use this for application-wide state management
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppStateStore {
   // User state
@@ -31,8 +31,7 @@ export class AppStateStore {
   readonly isLoading = this._isLoading;
 
   // Computed helper methods
-  hasPermission = (permission: string) =>
-    computed(() => this._permissions().includes(permission));
+  hasPermission = (permission: string) => computed(() => this._permissions().includes(permission));
 
   // State update methods
   setUser(user: User | null): void {
@@ -40,15 +39,11 @@ export class AppStateStore {
   }
 
   updateUserProfile(updates: Partial<User>): void {
-    this._user.update(current =>
-      current ? { ...current, ...updates } : null
-    );
+    this._user.update(current => (current ? { ...current, ...updates } : null));
   }
 
   toggleTheme(): void {
-    this._theme.update(current =>
-      current === 'light' ? 'dark' : 'light'
-    );
+    this._theme.update(current => (current === 'light' ? 'dark' : 'light'));
     // Apply theme class to document
     if (this._theme() === 'dark') {
       document.body.classList.add('dark-theme');
