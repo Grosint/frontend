@@ -1,5 +1,4 @@
-@import '../../../../../styles/abstracts/mixins';
-@import '../../../../../styles/abstracts/variables';
+// No imports needed - use utility classes and CSS variables
 
 .dashboard-container {
   min-height: 100vh;
@@ -7,11 +6,18 @@
 }
 
 .dashboard-header {
-  @include flex-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: var(--spacing-lg);
   background: var(--color-surface);
-  @include card-elevation(1);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
   margin-bottom: var(--spacing-lg);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
 
   h1 {
     margin: 0;
@@ -19,21 +25,34 @@
   }
 
   .user-info {
-    @include flex-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: var(--spacing-md);
   }
 }
 
 .dashboard-content {
-  @include container();
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: var(--spacing-lg);
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-lg);
+  }
 }
 
 .dashboard-card {
   background: var(--color-surface);
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  @include card-elevation(1);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
 
   h2 {
     margin-bottom: var(--spacing-md);

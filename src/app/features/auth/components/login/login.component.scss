@@ -1,8 +1,9 @@
-@import '../../../../../styles/abstracts/mixins';
-@import '../../../../../styles/abstracts/variables';
+// No imports needed - use utility classes and CSS variables
 
 .login-container {
-  @include flex-center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
   padding: var(--spacing-md);
   background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
@@ -14,7 +15,12 @@
   background: var(--color-surface);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-xl);
-  @include card-elevation(2);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
 }
 
 .login-title {
@@ -54,7 +60,7 @@
       &:focus {
         outline: none;
         border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.1);
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
       }
 
       &.error {
@@ -74,7 +80,7 @@
     font-size: var(--font-size-sm);
     margin-bottom: var(--spacing-md);
     padding: var(--spacing-sm);
-    background: rgba(var(--color-error), 0.1);
+    background: rgba(244, 67, 54, 0.1); // var(--color-error) with opacity
     border-radius: var(--border-radius-sm);
   }
 

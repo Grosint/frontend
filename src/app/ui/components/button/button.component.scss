@@ -1,5 +1,4 @@
-@import '../../../../styles/abstracts/mixins';
-@import '../../../../styles/abstracts/variables';
+// No imports needed - all styles use CSS variables from global
 
 .btn {
   display: inline-flex;
@@ -15,8 +14,14 @@
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  @include touch-feedback;
-  @include focus-visible;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  user-select: none;
+  -webkit-user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 
   // Size variants
   &--sm {
@@ -37,13 +42,69 @@
     min-height: var(--touch-target-comfortable);
   }
 
-  // Variant styles
+  // Variant styles - inline button variant logic
   &--primary {
-    @include button-variant(var(--color-primary), white);
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    transition:
+      background-color var(--transition-base),
+      transform var(--transition-fast),
+      filter var(--transition-base),
+      box-shadow var(--transition-base);
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.9);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      filter: brightness(0.85);
+      transform: translateY(0);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
   }
 
   &--secondary {
-    @include button-variant(var(--color-secondary), white);
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    transition:
+      background-color var(--transition-base),
+      transform var(--transition-fast),
+      filter var(--transition-base),
+      box-shadow var(--transition-base);
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.9);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      filter: brightness(0.85);
+      transform: translateY(0);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
   }
 
   &--ghost {
@@ -62,7 +123,35 @@
   }
 
   &--danger {
-    @include button-variant(var(--color-error), white);
+    background-color: var(--color-error);
+    color: white;
+    border: none;
+    transition:
+      background-color var(--transition-base),
+      transform var(--transition-fast),
+      filter var(--transition-base),
+      box-shadow var(--transition-base);
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.9);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      filter: brightness(0.85);
+      transform: translateY(0);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
   }
 
   // Full width
@@ -94,8 +183,4 @@
     align-items: center;
     justify-content: center;
   }
-}
-
-.spinner {
-  @include spinner(20px, currentColor);
 }

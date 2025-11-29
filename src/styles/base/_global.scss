@@ -11,26 +11,46 @@ app-root {
 
 // Container
 .container {
-  @include container();
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+
+  @media (min-width: 768px) {
+    padding: 0 var(--spacing-lg);
+  }
 }
 
 // Utility classes for spacing
 @each $prop, $abbrev in (margin: m, padding: p) {
-  @each $size, $value in (
-    0: 0,
-    1: var(--spacing-xs),
-    2: var(--spacing-sm),
-    3: var(--spacing-md),
-    4: var(--spacing-lg),
-    5: var(--spacing-xl),
-    6: var(--spacing-2xl),
-    7: var(--spacing-3xl)
-  ) {
-    .#{$abbrev}-#{$size} { #{$prop}: $value !important; }
-    .#{$abbrev}t-#{$size} { #{$prop}-top: $value !important; }
-    .#{$abbrev}r-#{$size} { #{$prop}-right: $value !important; }
-    .#{$abbrev}b-#{$size} { #{$prop}-bottom: $value !important; }
-    .#{$abbrev}l-#{$size} { #{$prop}-left: $value !important; }
+  @each $size,
+    $value
+      in (
+        0: 0,
+        1: var(--spacing-xs),
+        2: var(--spacing-sm),
+        3: var(--spacing-md),
+        4: var(--spacing-lg),
+        5: var(--spacing-xl),
+        6: var(--spacing-2xl),
+        7: var(--spacing-3xl)
+      )
+  {
+    .#{$abbrev}-#{$size} {
+      #{$prop}: $value !important;
+    }
+    .#{$abbrev}t-#{$size} {
+      #{$prop}-top: $value !important;
+    }
+    .#{$abbrev}r-#{$size} {
+      #{$prop}-right: $value !important;
+    }
+    .#{$abbrev}b-#{$size} {
+      #{$prop}-bottom: $value !important;
+    }
+    .#{$abbrev}l-#{$size} {
+      #{$prop}-left: $value !important;
+    }
     .#{$abbrev}x-#{$size} {
       #{$prop}-left: $value !important;
       #{$prop}-right: $value !important;
@@ -43,71 +63,251 @@ app-root {
 }
 
 // Display utilities
-.d-none { display: none !important; }
-.d-block { display: block !important; }
-.d-inline { display: inline !important; }
-.d-inline-block { display: inline-block !important; }
-.d-flex { display: flex !important; }
-.d-grid { display: grid !important; }
+.d-none {
+  display: none !important;
+}
+.d-block {
+  display: block !important;
+}
+.d-inline {
+  display: inline !important;
+}
+.d-inline-block {
+  display: inline-block !important;
+}
+.d-flex {
+  display: flex !important;
+}
+.d-grid {
+  display: grid !important;
+}
 
-// Flex utilities
-.flex-center { @include flex-center; }
-.flex-between { @include flex-between; }
-.flex-column { @include flex-column; }
-.flex-wrap { flex-wrap: wrap; }
-.flex-nowrap { flex-wrap: nowrap; }
+// Flex utilities (replacing mixins with direct CSS)
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
 
 // Responsive display utilities
 @each $breakpoint, $value in $breakpoints {
   @if $breakpoint != xs {
     @include respond-above($breakpoint) {
-      .d-#{$breakpoint}-none { display: none !important; }
-      .d-#{$breakpoint}-block { display: block !important; }
-      .d-#{$breakpoint}-flex { display: flex !important; }
-      .d-#{$breakpoint}-grid { display: grid !important; }
+      .d-#{$breakpoint}-none {
+        display: none !important;
+      }
+      .d-#{$breakpoint}-block {
+        display: block !important;
+      }
+      .d-#{$breakpoint}-flex {
+        display: flex !important;
+      }
+      .d-#{$breakpoint}-grid {
+        display: grid !important;
+      }
     }
   }
 }
 
 // Width utilities
-.w-full { width: 100%; }
-.w-auto { width: auto; }
-.w-50 { width: 50%; }
-.w-25 { width: 25%; }
-.w-75 { width: 75%; }
+.w-full {
+  width: 100%;
+}
+.w-auto {
+  width: auto;
+}
+.w-50 {
+  width: 50%;
+}
+.w-25 {
+  width: 25%;
+}
+.w-75 {
+  width: 75%;
+}
 
 // Height utilities
-.h-full { height: 100%; }
-.h-auto { height: auto; }
-.h-screen { height: 100vh; }
+.h-full {
+  height: 100%;
+}
+.h-auto {
+  height: auto;
+}
+.h-screen {
+  height: 100vh;
+}
 
 // Position utilities
-.position-relative { position: relative; }
-.position-absolute { position: absolute; }
-.position-fixed { position: fixed; }
-.position-sticky { position: sticky; }
+.position-relative {
+  position: relative;
+}
+.position-absolute {
+  position: absolute;
+}
+.position-fixed {
+  position: fixed;
+}
+.position-sticky {
+  position: sticky;
+}
 
 // Overflow utilities
-.overflow-hidden { overflow: hidden; }
-.overflow-auto { overflow: auto; }
-.overflow-scroll { overflow: scroll; }
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-auto {
+  overflow: auto;
+}
+.overflow-scroll {
+  overflow: scroll;
+}
 
 // Cursor utilities
-.cursor-pointer { cursor: pointer; }
-.cursor-not-allowed { cursor: not-allowed; }
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+// Card elevation utilities (replacing card-elevation mixin)
+.card-elevation-1 {
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.card-elevation-2 {
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.card-elevation-3 {
+  box-shadow: var(--shadow-lg);
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+// Touch feedback utility (replacing touch-feedback mixin)
+.touch-feedback {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+// Focus visible utility (replacing focus-visible mixin)
+.focus-visible {
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Spinner utility (replacing spinner mixin)
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 4px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 4px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 // Loading state
 .loading {
-  @include spinner();
+  width: 40px;
+  height: 40px;
+  border: 4px solid transparent;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
   margin: 0 auto;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 4px solid var(--color-primary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    opacity: 0.2;
+    pointer-events: none;
+  }
 }
 
 // Fade in animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .fade-in {
-  @include fade-in();
+  animation: fadeIn var(--transition-base) ease-in;
 }
 
 // Slide up animation
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .slide-up {
-  @include slide-up();
+  animation: slideUp var(--transition-base) ease-out;
 }
