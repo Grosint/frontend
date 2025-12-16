@@ -3,7 +3,7 @@ import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PwaService {
   private promptEvent: any;
@@ -54,8 +54,10 @@ export class PwaService {
     if (typeof window === 'undefined') return false;
 
     // Check if running in standalone mode
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone === true;
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true
+    );
   }
 
   /**
@@ -67,9 +69,12 @@ export class PwaService {
     }
 
     // Check for updates every hour
-    setInterval(() => {
-      this.swUpdate.checkForUpdate();
-    }, 60 * 60 * 1000);
+    setInterval(
+      () => {
+        this.swUpdate.checkForUpdate();
+      },
+      60 * 60 * 1000
+    );
 
     // Listen for version ready
     this.swUpdate.versionUpdates

@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         const apiError: ApiError = {
           message: this.getErrorMessage(error),
           status: error.status,
-          errors: error.error?.errors
+          errors: error.error?.errors,
         };
 
         // Log error

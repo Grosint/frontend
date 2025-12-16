@@ -1,0 +1,55 @@
+<div class="otp-container">
+  <div class="otp-card">
+    <h1 class="otp-title">Verify Your Email</h1>
+    <p class="otp-subtitle">We've sent a 6-digit OTP to {{ email }}</p>
+
+    <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="otp-form">
+      <div class="form-group">
+        <label for="otp">Enter OTP *</label>
+        <input
+          type="text"
+          id="otp"
+          formControlName="otp"
+          placeholder="Enter 6-digit OTP"
+          class="form-input otp-input"
+          maxlength="6"
+          [class.error]="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched"
+        />
+        <div
+          class="error-message"
+          *ngIf="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched"
+        >
+          <span *ngIf="otpForm.get('otp')?.errors?.['required']">OTP is required</span>
+          <span *ngIf="otpForm.get('otp')?.errors?.['pattern']">OTP must be 6 digits</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <app-button
+        type="submit"
+        variant="primary"
+        size="lg"
+        [loading]="isLoading"
+        [disabled]="otpForm.invalid"
+        [fullWidth]="true"
+        class="verify-button"
+      >
+        Verify OTP
+      </app-button>
+
+      <div class="otp-footer">
+        <p>
+          Didn't receive OTP?
+          <button type="button" (click)="resendOtp()" class="resend-link" [disabled]="isResending">
+            <span *ngIf="!isResending">Resend </span>
+            <span *ngIf="isResending">Sending...</span>
+          </button>
+        </p>
+        <p><a routerLink="/auth/signup">Back to Sign Up</a></p>
+      </div>
+    </form>
+  </div>
+</div>

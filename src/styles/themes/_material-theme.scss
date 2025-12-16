@@ -3,36 +3,36 @@
 
 // Define custom primary palette
 $primary-palette: (
-	50: #e8f5e9,
-	100: #c8e6c9,
-	200: #a5d6a7,
-	300: #81c784,
-	400: #66bb6a,
-	500: #4caf50,
-	600: #43a047,
-	700: #388e3c,
-	800: #2e7d32,
-	900: #1b5e20,
-	A100: #b9f6ca,
-	A200: #69f0ae,
-	A400: #00e676,
-	A700: #00c853,
-	contrast: (
-		50: rgba(black, 0.87),
-		100: rgba(black, 0.87),
-		200: rgba(black, 0.87),
-		300: rgba(black, 0.87),
-		400: rgba(black, 0.87),
-		500: white,
-		600: white,
-		700: white,
-		800: white,
-		900: white,
-		A100: rgba(black, 0.87),
-		A200: rgba(black, 0.87),
-		A400: rgba(black, 0.87),
-		A700: rgba(black, 0.87),
-	),
+  50: #e8f5e9,
+  100: #c8e6c9,
+  200: #a5d6a7,
+  300: #81c784,
+  400: #66bb6a,
+  500: #4caf50,
+  600: #43a047,
+  700: #388e3c,
+  800: #2e7d32,
+  900: #1b5e20,
+  A100: #b9f6ca,
+  A200: #69f0ae,
+  A400: #00e676,
+  A700: #00c853,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(black, 0.87),
+  ),
 );
 
 // Define palettes
@@ -42,32 +42,31 @@ $app-warn: mat.define-palette(mat.$red-palette);
 
 // Light theme
 $app-light-theme: mat.define-light-theme(
-	(
-		color: (
-			primary: $app-primary,
-			accent: $app-accent,
-			warn: $app-warn,
-		),
-		typography:
-			mat.define-typography-config(
-				$font-family: 'Roboto, "Helvetica Neue", sans-serif',
-				$headline-1: mat.define-typography-level(32px, 48px, 700),
-				$body-1: mat.define-typography-level(16px, 24px, 400),
-				$body-2: mat.define-typography-level(14px, 20px, 400),
-			),
-		density: 0,
-	)
+  (
+    color: (
+      primary: $app-primary,
+      accent: $app-accent,
+      warn: $app-warn,
+    ),
+    typography: mat.define-typography-config(
+        $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+        $headline-1: mat.define-typography-level(32px, 48px, 700),
+        $body-1: mat.define-typography-level(16px, 24px, 400),
+        $body-2: mat.define-typography-level(14px, 20px, 400),
+      ),
+    density: 0,
+  )
 );
 
 // Dark theme
 $app-dark-theme: mat.define-dark-theme(
-	(
-		color: (
-			primary: $app-primary,
-			accent: $app-accent,
-			warn: $app-warn,
-		),
-	)
+  (
+    color: (
+      primary: $app-primary,
+      accent: $app-accent,
+      warn: $app-warn,
+    ),
+  )
 );
 
 // Apply light theme by default
@@ -75,13 +74,13 @@ $app-dark-theme: mat.define-dark-theme(
 
 // Dark theme class
 .dark-theme {
-	@include mat.all-component-colors($app-dark-theme);
+  @include mat.all-component-colors($app-dark-theme);
 
-	// Override CSS variables for dark theme
-	--color-background: #121212;
-	--color-surface: #1e1e1e;
-	--color-text-primary: rgba(255, 255, 255, 0.87);
-	--color-text-secondary: rgba(255, 255, 255, 0.6);
-	--color-text-disabled: rgba(255, 255, 255, 0.38);
-	--border-color: rgba(255, 255, 255, 0.12);
+  // Override CSS variables for dark theme
+  --color-background: #121212;
+  --color-surface: #1e1e1e;
+  --color-text-primary: rgba(255, 255, 255, 0.87);
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-text-disabled: rgba(255, 255, 255, 0.38);
+  --border-color: rgba(255, 255, 255, 0.12);
 }

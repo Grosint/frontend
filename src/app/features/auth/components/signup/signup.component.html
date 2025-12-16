@@ -1,0 +1,328 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <h1 class="signup-title">Create Account</h1>
+    <p class="signup-subtitle">Sign up to get started</p>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+      <!-- Personal Information -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            placeholder="Enter first name"
+            class="form-input"
+            [class.error]="
+              signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched
+            "
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched"
+          >
+            <span *ngIf="signupForm.get('firstName')?.errors?.['required']"
+              >First name is required</span
+            >
+            <span *ngIf="signupForm.get('firstName')?.errors?.['minlength']"
+              >First name must be at least 2 characters</span
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name *</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            placeholder="Enter last name"
+            class="form-input"
+            [class.error]="
+              signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched
+            "
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched"
+          >
+            <span *ngIf="signupForm.get('lastName')?.errors?.['required']"
+              >Last name is required</span
+            >
+            <span *ngIf="signupForm.get('lastName')?.errors?.['minlength']"
+              >Last name must be at least 2 characters</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            class="form-input"
+            [class.error]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+          >
+            <span *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone *</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            placeholder="Enter phone number"
+            class="form-input"
+            [class.error]="signupForm.get('phone')?.invalid && signupForm.get('phone')?.touched"
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('phone')?.invalid && signupForm.get('phone')?.touched"
+          >
+            <span *ngIf="signupForm.get('phone')?.errors?.['required']">Phone is required</span>
+            <span *ngIf="signupForm.get('phone')?.errors?.['pattern']"
+              >Invalid phone number (10-12 digits)</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password">Password *</label>
+          <div class="password-field">
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              id="password"
+              formControlName="password"
+              placeholder="Enter password"
+              class="form-input password"
+              [class.error]="
+                signupForm.get('password')?.invalid && signupForm.get('password')?.touched
+              "
+            />
+            <button
+              type="button"
+              class="eye-toggle"
+              (click)="hidePassword = !hidePassword"
+              aria-label="Toggle password visibility"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+          >
+            <span *ngIf="signupForm.get('password')?.errors?.['required']"
+              >Password is required</span
+            >
+            <span *ngIf="signupForm.get('password')?.errors?.['minlength']"
+              >Password must be at least 8 characters</span
+            >
+            <span *ngIf="signupForm.get('password')?.errors?.['pattern']"
+              >Password must contain uppercase, lowercase, number and special character</span
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Confirm Password *</label>
+          <div class="password-field">
+            <input
+              [type]="hideConfirmPassword ? 'password' : 'text'"
+              id="confirmPassword"
+              +
+              formControlName="confirmPassword"
+              placeholder="Enter password"
+              class="form-input password"
+              [class.error]="
+                signupForm.get('confirmPassword')?.invalid &&
+                signupForm.get('confirmPassword')?.touched
+              "
+            />
+            <button
+              type="button"
+              class="eye-toggle"
+              (click)="hideConfirmPassword = !hideConfirmPassword"
+              aria-label="Toggle password visibility"
+            >
+              <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              signupForm.get('confirmPassword')?.invalid &&
+              signupForm.get('confirmPassword')?.touched
+            "
+          >
+            <span *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">
+              Confirm Password is required
+            </span>
+            <span
+              *ngIf="
+                signupForm.errors?.['passwordMismatch'] &&
+                signupForm.get('confirmPassword')?.touched
+              "
+              +
+              >Passwords do not match</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Information -->
+      <div class="form-group">
+        <label for="address">Address *</label>
+        <input
+          type="text"
+          id="address"
+          formControlName="address"
+          placeholder="Enter address"
+          class="form-input"
+          [class.error]="signupForm.get('address')?.invalid && signupForm.get('address')?.touched"
+        />
+        <div
+          class="error-message"
+          *ngIf="signupForm.get('address')?.invalid && signupForm.get('address')?.touched"
+        >
+          Address is required
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City *</label>
+          <input
+            type="text"
+            id="city"
+            formControlName="city"
+            placeholder="Enter city"
+            class="form-input"
+            [class.error]="signupForm.get('city')?.invalid && signupForm.get('city')?.touched"
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('city')?.invalid && signupForm.get('city')?.touched"
+          >
+            City is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="state">State *</label>
+          <input
+            type="text"
+            id="state"
+            formControlName="state"
+            placeholder="Enter state"
+            class="form-input"
+            [class.error]="signupForm.get('state')?.invalid && signupForm.get('state')?.touched"
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('state')?.invalid && signupForm.get('state')?.touched"
+          >
+            State is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pinCode">PIN Code *</label>
+          <input
+            type="text"
+            id="pinCode"
+            formControlName="pinCode"
+            placeholder="Enter PIN code"
+            class="form-input"
+            [class.error]="signupForm.get('pinCode')?.invalid && signupForm.get('pinCode')?.touched"
+          />
+          <div
+            class="error-message"
+            *ngIf="signupForm.get('pinCode')?.invalid && signupForm.get('pinCode')?.touched"
+          >
+            <span *ngIf="signupForm.get('pinCode')?.errors?.['required']"
+              >PIN code is required</span
+            >
+            <span *ngIf="signupForm.get('pinCode')?.errors?.['pattern']"
+              >PIN code must be 6 digits</span
+            >
+          </div>
+        </div>
+
+        <!-- User Type -->
+        <!-- <div class="form-group">
+          <label for="userType">User Type *</label>
+          <select
+            id="userType"
+            formControlName="userType"
+            class="form-input"
+            [class.error]="signupForm.get('userType')?.invalid && signupForm.get('userType')?.touched">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+          <div class="error-message" *ngIf="signupForm.get('userType')?.invalid && signupForm.get('userType')?.touched">
+            User type is required
+          </div>
+        </div> -->
+
+        <!-- Organization (optional) -->
+        <div class="form-group">
+          <label for="orgName">Organization Name (Optional)</label>
+          <input
+            type="text"
+            id="orgName"
+            formControlName="orgName"
+            placeholder="Enter organization name"
+            class="form-input"
+          />
+        </div>
+      </div>
+
+      <!-- Verify by Gov ID -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="verifyByGovId" class="checkbox-input" />
+          <span>Verify by Government ID</span>
+        </label>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <app-button
+        type="submit"
+        variant="primary"
+        size="lg"
+        [loading]="isLoading"
+        [disabled]="signupForm.invalid"
+        [fullWidth]="true"
+        class="signup-button"
+      >
+        Sign Up
+      </app-button>
+
+      <div class="signup-footer">
+        <p>Already have an account? <a routerLink="/auth/login">Sign In</a></p>
+      </div>
+    </form>
+  </div>
+</div>

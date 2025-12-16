@@ -2,5 +2,7 @@
 .touch-active {
   opacity: 0.7;
   transform: scale(0.98);
-  transition: opacity 150ms, transform 150ms;
+  transition:
+    opacity 150ms,
+    transform 150ms;
 }

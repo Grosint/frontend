@@ -6,17 +6,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    LazyLoadImageDirective,
-    TouchOptimizedDirective,
-    SafeHtmlPipe
-  ],
-  exports: [
-    CommonModule,
-    LazyLoadImageDirective,
-    TouchOptimizedDirective,
-    SafeHtmlPipe
-  ]
+  imports: [CommonModule, LazyLoadImageDirective, TouchOptimizedDirective, SafeHtmlPipe],
+  exports: [CommonModule, LazyLoadImageDirective, TouchOptimizedDirective, SafeHtmlPipe],
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -11,7 +11,7 @@ import { PwaService } from './core/services/pwa.service';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'GrosInt';
@@ -27,7 +27,9 @@ export class AppComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       // Enforce HTTPS in production
       if (location.protocol !== 'https:' && environment.production) {
-        location.replace('https:' + window.location.href.substring(window.location.protocol.length));
+        location.replace(
+          'https:' + window.location.href.substring(window.location.protocol.length)
+        );
       }
 
       // Initialize services

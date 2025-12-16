@@ -1,31 +1,34 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { AppStateStore } from '@core/services/app-state.store';
+import { take } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private appState: AppStateStore
+    private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar // Add this
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -33,29 +36,68 @@ export class LoginComponent implements OnInit {
     // Check if already authenticated
     if (this.auth.isAuthenticated()) {
       this.redirectToDashboard();
+      return;
+    }
+
+    // Check if coming from OTP verification and autofill email only
+    const fromOtp = localStorage.getItem('from_otp_verification');
+    const fromSignup = localStorage.getItem('from_signup');
+
+    if (fromOtp === 'true' || fromSignup === 'true') {
+      const email = localStorage.getItem('pending_verification_email');
+      if (email) {
+        // Only autofill email, NOT password
+        this.loginForm.patchValue({
+          email: email,
+          // Password field left empty for security
+        });
+
+        // Clear the flags
+        localStorage.removeItem('from_otp_verification');
+        localStorage.removeItem('from_signup');
+        // Keep email in case user navigates away and comes back
+        // Or clear it: localStorage.removeItem('pending_verification_email');
+
+        this.cdr.markForCheck();
+      }
     }
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isLoading) {
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.cdr.markForCheck();
 
     const { email, password } = this.loginForm.value;
 
-    this.auth.login({ email, password }).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.redirectToDashboard();
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.message || 'Login failed. Please try again.';
-      }
-    });
+    this.auth
+      .login({ email, password })
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.errorMessage = '';
+          this.cdr.markForCheck();
+          this.redirectToDashboard();
+        },
+
+        error: error => {
+          this.isLoading = false;
+          this.errorMessage =
+            error?.error?.message || error?.message || 'Login failed. Please try again.';
+          this.cdr.markForCheck();
+
+          this.snackBar.open(this.errorMessage, 'Dismiss', {
+            duration: 4000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        },
+      });
   }
 
   private redirectToDashboard(): void {

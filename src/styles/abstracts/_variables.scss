@@ -57,13 +57,13 @@
 
   // Spacing - Mobile-first (smaller base unit for mobile)
   --spacing-unit: 0.25rem;
-  --spacing-xs: calc(var(--spacing-unit) * 2);    // 0.5rem
-  --spacing-sm: calc(var(--spacing-unit) * 3);    // 0.75rem
-  --spacing-md: calc(var(--spacing-unit) * 4);    // 1rem
-  --spacing-lg: calc(var(--spacing-unit) * 6);    // 1.5rem
-  --spacing-xl: calc(var(--spacing-unit) * 8);    // 2rem
-  --spacing-2xl: calc(var(--spacing-unit) * 12);   // 3rem
-  --spacing-3xl: calc(var(--spacing-unit) * 16);  // 4rem
+  --spacing-xs: calc(var(--spacing-unit) * 2); // 0.5rem
+  --spacing-sm: calc(var(--spacing-unit) * 3); // 0.75rem
+  --spacing-md: calc(var(--spacing-unit) * 4); // 1rem
+  --spacing-lg: calc(var(--spacing-unit) * 6); // 1.5rem
+  --spacing-xl: calc(var(--spacing-unit) * 8); // 2rem
+  --spacing-2xl: calc(var(--spacing-unit) * 12); // 3rem
+  --spacing-3xl: calc(var(--spacing-unit) * 16); // 4rem
 
   // Borders
   --border-radius-sm: 0.25rem;

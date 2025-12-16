@@ -4,7 +4,7 @@ import { getCLS, getFID, getFCP, getLCP, getTTFB, Metric } from 'web-vitals';
 import { environment } from '@environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebVitalsService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
@@ -31,7 +31,7 @@ export class WebVitalsService {
         value: metric.value,
         rating: metric.rating,
         id: metric.id,
-        delta: metric.delta
+        delta: metric.delta,
       });
     }
 
@@ -42,7 +42,7 @@ export class WebVitalsService {
         metric_rating: metric.rating,
         metric_id: metric.id,
         metric_delta: metric.delta,
-        non_interaction: true
+        non_interaction: true,
       });
     }
 

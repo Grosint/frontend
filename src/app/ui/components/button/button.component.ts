@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   @Input() variant: 'primary' | 'secondary' | 'ghost' | 'danger' = 'primary';
@@ -20,11 +20,7 @@ export class ButtonComponent {
   @Output() onClick = new EventEmitter<Event>();
 
   get classes(): string {
-    const classes = [
-      'btn',
-      `btn--${this.variant}`,
-      `btn--${this.size}`
-    ];
+    const classes = ['btn', `btn--${this.variant}`, `btn--${this.size}`];
 
     if (this.fullWidth) {
       classes.push('btn--full-width');

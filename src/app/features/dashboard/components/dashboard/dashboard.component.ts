@@ -7,7 +7,7 @@ import { AppStateStore } from '@core/services/app-state.store';
   standalone: false,
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
   // Use signal directly instead of Observable
