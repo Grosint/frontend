@@ -3,7 +3,8 @@
   [class]="classes"
   [disabled]="disabled || loading"
   [attr.aria-label]="ariaLabel"
-  (click)="handleClick($event)">
+  (click)="handleClick($event)"
+>
   <span class="btn__content" *ngIf="!loading">
     <ng-content></ng-content>
   </span>

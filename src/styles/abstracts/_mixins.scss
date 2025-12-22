@@ -6,7 +6,11 @@
   background-color: $bg-color;
   color: $text-color;
   border: none;
-  transition: background-color var(--transition-base), transform var(--transition-fast), filter var(--transition-base), box-shadow var(--transition-base);
+  transition:
+    background-color var(--transition-base),
+    transform var(--transition-fast),
+    filter var(--transition-base),
+    box-shadow var(--transition-base);
 
   &:hover:not(:disabled) {
     // For CSS variables (strings), use filter; for actual colors, use darken

@@ -3,9 +3,7 @@
     <h1>Dashboard</h1>
     <div class="user-info" *ngIf="user">
       <span>Welcome, {{ user.name }}</span>
-      <app-button variant="ghost" size="sm" (onClick)="logout()">
-        Logout
-      </app-button>
+      <app-button variant="ghost" size="sm" (onClick)="logout()"> Logout </app-button>
     </div>
   </header>
 

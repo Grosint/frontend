@@ -1,19 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError, map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ApiBaseService } from './api-base.service';
 import { AppStateStore } from './app-state.store';
 import { LoggerService } from './logger.service';
-import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/user.model';
+import {
+  AuthResponse,
+  LoginRequest,
+  LoginApiResponse,
+  OtpVerificationRequest,
+  SignupRequest,
+  User,
+} from '../models/user.model';
+
+export interface SignupResponse {
+  success: boolean;
+  message?: string;
+}
+
+export interface ResendOtpRequest {
+  email: string;
+}
+
+export interface ResendOtpResponse {
+  success: boolean;
+  message?: string;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService extends ApiBaseService {
   private readonly tokenKey = 'auth_token';
   private readonly refreshTokenKey = 'refresh_token';
+  private readonly userKey = 'user_data';
 
   constructor(
     http: HttpClient,
@@ -29,29 +51,46 @@ export class AuthService extends ApiBaseService {
    * Login user
    */
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.post<AuthResponse>('/auth/login', credentials, 'login').pipe(
+    return this.post<LoginApiResponse>('/auth/login', credentials, 'login').pipe(
+      map(apiResponse => this.mapAuthResponse(apiResponse)),
       tap(response => {
         this.setAuthData(response);
         this.appState.setUser(response.user);
       }),
-      catchError(error => {
-        this.logger.error('Login failed', error);
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Login failed', err);
         return throwError(() => error);
       })
     );
   }
 
   /**
-   * Register new user
+   * Signup new user
    */
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.post<AuthResponse>('/auth/register', data, 'register').pipe(
+  signup(data: SignupRequest): Observable<SignupResponse> {
+    return this.post<any>('/user', data, 'signup').pipe(
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Signup failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Verify OTP
+   */
+  verifyOtp(data: OtpVerificationRequest): Observable<AuthResponse> {
+    return this.post<LoginApiResponse>('/auth/verify-otp', data, 'verify-otp').pipe(
+      map(apiResponse => this.mapAuthResponse(apiResponse)),
       tap(response => {
         this.setAuthData(response);
         this.appState.setUser(response.user);
       }),
-      catchError(error => {
-        this.logger.error('Registration failed', error);
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('OTP verification failed', err);
         return throwError(() => error);
       })
     );
@@ -84,7 +123,21 @@ export class AuthService extends ApiBaseService {
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
-    return !!this.getToken() && this.appState.isAuthenticated();
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+
+    if (!this.appState.isAuthenticated()) {
+      const storedUser = this.getStoredUser();
+      if (storedUser) {
+        this.appState.setUser(storedUser);
+        return true;
+      }
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -96,12 +149,15 @@ export class AuthService extends ApiBaseService {
       return throwError(() => new Error('No refresh token available'));
     }
 
-    return this.post<AuthResponse>('/auth/refresh', { refreshToken }, 'refresh-token').pipe(
+    return this.post<LoginApiResponse>('/auth/refresh', { refreshToken }, 'refresh-token').pipe(
+      map(apiResponse => this.mapAuthResponse(apiResponse)),
       tap(response => {
         this.setAuthData(response);
+        this.appState.setUser(response.user);
       }),
-      catchError(error => {
-        this.logger.error('Token refresh failed', error);
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Token refresh failed', err);
         this.logout();
         return throwError(() => error);
       })
@@ -113,9 +169,13 @@ export class AuthService extends ApiBaseService {
    */
   getCurrentUser(): Observable<User> {
     return this.get<User>('/auth/me', undefined, 'get-current-user').pipe(
-      tap(user => this.appState.setUser(user)),
-      catchError(error => {
-        this.logger.error('Failed to get current user', error);
+      tap(user => {
+        this.appState.setUser(user);
+        localStorage.setItem(this.userKey, JSON.stringify(user));
+      }),
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Failed to get current user', err);
         return throwError(() => error);
       })
     );
@@ -129,6 +189,25 @@ export class AuthService extends ApiBaseService {
     if (response.refreshToken) {
       localStorage.setItem(this.refreshTokenKey, response.refreshToken);
     }
+    if (response.user) {
+      localStorage.setItem(this.userKey, JSON.stringify(response.user));
+    }
+  }
+
+  /**
+   * Get stored user from localStorage
+   */
+  private getStoredUser(): User | null {
+    try {
+      const userStr = localStorage.getItem(this.userKey);
+      if (userStr) {
+        return JSON.parse(userStr) as User;
+      }
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      this.logger.error('Failed to parse stored user data', err);
+    }
+    return null;
   }
 
   /**
@@ -137,6 +216,7 @@ export class AuthService extends ApiBaseService {
   private clearAuthData(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.refreshTokenKey);
+    localStorage.removeItem(this.userKey);
   }
 
   /**
@@ -145,13 +225,51 @@ export class AuthService extends ApiBaseService {
   private loadUserFromStorage(): void {
     const token = this.getToken();
     if (token) {
-      // Try to get user info from API
-      this.getCurrentUser().subscribe({
-        error: () => {
-          // If failed, clear invalid token
-          this.clearAuthData();
-        }
-      });
+      const storedUser = this.getStoredUser();
+      if (storedUser) {
+        this.appState.setUser(storedUser);
+      }
+
+      this.getCurrentUser()
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.logger.info('User data refreshed from API');
+          },
+          error: (error: unknown) => {
+            if (this.isHttpErrorResponse(error) && error.status === 401) {
+              this.clearAuthData();
+              this.appState.reset();
+            }
+          },
+        });
     }
+  }
+
+  resendOtp(email: string): Observable<ResendOtpResponse> {
+    return this.post<ResendOtpResponse>('/auth/resend-otp', { email }, 'resend-otp').pipe(
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Resend OTP failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private mapAuthResponse(apiResponse: LoginApiResponse): AuthResponse {
+    return {
+      token: apiResponse.data.access_token,
+      refreshToken: apiResponse.data.refresh_token,
+      expiresIn: apiResponse.data.expires_in,
+      user: {
+        id: apiResponse.data.user_id,
+        email: apiResponse.data.email,
+        name: apiResponse.data.email.split('@')[0],
+      },
+    };
+  }
+
+  private isHttpErrorResponse(error: unknown): error is { status: number } {
+    return error !== null && typeof error === 'object' && 'status' in error;
   }
 }

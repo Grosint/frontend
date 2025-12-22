@@ -2,7 +2,7 @@ import { Directive, HostListener, Renderer2, ElementRef } from '@angular/core';
 
 @Directive({
   selector: '[appTouchOptimized]',
-  standalone: true
+  standalone: true,
 })
 export class TouchOptimizedDirective {
   constructor(

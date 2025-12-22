@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -36,10 +31,11 @@ export class CacheInterceptor implements HttpInterceptor {
     // Make request and cache response
     return next.handle(req).pipe(
       tap(event => {
-        if (event.type === 4) { // HttpResponse
+        if (event.type === 4) {
+          // HttpResponse
           this.cache.set(cacheKey, {
             data: event,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
         }
       })

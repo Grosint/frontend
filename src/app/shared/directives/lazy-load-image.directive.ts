@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input, OnInit, Renderer2, OnDestroy } from '@ang
 
 @Directive({
   selector: 'img[appLazyLoad]',
-  standalone: true
+  standalone: true,
 })
 export class LazyLoadImageDirective implements OnInit, OnDestroy {
   @Input() appLazyLoad?: string;
@@ -22,7 +22,7 @@ export class LazyLoadImageDirective implements OnInit, OnDestroy {
     // Use Intersection Observer for better browser support
     if ('IntersectionObserver' in window) {
       this.observer = new IntersectionObserver(
-        (entries) => {
+        entries => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               this.loadImage();

@@ -4,25 +4,35 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { LoggerService } from '../services/logger.service';
+
+const publicEndpoints = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/signup',
+  '/auth/verify-otp',
+  '/user', // Signup endpoint
+  '/auth/resend',
+];
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private auth: AuthService,
-    private router: Router,
     private logger: LoggerService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Skip auth for login/register endpoints
-    if (req.url.includes('/auth/login') || req.url.includes('/auth/register')) {
+
+    const isPublicEndpoint = publicEndpoints.some(endpoint => req.url.includes(endpoint));
+
+    if (isPublicEndpoint) {
       return next.handle(req);
     }
 
@@ -33,8 +43,8 @@ export class AuthInterceptor implements HttpInterceptor {
     if (token) {
       authReq = req.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
     }
 
@@ -49,10 +59,15 @@ export class AuthInterceptor implements HttpInterceptor {
               switchMap(() => {
                 // Retry original request with new token
                 const newToken = this.auth.getToken();
+                if (!newToken) {
+                  this.logger.error('Token refresh succeeded but no token received');
+                  this.auth.logout();
+                  return throwError(() => new Error('No token available after refresh'));
+                }
                 const retryReq = req.clone({
                   setHeaders: {
-                    Authorization: `Bearer ${newToken}`
-                  }
+                    Authorization: `Bearer ${newToken}`,
+                  },
                 });
                 return next.handle(retryReq);
               }),

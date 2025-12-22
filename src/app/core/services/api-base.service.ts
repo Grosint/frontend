@@ -11,7 +11,7 @@ import { LoggerService } from './logger.service';
  * Provides common patterns: retry, loading states, error handling
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiBaseService {
   protected readonly apiUrl = environment.apiUrl;
@@ -25,30 +25,25 @@ export class ApiBaseService {
   /**
    * Generic request with loading states and retry logic
    */
-  protected request<T>(
-    method: string,
-    url: string,
-    options?: any,
-    taskId?: string
-  ): Observable<T> {
+  protected request<T>(method: string, url: string, options?: any, taskId?: string): Observable<T> {
     const id = taskId || `api-${Date.now()}`;
     const fullUrl = url.startsWith('http') ? url : `${this.apiUrl}${url}`;
 
     // Ensure we get the body, not the full HttpEvent
     const requestOptions = {
       ...options,
-      observe: 'body' as const
+      observe: 'body' as const,
     };
 
     return timer(0).pipe(
       tap(() => this.appState.startLoading(id)),
       switchMap(() => this.http.request<T>(method, fullUrl, requestOptions) as Observable<T>),
       retry({
-        count: 3,
+        count: 1,
         delay: (error, retryCount) => {
           this.logger.warn(`Retry attempt ${retryCount} for ${method} ${url}`);
           return timer(Math.min(1000 * Math.pow(2, retryCount), 10000));
-        }
+        },
       }),
       catchError(error => {
         this.logger.error(`Request failed: ${method} ${url}`, error);
