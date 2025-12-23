@@ -140,25 +140,6 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: production-build
-          path: ./
-
-      - name: Verify build artifacts
-        run: |
-          echo "Checking build artifacts in ${{ env.OUTPUT_PATH }}..."
-          if [ -f "${{ env.OUTPUT_PATH }}/index.html" ]; then
-            echo "✅ index.html found at ${{ env.OUTPUT_PATH }}/index.html"
-            ls -la ${{ env.OUTPUT_PATH }}/index.html
-          else
-            echo "❌ index.html not found at ${{ env.OUTPUT_PATH }}/index.html"
-            echo "Searching for index.html..."
-            find . -name "index.html" -type f | head -5
-            exit 1
-          fi
-
       - name: Deploy to Azure Static Web Apps
         id: deploy
         uses: Azure/static-web-apps-deploy@v1
@@ -167,8 +148,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/"
-          output_location: ${{ env.OUTPUT_PATH }}
-          skip_app_build: true
+          output_location: "dist/grosint-frontend"
 
       - name: Deployment Summary
         run: |
