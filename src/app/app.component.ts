@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   title = 'GrosInt';
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     private appState: AppStateStore,
     private webVitals: WebVitalsService,
     private pwa: PwaService

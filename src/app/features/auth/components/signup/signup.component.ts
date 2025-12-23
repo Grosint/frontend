@@ -71,7 +71,11 @@ export class SignupComponent implements OnInit {
 
     const formValue = this.signupForm.value;
 
+    // Remove confirmPassword from form value before sending
     const { confirmPassword, ...restFormValue } = formValue;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    void confirmPassword; // Explicitly mark as intentionally unused
+
     const signupData = {
       ...restFormValue,
       organizationId: formValue.organizationId || null,

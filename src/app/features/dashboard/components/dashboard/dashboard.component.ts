@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
 import { AppStateStore } from '@core/services/app-state.store';
 
@@ -9,7 +9,7 @@ import { AppStateStore } from '@core/services/app-state.store';
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   // Use signal directly instead of Observable
   get user() {
     return this.appState.user();
@@ -19,10 +19,6 @@ export class DashboardComponent implements OnInit {
     private auth: AuthService,
     public appState: AppStateStore
   ) {}
-
-  ngOnInit(): void {
-    // Component initialization
-  }
 
   logout(): void {
     this.auth.logout();

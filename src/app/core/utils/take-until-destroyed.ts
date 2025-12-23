@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Injector, effect, Inject, inject } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 /**
@@ -7,9 +7,6 @@ import { Subject } from 'rxjs';
  */
 export function takeUntilDestroyed() {
   const destroy$ = new Subject<void>();
-
-  // This will be called when component is destroyed
-  const originalOnDestroy = (injector.get as any)?.prototype?.ngOnDestroy;
 
   return destroy$.asObservable();
 }

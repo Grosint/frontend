@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 interface CacheEntry {
-  data: any;
+  data: HttpEvent<unknown>;
   timestamp: number;
 }
 
@@ -13,7 +13,7 @@ export class CacheInterceptor implements HttpInterceptor {
   private cache = new Map<string, CacheEntry>();
   private readonly cacheTTL = 5 * 60 * 1000; // 5 minutes
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Only cache GET requests
     if (req.method !== 'GET') {
       return next.handle(req);

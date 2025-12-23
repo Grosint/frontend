@@ -13,7 +13,7 @@ export interface LogContext {
   sessionId?: string;
   url?: string;
   userAgent?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface LogEntry {
@@ -26,7 +26,7 @@ export interface LogEntry {
     stack?: string;
     name?: string;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 @Injectable({
@@ -38,13 +38,15 @@ export class LoggerService {
   private maxBufferSize = 100;
   private batchSize = 10;
   private pendingBatch: LogEntry[] = [];
-  private batchTimeout: any;
+  private batchTimeout: ReturnType<typeof setTimeout> | null = null;
   private sessionId: string;
   private currentContext: LogContext = {};
 
   constructor() {
+    const env = environment as Record<string, unknown>;
     this.logLevel =
-      (environment as any).logLevel ?? (environment.production ? LogLevel.WARN : LogLevel.DEBUG);
+      (env['logLevel'] as LogLevel | undefined) ??
+      (environment.production ? LogLevel.WARN : LogLevel.DEBUG);
     this.sessionId = this.generateSessionId();
     this.initializeContext();
   }
@@ -77,19 +79,19 @@ export class LoggerService {
     this.logLevel = level;
   }
 
-  debug(message: string, metadata?: Record<string, any>): void {
+  debug(message: string, metadata?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, message, undefined, metadata);
   }
 
-  info(message: string, metadata?: Record<string, any>): void {
+  info(message: string, metadata?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, message, undefined, metadata);
   }
 
-  warn(message: string, metadata?: Record<string, any>): void {
+  warn(message: string, metadata?: Record<string, unknown>): void {
     this.log(LogLevel.WARN, message, undefined, metadata);
   }
 
-  error(message: string, error?: Error, metadata?: Record<string, any>): void {
+  error(message: string, error?: Error, metadata?: Record<string, unknown>): void {
     this.log(LogLevel.ERROR, message, error, metadata);
   }
 
@@ -97,7 +99,7 @@ export class LoggerService {
     level: LogLevel,
     message: string,
     error?: Error,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): void {
     if (level < this.logLevel) return;
 
@@ -165,7 +167,8 @@ export class LoggerService {
   private shouldSendToRemote(level: LogLevel): boolean {
     if (!environment.production) return false;
 
-    const minRemoteLevel = (environment as any).remoteLogLevel ?? LogLevel.WARN;
+    const env = environment as Record<string, unknown>;
+    const minRemoteLevel = (env['remoteLogLevel'] as LogLevel | undefined) ?? LogLevel.WARN;
     return level >= minRemoteLevel;
   }
 
@@ -209,15 +212,22 @@ export class LoggerService {
   }
 
   private sendToSentry(logs: LogEntry[]): void {
-    if (!(environment as any).sentryDsn) return;
+    const env = environment as Record<string, unknown>;
+    if (!env['sentryDsn']) return;
 
     try {
-      const Sentry = (window as any).Sentry;
+      const windowWithSentry = window as Window & {
+        Sentry?: {
+          captureException: (error: Error, options?: Record<string, unknown>) => void;
+          captureMessage: (message: string, options?: Record<string, unknown>) => void;
+        };
+      };
+      const Sentry = windowWithSentry.Sentry;
       if (Sentry) {
         logs.forEach(log => {
           if (log.level === 'ERROR' && log.error) {
             Sentry.captureException(new Error(log.error.message), {
-              level: log.level.toLowerCase() as any,
+              level: log.level.toLowerCase() as string,
               tags: log.context,
               extra: log.metadata,
               contexts: {
@@ -229,7 +239,7 @@ export class LoggerService {
             });
           } else {
             Sentry.captureMessage(log.message, {
-              level: log.level.toLowerCase() as any,
+              level: log.level.toLowerCase() as string,
               tags: log.context,
               extra: log.metadata,
             });
@@ -242,7 +252,8 @@ export class LoggerService {
   }
 
   private sendToCustomEndpoint(logs: LogEntry[]): void {
-    const endpoint = (environment as any).loggingEndpoint;
+    const env = environment as Record<string, unknown>;
+    const endpoint = env['loggingEndpoint'] as string | undefined;
     if (!endpoint) return;
 
     try {
@@ -272,11 +283,14 @@ export class LoggerService {
   }
 
   private sendToLogRocket(logs: LogEntry[]): void {
-    if (!(window as any).LogRocket) return;
+    const windowWithLogRocket = window as Window & {
+      LogRocket?: { captureMessage: (message: string, options?: Record<string, unknown>) => void };
+    };
+    if (!windowWithLogRocket.LogRocket) return;
 
     try {
       logs.forEach(log => {
-        (window as any).LogRocket.captureMessage(log.message, {
+        windowWithLogRocket.LogRocket?.captureMessage(log.message, {
           level: log.level.toLowerCase(),
           extra: {
             ...log.context,

@@ -17,7 +17,7 @@ export class ButtonComponent {
   @Input() fullWidth = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() ariaLabel?: string;
-  @Output() onClick = new EventEmitter<Event>();
+  @Output() buttonClick = new EventEmitter<Event>();
 
   get classes(): string {
     const classes = ['btn', `btn--${this.variant}`, `btn--${this.size}`];
@@ -35,7 +35,7 @@ export class ButtonComponent {
 
   handleClick(event: Event): void {
     if (!this.disabled && !this.loading) {
-      this.onClick.emit(event);
+      this.buttonClick.emit(event);
     }
   }
 }

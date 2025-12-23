@@ -2,11 +2,20 @@ import { Injectable } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class PwaService {
-  private promptEvent: any;
+  private promptEvent: BeforeInstallPromptEvent | null = null;
 
   constructor(private swUpdate: SwUpdate) {
     this.setupInstallPrompt();
@@ -18,9 +27,9 @@ export class PwaService {
    */
   private setupInstallPrompt(): void {
     if (typeof window !== 'undefined') {
-      window.addEventListener('beforeinstallprompt', (event: any) => {
+      window.addEventListener('beforeinstallprompt', (event: Event) => {
         event.preventDefault();
-        this.promptEvent = event;
+        this.promptEvent = event as BeforeInstallPromptEvent;
       });
     }
   }
@@ -54,9 +63,10 @@ export class PwaService {
     if (typeof window === 'undefined') return false;
 
     // Check if running in standalone mode
+    const navigatorWithStandalone = window.navigator as NavigatorWithStandalone;
     return (
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true
+      navigatorWithStandalone.standalone === true
     );
   }
 

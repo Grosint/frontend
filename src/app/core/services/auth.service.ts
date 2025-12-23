@@ -69,7 +69,7 @@ export class AuthService extends ApiBaseService {
    * Signup new user
    */
   signup(data: SignupRequest): Observable<SignupResponse> {
-    return this.post<any>('/user', data, 'signup').pipe(
+    return this.post<SignupResponse>('/user', data, 'signup').pipe(
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
         this.logger.error('Signup failed', err);

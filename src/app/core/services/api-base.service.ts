@@ -25,7 +25,12 @@ export class ApiBaseService {
   /**
    * Generic request with loading states and retry logic
    */
-  protected request<T>(method: string, url: string, options?: any, taskId?: string): Observable<T> {
+  protected request<T>(
+    method: string,
+    url: string,
+    options?: Record<string, unknown>,
+    taskId?: string
+  ): Observable<T> {
     const id = taskId || `api-${Date.now()}`;
     const fullUrl = url.startsWith('http') ? url : `${this.apiUrl}${url}`;
 
@@ -56,7 +61,7 @@ export class ApiBaseService {
   /**
    * GET request
    */
-  protected get<T>(url: string, params?: any, taskId?: string): Observable<T> {
+  protected get<T>(url: string, params?: Record<string, unknown>, taskId?: string): Observable<T> {
     const httpParams = this.buildParams(params);
     return this.request<T>('GET', url, { params: httpParams }, taskId);
   }
@@ -64,21 +69,21 @@ export class ApiBaseService {
   /**
    * POST request
    */
-  protected post<T>(url: string, body: any, taskId?: string): Observable<T> {
+  protected post<T>(url: string, body: unknown, taskId?: string): Observable<T> {
     return this.request<T>('POST', url, { body }, taskId);
   }
 
   /**
    * PUT request
    */
-  protected put<T>(url: string, body: any, taskId?: string): Observable<T> {
+  protected put<T>(url: string, body: unknown, taskId?: string): Observable<T> {
     return this.request<T>('PUT', url, { body }, taskId);
   }
 
   /**
    * PATCH request
    */
-  protected patch<T>(url: string, body: any, taskId?: string): Observable<T> {
+  protected patch<T>(url: string, body: unknown, taskId?: string): Observable<T> {
     return this.request<T>('PATCH', url, { body }, taskId);
   }
 
@@ -92,12 +97,13 @@ export class ApiBaseService {
   /**
    * Build HTTP params from object
    */
-  private buildParams(params: any): HttpParams {
+  private buildParams(params?: Record<string, unknown>): HttpParams {
     let httpParams = new HttpParams();
     if (params) {
       Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          httpParams = httpParams.set(key, params[key].toString());
+        const value = params[key];
+        if (value !== null && value !== undefined) {
+          httpParams = httpParams.set(key, String(value));
         }
       });
     }

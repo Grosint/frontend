@@ -20,14 +20,16 @@ export class TouchOptimizedDirective {
   }
 
   @HostListener('touchend', ['$event'])
-  onTouchEnd(event: TouchEvent): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onTouchEnd(_event: TouchEvent): void {
     setTimeout(() => {
       this.renderer.removeClass(this.el.nativeElement, 'touch-active');
     }, 150);
   }
 
   @HostListener('touchcancel', ['$event'])
-  onTouchCancel(event: TouchEvent): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onTouchCancel(_event: TouchEvent): void {
     this.renderer.removeClass(this.el.nativeElement, 'touch-active');
   }
 }

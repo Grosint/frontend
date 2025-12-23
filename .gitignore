@@ -43,3 +43,6 @@ Thumbs.db
 
 # Temporary folders
 /to_be_deleted
+
+.nx/cache
+.nx/workspace-data

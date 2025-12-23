@@ -27,7 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
     private logger: LoggerService
   ) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Skip auth for login/register endpoints
 
     const isPublicEndpoint = publicEndpoints.some(endpoint => req.url.includes(endpoint));
