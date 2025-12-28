@@ -74,8 +74,8 @@ export class VerifyOtpComponent implements OnInit {
 
           // Navigate to dashboard
           setTimeout(() => {
-            this.router.navigate(['/dashboard']);
-          }, 500); // Small delay to show toast
+            this.router.navigate(['/auth/login']);
+          }, 1000); // Small delay to show toast
         },
         error: error => {
           this.isLoading = false;

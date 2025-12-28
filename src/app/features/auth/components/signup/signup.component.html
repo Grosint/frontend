@@ -146,7 +146,6 @@
             <input
               [type]="hideConfirmPassword ? 'password' : 'text'"
               id="confirmPassword"
-              +
               formControlName="confirmPassword"
               placeholder="Enter password"
               class="form-input password"
@@ -176,12 +175,12 @@
             </span>
             <span
               *ngIf="
-                signupForm.errors?.['passwordMismatch'] &&
+                signupForm.get('confirmPassword')?.errors?.['passwordMismatch'] &&
                 signupForm.get('confirmPassword')?.touched
               "
-              +
-              >Passwords do not match</span
             >
+              Passwords do not match
+            </span>
           </div>
         </div>
       </div>
