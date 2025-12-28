@@ -128,15 +128,15 @@
             class="error-message"
             *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
           >
-            <span *ngIf="signupForm.get('password')?.errors?.['required']"
-              >Password is required</span
-            >
-            <span *ngIf="signupForm.get('password')?.errors?.['minlength']"
-              >Password must be at least 8 characters</span
-            >
-            <span *ngIf="signupForm.get('password')?.errors?.['pattern']"
-              >Password must contain uppercase, lowercase, number and special character</span
-            >
+            <span *ngIf="signupForm.get('password')?.errors?.['required']">
+              Password is required
+            </span>
+            <span *ngIf="signupForm.get('password')?.errors?.['minlength']">
+              Password must be at least 8 characters
+            </span>
+            <span *ngIf="signupForm.get('password')?.errors?.['pattern']">
+              Password must contain uppercase, lowercase, number and special character
+            </span>
           </div>
         </div>
 

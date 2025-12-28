@@ -14,17 +14,13 @@ import {
   SignupRequest,
   User,
   RefreshTokenApiResponse,
-  CurrentUserApiResponse,
+  UpdateProfileRequest,
+  UpdateProfileResponse,
+  SignupResponse,
+  GetUserProfileResponse,
+  ChangePasswordRequest,
+  ChangePasswordResponse,
 } from '../models/user.model';
-
-export interface SignupResponse {
-  success: boolean;
-  message?: string;
-}
-
-export interface ResendOtpRequest {
-  email: string;
-}
 
 export interface ResendOtpResponse {
   success: boolean;
@@ -49,15 +45,28 @@ export class AuthService extends ApiBaseService {
     this.loadUserFromStorage();
   }
 
-  /**
-   * Login user
-   */
+  // Login user
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.post<LoginApiResponse>('/auth/login', credentials, 'login').pipe(
       map(apiResponse => this.mapAuthResponse(apiResponse)),
       tap(response => {
         this.setAuthData(response);
         this.appState.setUser(response.user);
+        // Load full user profile after successful login
+        // Use setTimeout to ensure token is stored before making the request
+        setTimeout(() => {
+          this.getCurrentUser()
+            .pipe(take(1))
+            .subscribe({
+              next: () => {
+                this.logger.info('User profile loaded after login');
+              },
+              error: error => {
+                // Log error but don't block the flow
+                this.logger.error('Failed to load user profile after login', error);
+              },
+            });
+        }, 1000);
       }),
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
@@ -67,9 +76,7 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  /**
-   * Signup new user
-   */
+  // Signup new user
   signup(data: SignupRequest): Observable<SignupResponse> {
     return this.post<SignupResponse>('/user', data, 'signup').pipe(
       catchError((error: unknown) => {
@@ -80,9 +87,7 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  /**
-   * Verify OTP
-   */
+  // Verify OTP
   verifyOtp(data: OtpVerificationRequest): Observable<AuthResponse> {
     return this.post<LoginApiResponse>('/auth/verify-otp', data, 'verify-otp').pipe(
       map(apiResponse => this.mapAuthResponse(apiResponse)),
@@ -98,32 +103,24 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  /**
-   * Logout user
-   */
+  // Logout user and redirect to login page
   logout(): void {
     this.clearAuthData();
     this.appState.reset();
     this.router.navigate(['/auth/login']);
   }
 
-  /**
-   * Get current token
-   */
+  // Get current token
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
-  /**
-   * Get refresh token
-   */
+  // Get refresh token
   getRefreshToken(): string | null {
     return localStorage.getItem(this.refreshTokenKey);
   }
 
-  /**
-   * Check if user is authenticated
-   */
+  // Check if user is authenticated
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) {
@@ -142,9 +139,7 @@ export class AuthService extends ApiBaseService {
     return true;
   }
 
-  /**
-   * Refresh access token
-   */
+  // Refresh access token
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) {
@@ -191,22 +186,32 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  /**
-   * Get current user
-   */
+  // Get current user
   getCurrentUser(): Observable<User> {
-    return this.get<CurrentUserApiResponse>('/auth/me', undefined, 'get-current-user').pipe(
+    return this.get<GetUserProfileResponse>('/user/me', undefined, 'get-current-user').pipe(
       map(apiResponse => {
         // Extract user data from API response and transform to User object
         const userData = apiResponse.data;
         return {
-          id: userData.user_id,
+          id: userData.id,
           email: userData.email,
-          name: userData.email.split('@')[0], // Use email prefix as name if name not provided
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          address: userData.address,
+          city: userData.city,
+          pinCode: userData.pinCode,
+          state: userData.state,
+          phone: userData.phone,
+          name:
+            userData.firstName && userData.lastName
+              ? `${userData.firstName} ${userData.lastName}`
+              : userData.email.split('@')[0],
+          createdAt: userData.createdAt,
+          updatedAt: userData.updatedAt,
         } as User;
       }),
       tap(user => {
-        // Only store the User object, not the entire API response
+        // Store the User object with all profile fields
         this.appState.setUser(user);
         localStorage.setItem(this.userKey, JSON.stringify(user));
       }),
@@ -218,9 +223,7 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  /**
-   * Set authentication data
-   */
+  // Set authentication data
   private setAuthData(response: AuthResponse): void {
     // Store access token
     if (response.token && typeof response.token === 'string') {
@@ -242,19 +245,33 @@ export class AuthService extends ApiBaseService {
       // Preserve existing user fields that might not be in response
       const existingUser = this.getStoredUser();
       const userToStore: User = {
-        ...existingUser, // Preserve existing fields
+        ...existingUser, // Preserve existing fields (including profile fields)
         ...response.user, // Override with new data
         id: response.user.id,
         email: response.user.email,
+        // Preserve profile fields from existing user if not in response
+        firstName: response.user.firstName ?? existingUser?.firstName,
+        lastName: response.user.lastName ?? existingUser?.lastName,
+        address: response.user.address ?? existingUser?.address,
+        city: response.user.city ?? existingUser?.city,
+        pinCode: response.user.pinCode ?? existingUser?.pinCode,
+        state: response.user.state ?? existingUser?.state,
+        phone: response.user.phone ?? existingUser?.phone,
+        // Preserve name if not in response
+        name: response.user.name ?? existingUser?.name ?? response.user.email.split('@')[0],
+        // Preserve other fields
+        avatar: response.user.avatar ?? existingUser?.avatar,
+        permissions: response.user.permissions ?? existingUser?.permissions,
+        role: response.user.role ?? existingUser?.role,
+        createdAt: response.user.createdAt ?? existingUser?.createdAt,
+        updatedAt: response.user.updatedAt ?? existingUser?.updatedAt,
       };
 
       localStorage.setItem(this.userKey, JSON.stringify(userToStore));
     }
   }
 
-  /**
-   * Get stored user from localStorage
-   */
+  // Get stored user from localStorage
   private getStoredUser(): User | null {
     try {
       const userStr = localStorage.getItem(this.userKey);
@@ -268,18 +285,14 @@ export class AuthService extends ApiBaseService {
     return null;
   }
 
-  /**
-   * Clear authentication data
-   */
+  // Clear authentication data
   private clearAuthData(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.refreshTokenKey);
     localStorage.removeItem(this.userKey);
   }
 
-  /**
-   * Load user from storage on app init
-   */
+  // Load user from storage on app init
   private loadUserFromStorage(): void {
     const token = this.getToken();
     if (token) {
@@ -309,6 +322,52 @@ export class AuthService extends ApiBaseService {
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
         this.logger.error('Resend OTP failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  updateProfile(data: UpdateProfileRequest): Observable<UpdateProfileResponse> {
+    return this.put<UpdateProfileResponse>('/user/me', data, 'update-profile').pipe(
+      map(apiResponse => apiResponse), // Pass through the response
+      tap(response => {
+        // Update user in app state with all fields from API response
+        const userData = response.data;
+        const updatedUser: User = {
+          id: userData.id,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          address: userData.address,
+          city: userData.city,
+          pinCode: userData.pinCode,
+          state: userData.state,
+          phone: userData.phone,
+          name:
+            userData.firstName && userData.lastName
+              ? `${userData.firstName} ${userData.lastName}`
+              : userData.email.split('@')[0],
+          createdAt: userData.createdAt,
+          updatedAt: userData.updatedAt,
+        };
+
+        this.appState.updateUserProfile(updatedUser);
+        // Also update localStorage
+        localStorage.setItem(this.userKey, JSON.stringify(updatedUser));
+      }),
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Update profile failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  changePassword(data: ChangePasswordRequest): Observable<ChangePasswordResponse> {
+    return this.post<ChangePasswordResponse>('/auth/change-password', data, 'change-password').pipe(
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Change password failed', err);
         return throwError(() => error);
       })
     );

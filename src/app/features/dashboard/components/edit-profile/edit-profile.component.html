@@ -1,0 +1,132 @@
+<div class="edit-profile-section">
+  <h3 class="edit-title">Edit Personal Information</h3>
+  <form [formGroup]="profileForm" class="profile-form">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        formControlName="firstName"
+        class="form-input"
+        placeholder="First Name"
+      />
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
+      >
+        First Name is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        formControlName="lastName"
+        class="form-input"
+        placeholder="Last Name"
+      />
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
+      >
+        Last Name is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea
+        id="address"
+        formControlName="address"
+        class="form-input form-textarea"
+        placeholder="Address"
+        rows="4"
+      ></textarea>
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('address')?.invalid && profileForm.get('address')?.touched"
+      >
+        Address is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" id="city" formControlName="city" class="form-input" placeholder="City" />
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('city')?.invalid && profileForm.get('city')?.touched"
+      >
+        City is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="pinCode">Pin Code</label>
+      <input
+        type="text"
+        id="pinCode"
+        formControlName="pinCode"
+        class="form-input"
+        placeholder="Pin Code"
+      />
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('pinCode')?.invalid && profileForm.get('pinCode')?.touched"
+      >
+        Pin Code is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="state">State</label>
+      <input
+        type="text"
+        id="state"
+        formControlName="state"
+        class="form-input"
+        placeholder="State"
+      />
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('state')?.invalid && profileForm.get('state')?.touched"
+      >
+        State is required
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input
+        type="text"
+        id="phone"
+        formControlName="phone"
+        class="form-input"
+        placeholder="Phone"
+      />
+      <span
+        class="error-message"
+        *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched"
+      >
+        Phone is required
+      </span>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="save-button"
+        (click)="saveProfile()"
+        [disabled]="profileForm.invalid || isLoading"
+      >
+        <span *ngIf="!isLoading">Save Changes</span>
+        <span *ngIf="isLoading">Saving...</span>
+      </button>
+      <button type="button" class="cancel-button" (click)="cancelEdit()" [disabled]="isLoading">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

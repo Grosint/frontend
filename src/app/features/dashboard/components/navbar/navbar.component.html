@@ -1,0 +1,45 @@
+<nav class="navbar">
+  <div class="navbar-header">
+    <h3>Menu</h3>
+  </div>
+  <div *ngIf="isLoading" class="navbar-loading">
+    <p>Loading menu...</p>
+  </div>
+  <ul class="navbar-menu" *ngIf="!isLoading">
+    <li
+      *ngFor="let item of menuItems"
+      class="navbar-item"
+      [class.expanded]="isExpanded(item)"
+      [class.selected]="isParentSelected(item)"
+    >
+      <div
+        class="navbar-item-header"
+        (click)="selectParent(item)"
+        [class.has-children]="item.children && item.children.length > 0"
+      >
+        <i *ngIf="item.icon" [class]="item.icon" class="navbar-item-icon"></i>
+        <span class="navbar-item-label">{{ item.label }}</span>
+        <i
+          *ngIf="item.children && item.children.length > 0"
+          [class]="isExpanded(item) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"
+          class="navbar-item-arrow"
+        ></i>
+      </div>
+      <ul
+        *ngIf="item.children && item.children.length > 0"
+        class="navbar-submenu"
+        [class.expanded]="isExpanded(item)"
+      >
+        <li
+          *ngFor="let child of item.children"
+          class="navbar-submenu-item"
+          [class.selected]="isChildSelected(child)"
+          (click)="selectChild(item, child, $event)"
+        >
+          <i *ngIf="child.icon" [class]="child.icon" class="navbar-submenu-icon"></i>
+          <span>{{ child.label }}</span>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

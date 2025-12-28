@@ -1,0 +1,15 @@
+<div class="result-card" [class.not-found]="result.found === false">
+  <div class="result-card-header">
+    <span class="result-source" *ngIf="showSource">{{ result.source }}</span>
+    <span class="result-type" *ngIf="result.type">{{ result.type }}</span>
+  </div>
+  <div class="result-card-body">
+    <div class="result-value">{{ displayValue }}</div>
+    <div class="result-category" *ngIf="result.category" [class]="categoryClass">
+      {{ result.category }}
+    </div>
+  </div>
+  <div class="result-card-footer" *ngIf="result.confidence !== undefined">
+    <span class="confidence">Confidence: {{ result.confidence | number: '1.1-1' }}%</span>
+  </div>
+</div>

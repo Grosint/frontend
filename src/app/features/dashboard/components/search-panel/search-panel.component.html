@@ -1,0 +1,65 @@
+<div class="search-panel">
+  <div class="search-panel-header">
+    <h3>Search</h3>
+    <div class="selected-option" *ngIf="selectedOption">
+      <span class="option-label">{{ getDisplayText() }}</span>
+    </div>
+    <div class="no-selection" *ngIf="!selectedOption">
+      <span>{{ getDisplayText() }}</span>
+    </div>
+  </div>
+
+  <div class="search-panel-content">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <input
+          type="text"
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          [placeholder]="searchPlaceholder"
+          [disabled]="!selectedOption || isLoading"
+          (keypress)="onKeyPress($event)"
+        />
+      </div>
+      <button
+        type="button"
+        class="search-button"
+        [disabled]="!selectedOption || !searchQuery.trim() || isLoading"
+        (click)="onSearch()"
+      >
+        <span *ngIf="!isLoading">Search</span>
+        <span *ngIf="isLoading">Searching...</span>
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results" *ngIf="searchResults.length > 0">
+      <div class="results-header">
+        <h4>Search Results</h4>
+        <div class="results-meta" *ngIf="searchResponse?.data">
+          <span>Total: {{ searchResponse?.data?.results?.length }}</span>
+          <!-- <span *ngIf="searchResponse.data.failed_count > 0">
+            Failed: {{ searchResponse?.data?.failed_count }}
+          </span> -->
+        </div>
+      </div>
+      <div class="results-list">
+        <app-result-card
+          *ngFor="let result of searchResults; let i = index"
+          [result]="result"
+          [index]="i"
+        ></app-result-card>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="no-results" *ngIf="searchResponse && searchResults.length === 0">
+      <p>No results found for this search.</p>
+    </div>
+  </div>
+</div>

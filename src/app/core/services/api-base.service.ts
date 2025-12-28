@@ -6,10 +6,9 @@ import { environment } from '@environments/environment';
 import { AppStateStore } from './app-state.store';
 import { LoggerService } from './logger.service';
 
-/**
- * Base service for API operations using RxJS
- * Provides common patterns: retry, loading states, error handling
- */
+//  Base service for API operations using RxJS
+// Provides common patterns: retry, loading states, error handling
+
 @Injectable({
   providedIn: 'root',
 })
@@ -22,9 +21,7 @@ export class ApiBaseService {
     protected logger: LoggerService
   ) {}
 
-  /**
-   * Generic request with loading states and retry logic
-   */
+  // Generic request with loading states and retry logic
   protected request<T>(
     method: string,
     url: string,
@@ -58,45 +55,33 @@ export class ApiBaseService {
     );
   }
 
-  /**
-   * GET request
-   */
+  // GET request
   protected get<T>(url: string, params?: Record<string, unknown>, taskId?: string): Observable<T> {
     const httpParams = this.buildParams(params);
     return this.request<T>('GET', url, { params: httpParams }, taskId);
   }
 
-  /**
-   * POST request
-   */
+  // POST request
   protected post<T>(url: string, body: unknown, taskId?: string): Observable<T> {
     return this.request<T>('POST', url, { body }, taskId);
   }
 
-  /**
-   * PUT request
-   */
+  // PUT request
   protected put<T>(url: string, body: unknown, taskId?: string): Observable<T> {
     return this.request<T>('PUT', url, { body }, taskId);
   }
 
-  /**
-   * PATCH request
-   */
+  // PATCH request
   protected patch<T>(url: string, body: unknown, taskId?: string): Observable<T> {
     return this.request<T>('PATCH', url, { body }, taskId);
   }
 
-  /**
-   * DELETE request
-   */
+  // DELETE request
   protected delete<T>(url: string, taskId?: string): Observable<T> {
     return this.request<T>('DELETE', url, undefined, taskId);
   }
 
-  /**
-   * Build HTTP params from object
-   */
+  // Build HTTP params from object
   private buildParams(params?: Record<string, unknown>): HttpParams {
     let httpParams = new HttpParams();
     if (params) {
