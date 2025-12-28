@@ -13,6 +13,8 @@ import {
   OtpVerificationRequest,
   SignupRequest,
   User,
+  RefreshTokenApiResponse,
+  CurrentUserApiResponse,
 } from '../models/user.model';
 
 export interface SignupResponse {
@@ -149,11 +151,36 @@ export class AuthService extends ApiBaseService {
       return throwError(() => new Error('No refresh token available'));
     }
 
-    return this.post<LoginApiResponse>('/auth/refresh', { refreshToken }, 'refresh-token').pipe(
-      map(apiResponse => this.mapAuthResponse(apiResponse)),
+    return this.post<RefreshTokenApiResponse>(
+      '/auth/refresh',
+      { refresh_token: refreshToken },
+      'refresh-token'
+    ).pipe(
+      map(apiResponse => {
+        const existingUser = this.getStoredUser();
+
+        if (!existingUser) {
+          throw new Error('No user data found');
+        }
+
+        // Refresh token response only provides new access_token
+        // Keep existing refresh_token and user data
+        return {
+          token: apiResponse.data.access_token,
+          refreshToken: refreshToken, // Keep existing refresh token
+          expiresIn: apiResponse.data.expires_in,
+          user: existingUser, // Preserve existing user data
+        } as AuthResponse;
+      }),
       tap(response => {
-        this.setAuthData(response);
-        this.appState.setUser(response.user);
+        // Only update access token, preserve refresh token and user
+        localStorage.setItem(this.tokenKey, response.token);
+        // Don't update refresh token - it's not in the response
+        // Don't update user - it's not in the response
+        // Just ensure user is set in app state
+        if (response.user) {
+          this.appState.setUser(response.user);
+        }
       }),
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
@@ -168,8 +195,18 @@ export class AuthService extends ApiBaseService {
    * Get current user
    */
   getCurrentUser(): Observable<User> {
-    return this.get<User>('/auth/me', undefined, 'get-current-user').pipe(
+    return this.get<CurrentUserApiResponse>('/auth/me', undefined, 'get-current-user').pipe(
+      map(apiResponse => {
+        // Extract user data from API response and transform to User object
+        const userData = apiResponse.data;
+        return {
+          id: userData.user_id,
+          email: userData.email,
+          name: userData.email.split('@')[0], // Use email prefix as name if name not provided
+        } as User;
+      }),
       tap(user => {
+        // Only store the User object, not the entire API response
         this.appState.setUser(user);
         localStorage.setItem(this.userKey, JSON.stringify(user));
       }),
@@ -185,12 +222,33 @@ export class AuthService extends ApiBaseService {
    * Set authentication data
    */
   private setAuthData(response: AuthResponse): void {
-    localStorage.setItem(this.tokenKey, response.token);
-    if (response.refreshToken) {
+    // Store access token
+    if (response.token && typeof response.token === 'string') {
+      localStorage.setItem(this.tokenKey, response.token);
+    }
+
+    // Only update refresh token if new one is provided
+    if (response.refreshToken && typeof response.refreshToken === 'string') {
       localStorage.setItem(this.refreshTokenKey, response.refreshToken);
     }
-    if (response.user) {
-      localStorage.setItem(this.userKey, JSON.stringify(response.user));
+
+    // Only update user if provided and it's a proper User object
+    if (
+      response.user &&
+      typeof response.user === 'object' &&
+      response.user.id &&
+      response.user.email
+    ) {
+      // Preserve existing user fields that might not be in response
+      const existingUser = this.getStoredUser();
+      const userToStore: User = {
+        ...existingUser, // Preserve existing fields
+        ...response.user, // Override with new data
+        id: response.user.id,
+        email: response.user.email,
+      };
+
+      localStorage.setItem(this.userKey, JSON.stringify(userToStore));
     }
   }
 

@@ -62,3 +62,27 @@ export interface OtpVerificationResponse {
   token?: string;
   user?: User;
 }
+
+export interface RefreshTokenApiResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  data: {
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+  };
+}
+
+export interface CurrentUserApiResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  data: {
+    is_authenticated: boolean;
+    user_id: string;
+    email: string;
+    token_type: string;
+    expires_at: string;
+  };
+}
