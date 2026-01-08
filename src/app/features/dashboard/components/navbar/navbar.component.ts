@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
@@ -8,6 +7,7 @@ import {
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MenuItem, NavbarSelection } from '../../models/menu-item.model';
+import menuItemsData from '../../../../../assets/data/menu-items.json';
 
 @Component({
   selector: 'app-navbar',
@@ -16,10 +16,10 @@ import { MenuItem, NavbarSelection } from '../../models/menu-item.model';
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   @Output() selectionChange = new EventEmitter<NavbarSelection>();
 
-  menuItems: MenuItem[] = [];
+  menuItems: MenuItem[] = menuItemsData as MenuItem[];
   selectedParent: MenuItem | null = null;
   selectedChild: MenuItem | null = null;
   expandedItems: Set<string> = new Set();
@@ -29,43 +29,6 @@ export class NavbarComponent implements OnInit {
     private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) {}
-
-  ngOnInit(): void {
-    this.loadMenuItems();
-  }
-
-  private loadMenuItems(): void {
-    this.http.get<MenuItem[]>('assets/data/menu-items.json').subscribe({
-      next: items => {
-        this.menuItems = items;
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-      error: error => {
-        console.error('Failed to load menu items:', error);
-        this.menuItems = this.getDefaultMenuItems();
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-    });
-  }
-
-  private getDefaultMenuItems(): MenuItem[] {
-    return [
-      {
-        id: 'osint-search',
-        label: 'OSInt Search',
-        value: 'osint-search',
-        icon: 'fas fa-search',
-      },
-      {
-        id: 'ip-search',
-        label: 'IP Search',
-        value: 'ip-search',
-        icon: 'fas fa-network-wired',
-      },
-    ];
-  }
 
   toggleExpand(item: MenuItem): void {
     if (item.children && item.children.length > 0) {

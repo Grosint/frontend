@@ -15,6 +15,7 @@ import { DashboardHeaderComponent } from './components/dashboard-header/dashboar
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { BuyCreditsComponent } from './components/buy-credits/buy-credits.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
       {
         path: 'profile',
         component: UserProfileComponent,
+      },
+      {
+        path: 'buy-credits',
+        component: BuyCreditsComponent,
       },
     ],
   },
@@ -44,6 +49,7 @@ const routes: Routes = [
     UserProfileComponent,
     ChangePasswordComponent,
     EditProfileComponent,
+    BuyCreditsComponent,
   ],
   imports: [
     CommonModule,

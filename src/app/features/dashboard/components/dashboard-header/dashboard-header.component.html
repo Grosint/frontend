@@ -1,11 +1,21 @@
 <header class="dashboard-header">
   <div class="header-left">
-    <h1 class="dashboard-title" (click)="navigateToDashboard()">Dashboard</h1>
+    <img
+      src="assets/data/whiteGrossintLogo.png"
+      alt="Grosint Logo"
+      class="dashboard-logo"
+      (click)="navigateToDashboard()"
+      tabindex="0"
+      role="button"
+      aria-label="Navigate to Dashboard"
+      (keyup.enter)="navigateToDashboard()"
+      (keyup.space)="navigateToDashboard()"
+    />
   </div>
   <div class="header-center" *ngIf="user">
     <span class="welcome-text">Welcome, {{ user.name }}</span>
   </div>
-  <div class="header-right" *ngIf="user">
+  <div class="header-right">
     <app-button variant="ghost" size="sm" (buttonClick)="buyCredits()"> Buy Credits </app-button>
     <button class="user-info-button" (click)="showUserInfo()" aria-label="User Info">
       <i class="fas fa-user-circle"></i>

@@ -19,7 +19,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -40,7 +40,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       enabled: environment.enableServiceWorker && environment.production,
       registrationStrategy: 'registerWhenStable:30000',
     }),
-    AppComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

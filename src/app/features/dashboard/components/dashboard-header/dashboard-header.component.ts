@@ -24,8 +24,7 @@ export class DashboardHeaderComponent {
   }
 
   buyCredits(): void {
-    // TODO: Implement buy credits functionality
-    console.log('Buy Credits clicked');
+    this.router.navigate(['dashboard/buy-credits']);
   }
 
   showUserInfo(): void {

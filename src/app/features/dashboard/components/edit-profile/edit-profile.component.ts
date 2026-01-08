@@ -27,10 +27,10 @@ export class EditProfileComponent implements OnInit {
   profileForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
-    address: new FormControl('', [Validators.required]),
-    city: new FormControl('', [Validators.required]),
-    pinCode: new FormControl('', [Validators.required]),
-    state: new FormControl('', [Validators.required]),
+    address: new FormControl(''),
+    city: new FormControl(''),
+    pinCode: new FormControl(''),
+    state: new FormControl(''),
     phone: new FormControl('', [Validators.required]),
   });
 

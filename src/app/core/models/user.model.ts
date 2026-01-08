@@ -77,7 +77,7 @@ export interface AuthResponse {
 
 // Login Request
 export interface LoginRequest {
-  email: string;
+  phone: string;
   password: string;
 }
 
@@ -90,10 +90,10 @@ export interface SignupRequest extends BaseProfileFields {
   userType: string;
   firstName: string;
   lastName: string;
-  address: string;
-  city: string;
-  pinCode: string;
-  state: string;
+  address?: string;
+  city?: string;
+  pinCode?: string;
+  state?: string;
   organizationId: string | null;
   orgName: string | null;
 }

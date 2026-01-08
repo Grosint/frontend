@@ -1,6 +1,6 @@
 .edit-profile-section {
-  background-color: #eff6ff;
-  padding: 1rem;
+  background-color: #f0f3ff;
+  padding: 1.5rem;
   border-radius: 1rem;
 
   .edit-title {
@@ -58,8 +58,8 @@
 
       .save-button {
         padding: 0.75rem 1.5rem;
-        background: #1976d2;
-        border: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: 1px solid #764ba2;
         border-radius: 6px;
         color: #fff;
         font-size: 1rem;
@@ -68,7 +68,8 @@
         transition: all 0.3s;
 
         &:hover:not(:disabled) {
-          background: #1565c0;
+          background: #fff;
+          color: #764ba2;
         }
 
         &:disabled {

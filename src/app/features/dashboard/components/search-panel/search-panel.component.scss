@@ -17,12 +17,12 @@
       margin: 0 0 1rem 0;
       font-size: 1.2rem;
       font-weight: 600;
-      color: #333;
+      color: #764ba2;
     }
 
     .selected-option {
       padding: 0.75rem 1rem;
-      background: linear-gradient(to left, #e3f2fd, #1976d2);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 4px;
       // border: 1px solid #1976d2;
 
@@ -35,7 +35,7 @@
 
     .no-selection {
       padding: 0.75rem 1rem;
-      background: linear-gradient(to left, #e3f2fd, #1976d2);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 4px;
       // border: 1px solid #1976d2;
 
@@ -83,7 +83,7 @@
 
     &:focus {
       outline: none;
-      border-color: #1976d2;
+      border-color: #764ba2;
       box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
     }
 
@@ -110,7 +110,7 @@
     font-weight: 600;
     line-height: 1.5;
     color: #fff;
-    background: linear-gradient(to left, #1976d2, #1565c0);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -120,13 +120,13 @@
     min-width: 120px;
 
     &:hover:not(:disabled) {
-      background: linear-gradient(to left, #1565c0, #0d47a1);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
       transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background: linear-gradient(to left, #0d47a1, #1565c0);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
       transform: translateY(0);
     }

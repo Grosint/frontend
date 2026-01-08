@@ -27,7 +27,13 @@ export class LoginComponent implements OnInit {
     private snackBar: MatSnackBar // Add this
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      phone: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/),
+        ],
+      ],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -44,11 +50,11 @@ export class LoginComponent implements OnInit {
     const fromSignup = localStorage.getItem('from_signup');
 
     if (fromOtp === 'true' || fromSignup === 'true') {
-      const email = localStorage.getItem('pending_verification_email');
-      if (email) {
+      const phone = localStorage.getItem('pending_verification_phone');
+      if (phone) {
         // Only autofill email, NOT password
         this.loginForm.patchValue({
-          email: email,
+          phone: phone,
           // Password field left empty for security
         });
 
@@ -56,7 +62,7 @@ export class LoginComponent implements OnInit {
         localStorage.removeItem('from_otp_verification');
         localStorage.removeItem('from_signup');
         // Keep email in case user navigates away and comes back
-        // Or clear it: localStorage.removeItem('pending_verification_email');
+        // Or clear it: localStorage.removeItem('pending_verification_phone');
 
         this.cdr.markForCheck();
       }
@@ -72,10 +78,10 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.cdr.markForCheck();
 
-    const { email, password } = this.loginForm.value;
+    const { phone, password } = this.loginForm.value;
 
     this.auth
-      .login({ email, password })
+      .login({ phone, password })
       .pipe(take(1))
       .subscribe({
         next: () => {

@@ -32,11 +32,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
     let isPublicEndpoint = publicEndpoints.some(endpoint => req.url.includes(endpoint));
 
-    if (req.url.includes('/user/me')) isPublicEndpoint = false;
+    if (req.url.includes('/auth/change-password') || req.url.includes('/user/me'))
+      isPublicEndpoint = false;
 
-    if (isPublicEndpoint) {
-      return next.handle(req);
-    }
+    if (isPublicEndpoint) return next.handle(req);
 
     const token = this.auth.getToken();
 
@@ -54,6 +53,10 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         // Handle 401 Unauthorized
         if (error.status === 401) {
+          if (req.url.includes('/auth/change-password'))
+            // Return error immediately without token refresh retry
+            return throwError(() => error);
+
           // Try to refresh token
           const refreshToken = this.auth.getRefreshToken();
           if (refreshToken) {

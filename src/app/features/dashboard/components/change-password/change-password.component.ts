@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Output,
   EventEmitter,
+  OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
@@ -17,7 +18,7 @@ import { take } from 'rxjs';
   styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChangePasswordComponent {
+export class ChangePasswordComponent implements OnInit {
   @Output() closeForm = new EventEmitter<void>();
 
   changePasswordForm: FormGroup = new FormGroup({
@@ -34,16 +35,39 @@ export class ChangePasswordComponent {
   hideNewPassword = true;
   hideConfirmPassword = true;
   isLoading = false;
+  errorMessage = '';
+  lastAttemptedPassword = '';
 
   constructor(
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     // Add password match validator
     this.changePasswordForm
       .get('confirmPassword')
       ?.setValidators([Validators.required, this.passwordMatchValidator.bind(this)]);
+
+    // Re-validate confirmPassword when newPassword changes
+    this.changePasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
+      this.changePasswordForm.get('confirmPassword')?.updateValueAndValidity();
+      // Clear error message when user starts typing
+      if (this.errorMessage) {
+        this.errorMessage = '';
+        this.cdr.markForCheck();
+      }
+    });
+
+    // Clear error and re-enable button when current password changes
+    this.changePasswordForm.get('currentPassword')?.valueChanges.subscribe((newValue: string) => {
+      // If there's an error and the current password has changed from the last attempted value
+      if (this.errorMessage && newValue !== this.lastAttemptedPassword) {
+        this.errorMessage = '';
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   passwordMatchValidator(control: FormControl): { [key: string]: boolean } | null {
@@ -63,19 +87,25 @@ export class ChangePasswordComponent {
 
   cancelChangePassword(): void {
     this.changePasswordForm.reset();
+    this.lastAttemptedPassword = '';
+    this.errorMessage = '';
+    this.isLoading = false;
     this.closeForm.emit();
     this.cdr.markForCheck();
   }
 
   savePassword(): void {
-    if (this.changePasswordForm.invalid || this.isLoading) {
+    if (this.changePasswordForm.invalid || this.isLoading || this.isButtonDisabled()) {
       return;
     }
 
+    this.errorMessage = '';
     this.isLoading = true;
     this.cdr.markForCheck();
 
     const formValue = this.changePasswordForm.value;
+    this.lastAttemptedPassword = formValue.currentPassword;
+
     this.auth
       .changePassword({
         current_password: formValue.currentPassword,
@@ -99,17 +129,28 @@ export class ChangePasswordComponent {
         },
         error: error => {
           this.isLoading = false;
-          this.cdr.markForCheck();
-          const errorMessage =
+          this.errorMessage =
+            error.message ||
             error?.error?.message ||
-            error?.message ||
             'Failed to change password. Please try again.';
-          this.snackBar.open(errorMessage, 'Dismiss', {
+          this.cdr.markForCheck();
+          this.snackBar.open(this.errorMessage, 'Dismiss', {
             duration: 5000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
           });
         },
       });
+  }
+
+  isButtonDisabled(): boolean {
+    // Disable if there's an error and current password hasn't changed
+    if (this.errorMessage && this.lastAttemptedPassword) {
+      const currentPasswordValue = this.changePasswordForm.get('currentPassword')?.value || '';
+      if (currentPasswordValue === this.lastAttemptedPassword) {
+        return true; // Still the same password that caused error
+      }
+    }
+    return false;
   }
 }
