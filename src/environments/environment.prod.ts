@@ -20,6 +20,6 @@ export const environment = {
   // Logging configuration
   logLevel: 2, // WARN level for production (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
   remoteLogLevel: 2, // Send WARN and ERROR to remote services
-  loggingEndpoint: 'https://api.yourdomain.com/api/logs', // Your logging API endpoint
+  loggingEndpoint: 'https://grosint.org/api', // Your logging API endpoint
   enableRemoteLogging: true, // Enable remote logging in production
 };

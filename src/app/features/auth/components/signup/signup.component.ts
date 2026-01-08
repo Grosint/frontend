@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -13,6 +19,7 @@ import { passwordMatchValidator } from '@shared/validators/pass-match.validator'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TermsConditionsDialogComponent } from '../terms-conditions-dialog/terms-conditions-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -21,7 +28,9 @@ import { TermsConditionsDialogComponent } from '../terms-conditions-dialog/terms
   styleUrls: ['./signup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
+  private subscriptions = new Subscription();
+
   signupForm: FormGroup;
   isLoading = false;
   errorMessage = '';
@@ -63,10 +72,12 @@ export class SignupComponent implements OnInit {
 
     this.addEmailValidator();
 
-    this.signupForm.get('verifyByGovId')?.valueChanges.subscribe(() => {
-      this.signupForm.get('email')?.updateValueAndValidity();
-      this.cdr.markForCheck();
-    });
+    this.subscriptions.add(
+      this.signupForm.get('verifyByGovId')?.valueChanges.subscribe(() => {
+        this.signupForm.get('email')?.updateValueAndValidity();
+        this.cdr.markForCheck();
+      })
+    );
   }
 
   ngOnInit(): void {
@@ -161,7 +172,7 @@ export class SignupComponent implements OnInit {
           this.cdr.markForCheck();
 
           // Store email and form data for autofill after OTP verification
-          localStorage.setItem('pending_verification_phone', formValue.email);
+          localStorage.setItem('pending_verification_phone', formValue.phone);
           localStorage.setItem('from_signup', 'true'); // Flag to indicate coming from signup
 
           this.router.navigate(['/auth/verify-otp']);
@@ -188,5 +199,9 @@ export class SignupComponent implements OnInit {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

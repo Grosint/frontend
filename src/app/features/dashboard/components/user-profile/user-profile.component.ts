@@ -64,6 +64,6 @@ export class UserProfileComponent {
   }
 
   goToDashboardClick(): void {
-    this.router.navigate(['/dashboard/profile']);
+    this.router.navigate(['/dashboard']);
   }
 }

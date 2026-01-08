@@ -28,13 +28,13 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = this.fb.group({
       phone: [
-        '+919997260627',
+        '',
         [
           Validators.required,
           Validators.pattern(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/),
         ],
       ],
-      password: ['Password123!', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
@@ -45,14 +45,14 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    // Check if coming from OTP verification and autofill email only
+    // Check if coming from OTP verification and autofill phone only
     const fromOtp = localStorage.getItem('from_otp_verification');
     const fromSignup = localStorage.getItem('from_signup');
 
     if (fromOtp === 'true' || fromSignup === 'true') {
       const phone = localStorage.getItem('pending_verification_phone');
       if (phone) {
-        // Only autofill email, NOT password
+        // Only autofill phone, NOT password
         this.loginForm.patchValue({
           phone: phone,
           // Password field left empty for security

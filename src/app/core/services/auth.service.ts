@@ -20,6 +20,7 @@ import {
   GetUserProfileResponse,
   ChangePasswordRequest,
   ChangePasswordResponse,
+  BaseUserProfileData,
 } from '../models/user.model';
 
 export interface ResendOtpResponse {
@@ -189,26 +190,7 @@ export class AuthService extends ApiBaseService {
     return this.get<GetUserProfileResponse>('/user/me', undefined, 'get-current-user').pipe(
       map(apiResponse => {
         // Extract user data from API response and transform to User object
-        const userData = apiResponse.data;
-        return {
-          id: userData.id,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          address: userData.address,
-          city: userData.city,
-          pinCode: userData.pinCode,
-          state: userData.state,
-          phone: userData.phone,
-          userType: userData.userType,
-          isVerified: userData.isVerified,
-          name:
-            userData.firstName && userData.lastName
-              ? `${userData.firstName} ${userData.lastName}`
-              : userData.email.split('@')[0],
-          createdAt: userData.createdAt,
-          updatedAt: userData.updatedAt,
-        } as User;
+        return this.mapUserDataToUser(apiResponse.data);
       }),
       tap(user => {
         // Store the User object with all profile fields
@@ -331,26 +313,7 @@ export class AuthService extends ApiBaseService {
     return this.put<UpdateProfileResponse>('/user/me', data, 'update-profile').pipe(
       tap(response => {
         // Update user in app state with all fields from API response
-        const userData = response.data;
-        const updatedUser: User = {
-          id: userData.id,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          address: userData.address,
-          city: userData.city,
-          pinCode: userData.pinCode,
-          state: userData.state,
-          phone: userData.phone,
-          userType: userData.userType,
-          isVerified: userData.isVerified,
-          name:
-            userData.firstName && userData.lastName
-              ? `${userData.firstName} ${userData.lastName}`
-              : userData.email.split('@')[0],
-          createdAt: userData.createdAt,
-          updatedAt: userData.updatedAt,
-        };
+        const updatedUser = this.mapUserDataToUser(response.data);
 
         this.appState.updateUserProfile(updatedUser);
         // Also update localStorage
@@ -385,6 +348,28 @@ export class AuthService extends ApiBaseService {
         name: apiResponse.data.email.split('@')[0],
       },
     };
+  }
+
+  private mapUserDataToUser(userData: BaseUserProfileData): User {
+    return {
+      id: userData.id,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      address: userData.address,
+      city: userData.city,
+      pinCode: userData.pinCode,
+      state: userData.state,
+      phone: userData.phone,
+      userType: userData.userType,
+      isVerified: userData.isVerified,
+      name:
+        userData.firstName && userData.lastName
+          ? `${userData.firstName} ${userData.lastName}`
+          : userData.email.split('@')[0],
+      createdAt: userData.createdAt,
+      updatedAt: userData.updatedAt,
+    } as User;
   }
 
   private isHttpErrorResponse(error: unknown): error is { status: number } {

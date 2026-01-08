@@ -52,11 +52,12 @@ export class SearchService extends ApiBaseService {
 
   // Build search request body based on menu value
   private buildSearchRequest(menuValue: string, query: string): SearchRequest {
-    console.log('menuValue', menuValue);
+    const trimmedQuery = query.trim();
+
     // Handle mobile - use query as-is, default country code to +91
     if (menuValue.includes('mobile')) {
       return {
-        phone: query.trim(),
+        phone: trimmedQuery,
         country_code: '+91',
       };
     }
@@ -64,13 +65,27 @@ export class SearchService extends ApiBaseService {
     // Handle email
     if (menuValue === 'email') {
       return {
-        email: query.trim(),
+        email: trimmedQuery,
       };
     }
 
-    // For other types, return generic query (extend as needed)
+    // Handle IP search
+    if (menuValue === 'ip-search') {
+      return {
+        ip: trimmedQuery,
+      };
+    }
+
+    // Handle IMEI search
+    if (menuValue === 'imei-search') {
+      return {
+        imei: trimmedQuery,
+      };
+    }
+
+    // For other types, return generic query
     return {
-      query: query.trim(),
-    } as any;
+      query: trimmedQuery,
+    };
   }
 }

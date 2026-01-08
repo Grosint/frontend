@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   OnChanges,
@@ -23,7 +21,6 @@ import { take } from 'rxjs/operators';
 })
 export class SearchPanelComponent implements OnInit, OnChanges {
   @Input() selectedOption: NavbarSelection | null = null;
-  @Output() search = new EventEmitter<{ option: NavbarSelection; query: string }>();
 
   searchQuery: string = '';
   searchPlaceholder: string = 'Enter search query...';
@@ -75,10 +72,6 @@ export class SearchPanelComponent implements OnInit, OnChanges {
           this.cdr.markForCheck();
 
           // Emit search event for parent component
-          this.search.emit({
-            option: this.selectedOption!,
-            query: this.searchQuery.trim(),
-          });
         },
         error: error => {
           this.isLoading = false;

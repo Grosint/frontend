@@ -7,7 +7,7 @@ interface BaseApiResponse<T> {
 }
 
 // Base user profile fields (for response data)
-interface BaseUserProfileData {
+export interface BaseUserProfileData {
   id: string;
   email: string;
   phone?: string;

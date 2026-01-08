@@ -2,6 +2,9 @@ export interface SearchRequest {
   phone?: string;
   country_code?: string;
   email?: string;
+  ip?: string;
+  imei?: string;
+  query?: string;
   // Add other search types as needed
 }
 
