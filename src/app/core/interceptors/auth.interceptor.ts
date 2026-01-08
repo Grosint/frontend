@@ -11,13 +11,13 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { LoggerService } from '../services/logger.service';
 
-const publicEndpoints = [
-  '/auth/login',
-  '/auth/register',
-  '/auth/signup',
-  '/auth/verify-otp',
-  '/user', // Signup endpoint
-  '/auth/resend',
+const publicEndpointPatterns = [
+  /\/auth\/login$/,
+  /\/auth\/register$/,
+  /\/auth\/signup$/,
+  /\/auth\/verify-otp$/,
+  /\/user$/, // Exact match for signup only
+  /\/auth\/resend$/,
 ];
 
 @Injectable()
@@ -30,11 +30,10 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Skip auth for login/register endpoints
 
-    const isPublicEndpoint = publicEndpoints.some(endpoint => req.url.includes(endpoint));
+    const urlPath = new URL(req.url, 'http://dummy').pathname;
+    const isPublicEndpoint = publicEndpointPatterns.some(pattern => pattern.test(urlPath));
 
-    if (isPublicEndpoint) {
-      return next.handle(req);
-    }
+    if (isPublicEndpoint) return next.handle(req);
 
     const token = this.auth.getToken();
 
@@ -52,6 +51,10 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         // Handle 401 Unauthorized
         if (error.status === 401) {
+          if (req.url.includes('/auth/change-password'))
+            // Return error immediately without token refresh retry
+            return throwError(() => error);
+
           // Try to refresh token
           const refreshToken = this.auth.getRefreshToken();
           if (refreshToken) {

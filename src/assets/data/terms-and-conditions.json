@@ -1,0 +1,147 @@
+{
+  "title": "Terms & Conditions",
+  "sections": [
+    {
+      "id": 1,
+      "title": "Acceptance of Terms",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "By accessing and using this service, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Use License",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Permission is granted to temporarily download one copy of the materials (information or software) on our service for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Modify or copy the materials",
+            "Use the materials for any commercial purpose or for any public display",
+            "Attempt to decompile or reverse engineer any software contained on the service",
+            "Remove any copyright or other proprietary notations from the materials",
+            "Transfer the materials to another person or \"mirror\" the materials on any other server"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Disclaimer",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "The materials on our service are provided on an 'as is' basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Limitations",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "In no event shall the company or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the service, even if the company or an authorized representative has been notified orally or in writing of the possibility of such damage."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Accuracy of Materials",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "The materials appearing on our service could include technical, typographical, or photographic errors. We do not warrant that any of the materials on its service are accurate, complete, or current. We may make changes to the materials contained on its service at any time without notice. However, we do not make any commitment to update the materials."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Links",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "We have not reviewed all of the sites linked to our service and are not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by us of the site. Use of any such linked website is at the user's own risk."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Modifications",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "We may revise the terms of service for our service at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Governing Law",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "These terms and conditions are governed by and construed in accordance with the laws of India and you irrevocably submit to the exclusive jurisdiction of the courts in that location."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "User Responsibility",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account. You agree not to use the service for any unauthorized or illegal purpose. You agree not to access or attempt to access any other user's account, or to obtain unauthorized access to any part of the service. You agree not to use any automated means to access the service or collect information from the service. You agree not to use the service to transmit any malicious code, viruses, or other harmful components. You agree not to use the service to violate any laws or regulations. You agree not to use personal or confidential data of others without proper consent and authorization."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Data Privacy",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Your use of this service is also governed by our Privacy Policy. Please review our Privacy Policy to understand our practices. By using this service, you consent to our collection and use of personal information as outlined in the Privacy Policy."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Search History & Encryption",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "You have the option to enable search history tracking. If you choose to enable this feature, you must select one of the following security options:"
+        },
+        {
+          "type": "encryption-option",
+          "variant": "encrypted",
+          "title": "Option 1: Encrypted History (Recommended)",
+          "text": "You can create an encryption key (auto-generated or custom, minimum 16 characters). Your search history will be encrypted using this key. **You are responsible for storing this key safely.** We do not store, backup, or retrieve encryption keys. If you lose the key, your historical data cannot be recovered or decrypted."
+        },
+        {
+          "type": "encryption-option",
+          "variant": "unencrypted",
+          "title": "Option 2: Unencrypted History",
+          "text": "You can enable history storage without encryption. Your search history will be stored in plain text on our servers. This option is **NOT recommended for sensitive searches.** We store this data but cannot guarantee the same level of privacy and security as encrypted history. You are responsible for understanding the risks associated with storing unencrypted search data."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "User Responsibility for Data Security",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "By enabling search history, you acknowledge that you are responsible for the security of your encryption key (if chosen) and understand the risks of both encrypted and unencrypted data storage. We will not be liable for any loss of data, unauthorized access, or inability to recover data due to lost encryption keys or your choice of unencrypted storage."
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@
   justify-content: center;
   min-height: 100vh;
   padding: var(--spacing-md);
-  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .login-card {
@@ -101,7 +101,7 @@
   }
 
   a {
-    color: #4caf50;
+    color: #764ba2;
     text-decoration: none;
     font-weight: 500;
 

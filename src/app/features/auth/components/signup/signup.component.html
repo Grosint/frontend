@@ -1,6 +1,8 @@
 <div class="signup-container">
   <div class="signup-card">
-    <h1 class="signup-title">Create Account</h1>
+    <div class="signup-header">
+      <img src="assets/data/grossintLogo.png" alt="Grosint Logo" class="signup-logo" />
+    </div>
     <p class="signup-subtitle">Sign up to get started</p>
 
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
@@ -75,6 +77,9 @@
           >
             <span *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</span>
             <span *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format</span>
+            <span *ngIf="signupForm.get('email')?.errors?.['govEmailRequired'] && verifyByGovId">
+              Email must be a .gov.in domain when "Verify by Government ID" is selected
+            </span>
           </div>
         </div>
 
@@ -128,15 +133,15 @@
             class="error-message"
             *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
           >
-            <span *ngIf="signupForm.get('password')?.errors?.['required']"
-              >Password is required</span
-            >
-            <span *ngIf="signupForm.get('password')?.errors?.['minlength']"
-              >Password must be at least 8 characters</span
-            >
-            <span *ngIf="signupForm.get('password')?.errors?.['pattern']"
-              >Password must contain uppercase, lowercase, number and special character</span
-            >
+            <span *ngIf="signupForm.get('password')?.errors?.['required']">
+              Password is required
+            </span>
+            <span *ngIf="signupForm.get('password')?.errors?.['minlength']">
+              Password must be at least 8 characters
+            </span>
+            <span *ngIf="signupForm.get('password')?.errors?.['pattern']">
+              Password must contain uppercase, lowercase, number and special character
+            </span>
           </div>
         </div>
 
@@ -187,7 +192,7 @@
 
       <!-- Address Information -->
       <div class="form-group">
-        <label for="address">Address *</label>
+        <label for="address">Address</label>
         <input
           type="text"
           id="address"
@@ -196,17 +201,11 @@
           class="form-input"
           [class.error]="signupForm.get('address')?.invalid && signupForm.get('address')?.touched"
         />
-        <div
-          class="error-message"
-          *ngIf="signupForm.get('address')?.invalid && signupForm.get('address')?.touched"
-        >
-          Address is required
-        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="city">City *</label>
+          <label for="city">City</label>
           <input
             type="text"
             id="city"
@@ -215,16 +214,10 @@
             class="form-input"
             [class.error]="signupForm.get('city')?.invalid && signupForm.get('city')?.touched"
           />
-          <div
-            class="error-message"
-            *ngIf="signupForm.get('city')?.invalid && signupForm.get('city')?.touched"
-          >
-            City is required
-          </div>
         </div>
 
         <div class="form-group">
-          <label for="state">State *</label>
+          <label for="state">State</label>
           <input
             type="text"
             id="state"
@@ -233,18 +226,12 @@
             class="form-input"
             [class.error]="signupForm.get('state')?.invalid && signupForm.get('state')?.touched"
           />
-          <div
-            class="error-message"
-            *ngIf="signupForm.get('state')?.invalid && signupForm.get('state')?.touched"
-          >
-            State is required
-          </div>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="pinCode">PIN Code *</label>
+          <label for="pinCode">PIN Code</label>
           <input
             type="text"
             id="pinCode"
@@ -257,30 +244,11 @@
             class="error-message"
             *ngIf="signupForm.get('pinCode')?.invalid && signupForm.get('pinCode')?.touched"
           >
-            <span *ngIf="signupForm.get('pinCode')?.errors?.['required']"
-              >PIN code is required</span
-            >
-            <span *ngIf="signupForm.get('pinCode')?.errors?.['pattern']"
-              >PIN code must be 6 digits</span
-            >
+            <span *ngIf="signupForm.get('pinCode')?.errors?.['pattern']">
+              PIN code must be 6 digits
+            </span>
           </div>
         </div>
-
-        <!-- User Type -->
-        <!-- <div class="form-group">
-          <label for="userType">User Type *</label>
-          <select
-            id="userType"
-            formControlName="userType"
-            class="form-input"
-            [class.error]="signupForm.get('userType')?.invalid && signupForm.get('userType')?.touched">
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-          <div class="error-message" *ngIf="signupForm.get('userType')?.invalid && signupForm.get('userType')?.touched">
-            User type is required
-          </div>
-        </div> -->
 
         <!-- Organization (optional) -->
         <div class="form-group">
@@ -301,6 +269,46 @@
           <input type="checkbox" formControlName="verifyByGovId" class="checkbox-input" />
           <span>Verify by Government ID</span>
         </label>
+      </div>
+
+      <div class="gov-id-info-box" *ngIf="!verifyByGovId">
+        <p>
+          Account will be approved post sending copy of your government id to contact{{
+            '@'
+          }}grosint.in
+        </p>
+      </div>
+
+      <!-- Terms and Conditions -->
+      <div class="form-group checkbox-group terms-checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="termsAccepted"
+            class="checkbox-input"
+            [class.error]="
+              signupForm.get('termsAccepted')?.invalid && signupForm.get('termsAccepted')?.touched
+            "
+          />
+          <span>
+            I have read and understood the
+            <a
+              href="javascript:void(0)"
+              (click)="openTermsModal(); $event.preventDefault()"
+              class="terms-link"
+            >
+              Terms and Conditions
+            </a>
+          </span>
+        </label>
+        <div
+          class="error-message"
+          *ngIf="
+            signupForm.get('termsAccepted')?.invalid && signupForm.get('termsAccepted')?.touched
+          "
+        >
+          You must accept the Terms and Conditions to continue
+        </div>
       </div>
 
       <div class="error-message" *ngIf="errorMessage">

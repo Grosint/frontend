@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AuthService } from '@core/services/auth.service';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AppStateStore } from '@core/services/app-state.store';
+import { NavbarSelection } from '@features/dashboard/models/menu-item.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,17 +10,15 @@ import { AppStateStore } from '@core/services/app-state.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  // Use signal directly instead of Observable
-  get user() {
-    return this.appState.user();
-  }
+  selectedOption: NavbarSelection | null = null;
 
   constructor(
-    private auth: AuthService,
-    public appState: AppStateStore
+    public appState: AppStateStore,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  logout(): void {
-    this.auth.logout();
+  onSelectionChange(selection: NavbarSelection): void {
+    this.selectedOption = selection;
+    this.cdr.markForCheck();
   }
 }

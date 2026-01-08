@@ -24,11 +24,17 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar // Add this
+    private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      phone: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/),
+        ],
+      ],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
@@ -39,16 +45,16 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    // Check if coming from OTP verification and autofill email only
+    // Check if coming from OTP verification and autofill phone only
     const fromOtp = localStorage.getItem('from_otp_verification');
     const fromSignup = localStorage.getItem('from_signup');
 
     if (fromOtp === 'true' || fromSignup === 'true') {
-      const email = localStorage.getItem('pending_verification_email');
-      if (email) {
-        // Only autofill email, NOT password
+      const phone = localStorage.getItem('pending_verification_phone');
+      if (phone) {
+        // Only autofill phone, NOT password
         this.loginForm.patchValue({
-          email: email,
+          phone: phone,
           // Password field left empty for security
         });
 
@@ -56,7 +62,7 @@ export class LoginComponent implements OnInit {
         localStorage.removeItem('from_otp_verification');
         localStorage.removeItem('from_signup');
         // Keep email in case user navigates away and comes back
-        // Or clear it: localStorage.removeItem('pending_verification_email');
+        // Or clear it: localStorage.removeItem('pending_verification_phone');
 
         this.cdr.markForCheck();
       }
@@ -72,10 +78,10 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.cdr.markForCheck();
 
-    const { email, password } = this.loginForm.value;
+    const { phone, password } = this.loginForm.value;
 
     this.auth
-      .login({ email, password })
+      .login({ phone, password })
       .pipe(take(1))
       .subscribe({
         next: () => {

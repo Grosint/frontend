@@ -1,0 +1,53 @@
+<nav class="navbar">
+  <div class="navbar-header">
+    <h3>Menu</h3>
+  </div>
+  <ul class="navbar-menu">
+    <li
+      *ngFor="let item of menuItems"
+      class="navbar-item"
+      [class.expanded]="isExpanded(item)"
+      [class.selected]="isParentSelected(item)"
+    >
+      <div
+        class="navbar-item-header"
+        (click)="selectParent(item)"
+        (keyup.enter)="selectParent(item)"
+        (keyup.space)="selectParent(item)"
+        [class.has-children]="item.children && item.children.length > 0"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="item.label"
+        [attr.aria-expanded]="item.children && item.children.length > 0 ? isExpanded(item) : null"
+      >
+        <i *ngIf="item.icon" [class]="item.icon" class="navbar-item-icon"></i>
+        <span class="navbar-item-label">{{ item.label }}</span>
+        <i
+          *ngIf="item.children && item.children.length > 0"
+          [class]="isExpanded(item) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"
+          class="navbar-item-arrow"
+        ></i>
+      </div>
+      <ul
+        *ngIf="item.children && item.children.length > 0"
+        class="navbar-submenu"
+        [class.expanded]="isExpanded(item)"
+      >
+        <li
+          *ngFor="let child of item.children"
+          class="navbar-submenu-item"
+          [class.selected]="isChildSelected(child)"
+          (click)="selectChild(item, child, $event)"
+          (keyup.enter)="selectChild(item, child, $event)"
+          (keyup.space)="selectChild(item, child, $event)"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="child.label"
+        >
+          <i *ngIf="child.icon" [class]="child.icon" class="navbar-submenu-icon"></i>
+          <span>{{ child.label }}</span>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

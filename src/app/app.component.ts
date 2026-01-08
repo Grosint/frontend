@@ -1,15 +1,12 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { environment } from '@environments/environment';
 import { AppStateStore } from './core/services/app-state.store';
 import { WebVitalsService } from './core/services/web-vitals.service';
-import { PwaService } from './core/services/pwa.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
+  standalone: false,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -19,8 +16,7 @@ export class AppComponent implements OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
     private appState: AppStateStore,
-    private webVitals: WebVitalsService,
-    private pwa: PwaService
+    private webVitals: WebVitalsService
   ) {}
 
   ngOnInit(): void {

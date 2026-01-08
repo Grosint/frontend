@@ -1,0 +1,42 @@
+<div class="terms-dialog-container">
+  <div class="terms-dialog-header">
+    <h2>{{ termsData.title }}</h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="terms-dialog-content">
+    <div class="terms-section" *ngFor="let section of termsData.sections">
+      <h3>{{ section.id }}. {{ section.title }}</h3>
+
+      <ng-container *ngFor="let content of section.content">
+        <!-- Paragraph -->
+        <p *ngIf="content.type === 'paragraph'" [innerHTML]="formatText(content.text || '')"></p>
+
+        <!-- List -->
+        <ul *ngIf="content.type === 'list'">
+          <li *ngFor="let item of content.items">{{ item }}</li>
+        </ul>
+
+        <!-- Encryption Option -->
+        <div
+          *ngIf="content.type === 'encryption-option'"
+          class="encryption-option"
+          [class.encrypted-option]="content.variant === 'encrypted'"
+          [class.unencrypted-option]="content.variant === 'unencrypted'"
+        >
+          <h4>{{ content.title }}</h4>
+          <p [innerHTML]="formatText(content.text || '')"></p>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="terms-dialog-actions">
+    <button mat-button (click)="onClose()" class="decline-button">Decline</button>
+    <app-button mat-raised-button size="sm" (buttonClick)="onAccept()" class="accept-button">
+      Accept & Continue
+    </app-button>
+  </div>
+</div>

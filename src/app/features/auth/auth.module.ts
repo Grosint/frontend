@@ -7,7 +7,6 @@ import { UiModule } from '@ui/ui.module';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component';
-
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TermsConditionsDialogComponent } from './components/terms-conditions-dialog/terms-conditions-dialog.component';
 
 const routes: Routes = [
   {
@@ -39,7 +40,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [LoginComponent, SignupComponent, VerifyOtpComponent],
+  declarations: [
+    LoginComponent,
+    SignupComponent,
+    VerifyOtpComponent,
+    TermsConditionsDialogComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -55,6 +61,7 @@ const routes: Routes = [
     MatCardModule,
     MatDividerModule,
     MatSnackBarModule,
+    MatDialogModule,
   ],
 })
 export class AuthModule {}

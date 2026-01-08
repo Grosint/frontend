@@ -1,10 +1,8 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { User } from '../models/user.model';
 
-/**
- * Global State Store using Angular Signals
- * Use this for application-wide state management
- */
+// Global State Store using Angular Signals
+// Use this for application-wide state management
 @Injectable({
   providedIn: 'root',
 })

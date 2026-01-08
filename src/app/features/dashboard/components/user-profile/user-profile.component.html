@@ -1,0 +1,129 @@
+<div class="user-profile-container">
+  <div class="profile-card">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-icon">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="profile-title-section">
+        <h1 class="profile-title">User Profile</h1>
+        <span class="verified-badge"> {{ user?.userType || 'Not set' }}</span>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="info-section">
+      <div class="info-item">
+        <span class="info-label">Email Address</span>
+        <span class="info-value">{{ user?.email || 'Not set' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Mobile Number</span>
+        <span class="info-value">{{ user?.phone || 'Not set' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Verification Status</span>
+        <div class="status-badge">
+          <span class="status-dot verified"></span>
+          <span
+            class="status-text"
+            [class.verified]="user?.isVerified"
+            [class.unverified]="!user?.isVerified"
+          >
+            {{ user?.isVerified ? 'Verified' : 'Not Verified' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="info-section">
+      <h2 class="section-title">Personal Information</h2>
+
+      <!-- View Mode -->
+      <div *ngIf="!isEditMode">
+        <div class="info-item">
+          <span class="info-label">First Name</span>
+          <span class="info-value">{{ user?.firstName || 'Not set' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Last Name</span>
+          <span class="info-value">{{ user?.lastName || 'Not set' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Address</span>
+          <span class="info-value">{{ user?.address || 'Not set' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">City</span>
+          <span class="info-value">{{ user?.city || 'Not set' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Pin Code</span>
+          <span class="info-value">{{ user?.pinCode || 'Not set' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">State</span>
+          <span class="info-value">{{ user?.state || 'Not set' }}</span>
+        </div>
+        <button class="edit-profile-button" (click)="editProfile()">Edit Profile</button>
+      </div>
+
+      <!-- Edit Profile Component -->
+      <app-edit-profile
+        *ngIf="isEditMode"
+        [user]="user"
+        (closeForm)="onCloseEditProfile()"
+      ></app-edit-profile>
+    </div>
+
+    <!-- Change Password -->
+    <div class="info-section">
+      <!-- View Mode -->
+      <div *ngIf="!isChangePasswordMode">
+        <button class="change-password-button" (click)="changePassword()">
+          <i class="fas fa-lock"></i>
+          Change Password
+        </button>
+      </div>
+
+      <!-- Change Password Component -->
+      <app-change-password
+        *ngIf="isChangePasswordMode"
+        (closeForm)="onCloseChangePassword()"
+      ></app-change-password>
+    </div>
+
+    <!-- Search History -->
+    <div class="info-section">
+      <h2 class="section-title">Search History</h2>
+      <div class="search-history-item">
+        <span class="search-history-label">Your search history is enabled</span>
+        <label class="toggle-switch">
+          <input
+            type="checkbox"
+            [checked]="searchHistoryEnabled"
+            (change)="toggleSearchHistory()"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions-section">
+      <button class="action-button delete-button" (click)="deleteAllData()">
+        <i class="fas fa-trash"></i>
+        Delete All My Data
+      </button>
+      <button class="action-button logout-button" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+      </button>
+      <button class="action-button dashboard-button" (click)="goToDashboardClick()">
+        <i class="fas fa-chart-bar"></i>
+        Go to Dashboard
+      </button>
+    </div>
+  </div>
+</div>

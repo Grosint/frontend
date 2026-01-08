@@ -22,9 +22,7 @@ export class PwaService {
     this.setupUpdateCheck();
   }
 
-  /**
-   * Setup beforeinstallprompt event listener
-   */
+  // Setup beforeinstallprompt event listener
   private setupInstallPrompt(): void {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeinstallprompt', (event: Event) => {
@@ -34,9 +32,7 @@ export class PwaService {
     }
   }
 
-  /**
-   * Prompt user to install PWA
-   */
+  // Prompt user to install PWA
   async promptInstall(): Promise<boolean> {
     if (!this.promptEvent) {
       return false;
@@ -49,16 +45,12 @@ export class PwaService {
     return result.outcome === 'accepted';
   }
 
-  /**
-   * Check if PWA can be installed
-   */
+  // Check if PWA can be installed
   canInstall(): boolean {
     return !!this.promptEvent;
   }
 
-  /**
-   * Check if app is installed (running as PWA)
-   */
+  // Check if app is installed (running as PWA)
   isInstalled(): boolean {
     if (typeof window === 'undefined') return false;
 
@@ -70,9 +62,7 @@ export class PwaService {
     );
   }
 
-  /**
-   * Setup service worker update checking
-   */
+  // Setup service worker update checking
   private setupUpdateCheck(): void {
     if (!this.swUpdate.isEnabled) {
       return;
@@ -97,9 +87,7 @@ export class PwaService {
       });
   }
 
-  /**
-   * Check for updates manually
-   */
+  // Check for updates manually
   async checkForUpdate(): Promise<void> {
     if (!this.swUpdate.isEnabled) {
       return;

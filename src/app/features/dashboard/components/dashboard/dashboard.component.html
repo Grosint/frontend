@@ -1,16 +1,9 @@
 <div class="dashboard-container">
-  <header class="dashboard-header">
-    <h1>Dashboard</h1>
-    <div class="user-info" *ngIf="user">
-      <span>Welcome, {{ user.name }}</span>
-      <app-button variant="ghost" size="sm" (buttonClick)="logout()"> Logout </app-button>
-    </div>
-  </header>
-
-  <main class="dashboard-content">
-    <div class="dashboard-card">
-      <h2>Welcome to GrosInt</h2>
-      <p>Your application is ready to use. Start building your features!</p>
-    </div>
-  </main>
+  <div class="dashboard-layout">
+    <app-navbar class="dashboard-navbar" (selectionChange)="onSelectionChange($event)"></app-navbar>
+    <app-search-panel
+      class="dashboard-search-panel"
+      [selectedOption]="selectedOption"
+    ></app-search-panel>
+  </div>
 </div>
