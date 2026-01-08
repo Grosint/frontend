@@ -55,6 +55,8 @@ export interface User {
   role?: string;
   createdAt?: string;
   updatedAt?: string;
+  userType?: string;
+  isVerified?: boolean;
 }
 
 // Login API Response

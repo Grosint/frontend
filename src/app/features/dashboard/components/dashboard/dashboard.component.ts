@@ -22,7 +22,7 @@ export class DashboardComponent {
     this.cdr.markForCheck();
   }
 
-  onSearch(event: any): void {
+  onSearch(event: unknown): void {
     console.log('Search triggered:', event);
     // Handle search logic here
     // You can call a service method or navigate to results page

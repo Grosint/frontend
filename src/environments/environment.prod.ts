@@ -8,7 +8,7 @@
  */
 export const environment = {
   production: true,
-  apiUrl: 'https://api.yourdomain.com/api', // TODO: Update with your actual backend API URL
+  apiUrl: 'https://grosint.org/api',
   version: '1.0.0',
   enableServiceWorker: true,
   enableAnalytics: true,

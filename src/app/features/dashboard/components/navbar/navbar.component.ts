@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { MenuItem, NavbarSelection } from '../../models/menu-item.model';
 import menuItemsData from '../../../../../assets/data/menu-items.json';
 
@@ -25,10 +24,7 @@ export class NavbarComponent {
   expandedItems: Set<string> = new Set();
   isLoading = true;
 
-  constructor(
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   toggleExpand(item: MenuItem): void {
     if (item.children && item.children.length > 0) {

@@ -113,6 +113,8 @@ export class SignupComponent implements OnInit {
       panelClass: 'terms-dialog',
       backdropClass: 'terms-dialog-backdrop',
       disableClose: false,
+      hasBackdrop: true, // Ensure backdrop is enabled
+      autoFocus: true,
     });
 
     dialogRef.afterClosed().subscribe((accepted: boolean) => {

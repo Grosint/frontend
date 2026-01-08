@@ -11,8 +11,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    min-width: 45rem;
-    width: 50%;
+    width: 55%;
 
     .profile-header {
       display: flex;
@@ -101,6 +100,10 @@
             &.verified {
               background-color: #764ba2;
             }
+
+            &.unverified {
+              background-color: #f44336;
+            }
           }
 
           .status-text {
@@ -109,6 +112,10 @@
 
             &.verified {
               color: #764ba2;
+            }
+
+            &.unverified {
+              color: #f44336; // Red color for unverified text
             }
           }
         }

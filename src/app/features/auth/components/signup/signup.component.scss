@@ -201,8 +201,9 @@ select.form-input {
 }
 
 ::ng-deep .terms-dialog-backdrop {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .gov-id-info-box {

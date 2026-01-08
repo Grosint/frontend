@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import TermsDataJson from '../../../../../assets/data/terms-and-conditions.json';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface TermsContentItem {
   type: 'paragraph' | 'list' | 'encryption-option';
@@ -31,7 +32,10 @@ interface TermsData {
 export class TermsConditionsDialogComponent {
   termsData: TermsData = TermsDataJson as TermsData;
 
-  constructor(public dialogRef: MatDialogRef<TermsConditionsDialogComponent>) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    public dialogRef: MatDialogRef<TermsConditionsDialogComponent>
+  ) {}
 
   onClose(): void {
     this.dialogRef.close(false);
@@ -41,8 +45,8 @@ export class TermsConditionsDialogComponent {
     this.dialogRef.close(true);
   }
 
-  formatText(text: string): string {
-    // Convert **text** to <strong>text</strong>
-    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  formatText(text: string): SafeHtml {
+    const html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }

@@ -52,21 +52,19 @@ export class AuthService extends ApiBaseService {
       tap(response => {
         this.setAuthData(response);
         this.appState.setUser(response.user);
+
         // Load full user profile after successful login
-        // Use setTimeout to ensure token is stored before making the request
-        setTimeout(() => {
-          this.getCurrentUser()
-            .pipe(take(1))
-            .subscribe({
-              next: () => {
-                this.logger.info('User profile loaded after login');
-              },
-              error: error => {
-                // Log error but don't block the flow
-                this.logger.error('Failed to load user profile after login', error);
-              },
-            });
-        }, 1000);
+        this.getCurrentUser()
+          .pipe(take(1))
+          .subscribe({
+            next: () => {
+              this.logger.info('User profile loaded after login');
+            },
+            error: error => {
+              // Log error but don't block the flow
+              this.logger.error('Failed to load user profile after login', error);
+            },
+          });
       }),
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
@@ -202,6 +200,8 @@ export class AuthService extends ApiBaseService {
           pinCode: userData.pinCode,
           state: userData.state,
           phone: userData.phone,
+          userType: userData.userType,
+          isVerified: userData.isVerified,
           name:
             userData.firstName && userData.lastName
               ? `${userData.firstName} ${userData.lastName}`
@@ -329,7 +329,6 @@ export class AuthService extends ApiBaseService {
 
   updateProfile(data: UpdateProfileRequest): Observable<UpdateProfileResponse> {
     return this.put<UpdateProfileResponse>('/user/me', data, 'update-profile').pipe(
-      map(apiResponse => apiResponse), // Pass through the response
       tap(response => {
         // Update user in app state with all fields from API response
         const userData = response.data;
@@ -343,6 +342,8 @@ export class AuthService extends ApiBaseService {
           pinCode: userData.pinCode,
           state: userData.state,
           phone: userData.phone,
+          userType: userData.userType,
+          isVerified: userData.isVerified,
           name:
             userData.firstName && userData.lastName
               ? `${userData.firstName} ${userData.lastName}`

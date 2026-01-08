@@ -7,7 +7,7 @@
       </div>
       <div class="profile-title-section">
         <h1 class="profile-title">User Profile</h1>
-        <span class="verified-badge">Verified</span>
+        <span class="verified-badge"> {{ user?.userType || 'Not set' }}</span>
       </div>
     </div>
 
@@ -25,7 +25,13 @@
         <span class="info-label">Verification Status</span>
         <div class="status-badge">
           <span class="status-dot verified"></span>
-          <span class="status-text verified">Verified</span>
+          <span
+            class="status-text"
+            [class.verified]="user?.isVerified"
+            [class.unverified]="!user?.isVerified"
+          >
+            {{ user?.isVerified ? 'Verified' : 'Not Verified' }}
+          </span>
         </div>
       </div>
     </div>

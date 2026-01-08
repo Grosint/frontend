@@ -35,9 +35,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   private checkAuth(url: string): boolean {
     // Check authentication synchronously first
     // If token exists and user is restored from storage, allow access
-    // if (this.auth.isAuthenticated()) {
-    return true;
-    // }
+    if (this.auth.isAuthenticated()) {
+      return true;
+    }
 
     // Store attempted URL for redirect after login
     this.router.navigate(['/auth/login'], {

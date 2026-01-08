@@ -7,7 +7,6 @@ import { UiModule } from '@ui/ui.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
-import { HttpClientModule } from '@angular/common/http';
 import { ResultCardComponent } from './components/result-card/result-card.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { DashboardLayoutComponent } from './components/dashboard-layout/dashboard-layout.component';
@@ -57,7 +56,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     UiModule,
-    HttpClientModule,
     MatSnackBarModule,
     ReactiveFormsModule,
   ],

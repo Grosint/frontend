@@ -12,7 +12,7 @@ export interface SearchResultItem {
   showSource?: boolean;
   category?: string;
   found?: boolean;
-  data?: any;
+  data?: unknown;
   confidence?: number;
 }
 

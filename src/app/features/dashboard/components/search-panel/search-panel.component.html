@@ -37,15 +37,22 @@
       {{ errorMessage }}
     </div>
 
+    <!-- Animated Search Icon - Show when no search has been performed -->
+    <div class="search-animation-container" *ngIf="isLoading">
+      <div class="search-animation-wrapper">
+        <div class="search-icon-animation">
+          <i class="fas fa-search search-icon"></i>
+        </div>
+        <p class="search-animation-caption">Start searching to see results!</p>
+      </div>
+    </div>
+
     <!-- Search Results -->
     <div class="search-results" *ngIf="searchResults.length > 0">
       <div class="results-header">
         <h4>Search Results</h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
           <span>Total: {{ searchResponse?.data?.results?.length }}</span>
-          <!-- <span *ngIf="searchResponse.data.failed_count > 0">
-            Failed: {{ searchResponse?.data?.failed_count }}
-          </span> -->
         </div>
       </div>
       <div class="results-list">

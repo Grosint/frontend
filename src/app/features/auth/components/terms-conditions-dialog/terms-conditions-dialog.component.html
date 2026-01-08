@@ -35,8 +35,8 @@
 
   <div class="terms-dialog-actions">
     <button mat-button (click)="onClose()" class="decline-button">Decline</button>
-    <button mat-raised-button color="primary" (click)="onAccept()" class="accept-button">
+    <app-button mat-raised-button size="sm" (buttonClick)="onAccept()" class="accept-button">
       Accept & Continue
-    </button>
+    </app-button>
   </div>
 </div>

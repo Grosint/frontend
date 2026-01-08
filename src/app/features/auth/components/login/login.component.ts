@@ -24,17 +24,17 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar // Add this
+    private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       phone: [
-        '',
+        '+919997260627',
         [
           Validators.required,
           Validators.pattern(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/),
         ],
       ],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['Password123!', [Validators.required, Validators.minLength(8)]],
     });
   }
 
