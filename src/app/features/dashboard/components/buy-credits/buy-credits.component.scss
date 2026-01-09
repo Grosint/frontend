@@ -1,67 +1,61 @@
+$p: #764ba2;
+$g: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$b: #e0e0e0;
+$t: #333;
+$tl: #666;
 .buy-credits-container {
-  min-height: calc(100vh - 80px); // Adjust based on header height
-  background-color: #f9fafb;
-
+  min-height: calc(100vh - 80px);
+  background: #f9fafb;
   .buy-credits-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-
     .page-title {
       font-size: 2.2rem;
       font-weight: 700;
-      color: #333;
-      margin: 0 0 0.5rem 0;
+      color: $t;
+      margin: 0 0 0.5rem;
       text-align: center;
     }
-
     .page-subtitle {
       font-size: 1.1rem;
-      color: #666;
-      margin: 0 0 1.5rem 0;
+      color: $tl;
+      margin: 0 0 1.5rem;
       text-align: center;
     }
-
     .balance-section {
       margin-bottom: 2rem;
       font-size: 1rem;
       text-align: center;
-
       .balance-label {
-        color: #666;
+        color: $tl;
       }
-
       .balance-value {
-        color: #764ba2;
+        color: $p;
         font-weight: 600;
         margin-left: 0.5rem;
       }
     }
-
     .tabs {
       display: flex;
       gap: 2rem;
-      border-bottom: 2px solid #e0e0e0;
+      border-bottom: 2px solid $b;
       margin-bottom: 2rem;
-
       .tab {
         background: transparent;
         border: none;
         padding: 1rem 0;
         font-size: 1rem;
-        color: #666;
+        color: $tl;
         cursor: pointer;
         position: relative;
         transition: color 0.3s;
-
         &:hover {
-          color: #764ba2;
+          color: $p;
         }
-
         &.active {
-          color: #764ba2;
+          color: $p;
           font-weight: 600;
-
           &::after {
             content: '';
             position: absolute;
@@ -69,363 +63,135 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: #764ba2;
+            background: $p;
           }
         }
       }
     }
-
     .plans-section {
       .section-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #333;
-        margin: 0 0 2rem 0;
-
-        &.monthly-plans-title {
-          margin-top: 4rem;
-        }
+        color: $t;
+        margin: 0 0 2rem;
       }
-
-      // Prepaid Plans Grid
       .plans-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 2rem;
-
-        .plan-card {
-          background: #fff;
-          border: 2px solid #e0e0e0;
-          border-radius: 12px;
-          padding: 2rem;
-          position: relative;
-          cursor: pointer;
-          transition: all 0.3s;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-
-          &:hover {
-            border-color: #764ba2;
-            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
-          }
-
-          &.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #764ba2;
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
-
-            .plan-name,
-            .plan-price,
-            .plan-credits {
-              color: #fff;
-            }
-
-            .plan-features {
-              li {
-                color: #fff;
-
-                i {
-                  color: #fff;
-                }
-              }
-            }
-
-            .buy-button {
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              color: #764ba2;
-
-              &:hover {
-                background: #f5f5f5;
-              }
-            }
-          }
-
-          &.popular {
-            border-color: #ffc107;
-          }
-
-          .popular-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #ffc107;
-            color: #333;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-          }
-
-          .plan-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #333;
-            margin: 0 0 1rem 0;
-          }
-
-          .plan-price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #764ba2;
-            margin: 0 0 0.5rem 0;
-          }
-
-          .plan-credits {
-            font-size: 1rem;
-            color: #666;
-            margin: 0 0 1.5rem 0;
-          }
-
-          .plan-features {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 1.5rem 0;
-            width: 100%;
-
-            li {
-              display: flex;
-              align-items: center;
-              justify-content: flex-start;
-              gap: 0.5rem;
-              padding: 0.5rem 0;
-              color: #666;
-              font-size: 0.9rem;
-
-              i {
-                color: #764ba2;
-                font-size: 0.875rem;
-              }
-            }
-          }
-
-          .buy-button {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid #764ba2;
-
-            &:hover {
-              background: #fff;
-              color: #764ba2;
-            }
-
-            &.selected-button {
-              background: #fff;
-              color: #764ba2;
-
-              &:hover {
-                background: #f5f5f5;
-              }
-            }
-          }
-        }
-      }
-
-      // Monthly Recharge Plans Grid
-      .monthly-plans-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
         margin-bottom: 2rem;
-
-        .monthly-plan-card {
-          background: #fff;
-          border: 2px solid #e0e0e0;
-          border-radius: 12px;
-          padding: 2rem;
-          position: relative;
-          cursor: pointer;
-          transition: all 0.3s;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-
-          &:hover {
-            border-color: #764ba2;
-            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
-          }
-
-          &.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #764ba2;
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
-
-            .plan-name,
-            .plan-price,
-            .plan-credits,
-            .renewal-date {
-              color: #fff;
-            }
-
-            .renewal-date {
-              .renewal-label,
-              .renewal-value {
-                color: #fff;
-              }
-            }
-
-            .plan-features {
-              li {
-                color: #fff;
-
-                i {
-                  color: #fff;
-                }
-              }
-            }
-
-            .subscribe-button {
-              background: #fff;
-              color: #764ba2;
-              border: 1px solid #764ba2;
-
-              &:hover {
-                background: #fff;
-                color: #764ba2;
-              }
-            }
-          }
-
-          .auto-renewal-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: #4caf50;
-            color: #fff;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-          }
-
-          .plan-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #333;
-            margin: 2rem 0 1rem 0;
-          }
-
-          .plan-price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #764ba2;
-            margin: 0 0 0.5rem 0;
-          }
-
+      }
+      .plan-card {
+        background: #fff;
+        border: 2px solid $b;
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        &:hover {
+          border-color: $p;
+          box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
+        }
+        &.selected {
+          background: $g;
+          border-color: $p;
+          color: #fff;
+          box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+          .plan-name,
+          .plan-price,
           .plan-credits {
-            font-size: 1rem;
-            color: #666;
-            margin: 0 0 1rem 0;
-          }
-
-          .renewal-date {
-            margin: 0 0 1.5rem 0;
-            font-size: 0.9rem;
-            color: #666;
-
-            .renewal-label {
-              color: #666;
-            }
-
-            .renewal-value {
-              color: #333;
-              font-weight: 600;
-              margin-left: 0.5rem;
-            }
-          }
-
-          .subscribe-button {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 1px solid #764ba2;
-            border-radius: 6px;
             color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 1.5rem;
-
-            &:hover {
-              background: #fff;
-              color: #764ba2;
-            }
-
-            &.selected-button {
-              background: #fff;
-              color: #764ba2;
-
-              &:hover {
-                background: #f5f5f5;
-              }
-            }
           }
-
-          .plan-features {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            text-align: left;
-
-            li {
-              display: flex;
-              align-items: center;
-              justify-content: flex-start;
-              gap: 0.5rem;
-              padding: 0.5rem 0;
-              color: #666;
-              font-size: 0.9rem;
-
-              i {
-                color: #764ba2;
-                font-size: 0.875rem;
-              }
+          .plan-features li,
+          .plan-features li i {
+            color: #fff;
+          }
+        }
+        &.popular {
+          border-color: #ffc107;
+        }
+        .popular-badge {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          background: #ffc107;
+          color: $t;
+          padding: 0.25rem 0.75rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+        .plan-name {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: $t;
+          margin: 0 0 1rem;
+        }
+        .plan-price {
+          font-size: 2rem;
+          font-weight: 700;
+          color: $p;
+          margin: 0 0 0.5rem;
+        }
+        .plan-credits {
+          font-size: 1rem;
+          color: $tl;
+          margin: 0 0 1.5rem;
+        }
+        .plan-features {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 1.5rem;
+          width: 100%;
+          text-align: left;
+          li {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            color: $tl;
+            font-size: 0.9rem;
+            i {
+              color: $p;
+              font-size: 0.875rem;
             }
           }
         }
-      }
-
-      // Note Section
-      .note-section {
-        background: #fff9c4;
-        border: 1px solid #fdd835;
-        border-radius: 8px;
-        padding: 1rem 1.5rem;
-        margin-top: 3rem;
-
-        .note-text {
-          margin: 0;
-          color: #333;
-          font-size: 0.95rem;
-          line-height: 1.6;
-
-          strong {
-            color: #333;
-            font-weight: 600;
+        .buy-button {
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          background: $g;
+          border: 1px solid $p;
+          border-radius: 6px;
+          color: #fff;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+          &:hover {
+            background: #fff;
+            color: $p;
+          }
+          &.selected-button {
+            background: #fff;
+            color: $p;
+            &:hover {
+              background: #f5f5f5;
+            }
           }
         }
       }
     }
-
     .tab-content {
       padding: 2rem 0;
-      color: #666;
+      color: $tl;
     }
   }
 }

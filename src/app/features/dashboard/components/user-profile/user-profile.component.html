@@ -94,22 +94,6 @@
       ></app-change-password>
     </div>
 
-    <!-- Search History -->
-    <div class="info-section">
-      <h2 class="section-title">Search History</h2>
-      <div class="search-history-item">
-        <span class="search-history-label">Your search history is enabled</span>
-        <label class="toggle-switch">
-          <input
-            type="checkbox"
-            [checked]="searchHistoryEnabled"
-            (change)="toggleSearchHistory()"
-          />
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-
     <!-- Action Buttons -->
     <div class="actions-section">
       <button class="action-button delete-button" (click)="deleteAllData()">

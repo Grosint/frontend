@@ -15,6 +15,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { BuyCreditsComponent } from './components/buy-credits/buy-credits.component';
+import { MonthlyRechargePlansComponent } from './components/monthly-recharge-plans/monthly-recharge-plans.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,7 @@ const routes: Routes = [
     ChangePasswordComponent,
     EditProfileComponent,
     BuyCreditsComponent,
+    MonthlyRechargePlansComponent,
   ],
   imports: [
     CommonModule,

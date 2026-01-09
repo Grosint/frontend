@@ -1,5 +1,4 @@
 <div class="buy-credits-container">
-  <!-- Main Content -->
   <div class="buy-credits-content">
     <h1 class="page-title">Buy Credits</h1>
     <p class="page-subtitle">Choose a plan and get instant access to search results.</p>
@@ -9,7 +8,6 @@
       <span class="balance-value">{{ currentBalance }} Credits</span>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs">
       <button class="tab" [class.active]="activeTab === 'buy'" (click)="setActiveTab('buy')">
         Buy Credits
@@ -30,7 +28,6 @@
       </button>
     </div>
 
-    <!-- Prepaid Plans -->
     <div *ngIf="activeTab === 'buy'" class="plans-section">
       <h2 class="section-title">Prepaid Plans</h2>
       <div class="plans-grid">
@@ -66,59 +63,18 @@
         </div>
       </div>
 
-      <!-- Monthly Recharge Plans -->
-      <h2 class="section-title monthly-plans-title">Monthly Recharge Plans</h2>
-      <div class="monthly-plans-grid">
-        <div
-          *ngFor="let plan of monthlyPlans"
-          class="monthly-plan-card"
-          [class.selected]="selectedMonthlyPlan?.id === plan.id"
-          (click)="selectMonthlyPlan(plan)"
-          (keyup.enter)="selectMonthlyPlan(plan)"
-          (keyup.space)="selectMonthlyPlan(plan)"
-          tabindex="0"
-          role="button"
-          [attr.aria-label]="'Select ' + plan.name + ' plan'"
-        >
-          <div class="auto-renewal-badge">AUTO-RENEWAL</div>
-          <h3 class="plan-name">{{ plan.name }}</h3>
-          <div class="plan-price">₹{{ plan.price }}/month</div>
-          <div class="plan-credits">{{ plan.credits }} credits/month</div>
-          <div class="renewal-date">
-            <span class="renewal-label">Next renewal:</span>
-            <span class="renewal-value">{{ plan.nextRenewal }}</span>
-          </div>
-          <button
-            class="subscribe-button"
-            [class.selected-button]="selectedMonthlyPlan?.id === plan.id"
-            (click)="subscribeNow(plan); $event.stopPropagation()"
-          >
-            Subscribe Now
-          </button>
-          <ul class="plan-features">
-            <li *ngFor="let feature of plan.features">
-              <i class="fas fa-check"></i>
-              {{ feature }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Note Section -->
-      <div class="note-section">
-        <p class="note-text">
-          <strong>Note:</strong> This is a demo payment page. All transactions are simulated. Your
-          credits will be added instantly upon purchase.
-        </p>
-      </div>
+      <app-monthly-recharge-plans
+        [plans]="monthlyPlans"
+        [selectedPlan]="selectedMonthlyPlan"
+        (planSelected)="selectMonthlyPlan($event)"
+        (subscribeClicked)="subscribeNow($event)"
+      ></app-monthly-recharge-plans>
     </div>
 
-    <!-- Payment History Tab -->
     <div *ngIf="activeTab === 'payment'" class="tab-content">
       <p>Payment History content will go here</p>
     </div>
 
-    <!-- Transaction History Tab -->
     <div *ngIf="activeTab === 'transaction'" class="tab-content">
       <p>Transaction History content will go here</p>
     </div>
