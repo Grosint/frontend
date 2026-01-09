@@ -15,8 +15,9 @@ export interface SearchResultItem {
   showSource?: boolean;
   category?: string;
   found?: boolean;
-  data?: unknown;
+  data?: string | null;
   confidence?: number;
+  breach_source?: string;
 }
 
 export interface SearchResponse {
