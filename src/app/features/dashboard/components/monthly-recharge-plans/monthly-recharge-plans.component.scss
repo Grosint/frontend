@@ -1,0 +1,140 @@
+$p: #764ba2;
+$g: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$b: #e0e0e0;
+$t: #333;
+$tl: #666;
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $t;
+  margin: 0 0 2rem 0 4rem 0 0 2rem;
+}
+.monthly-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.monthly-plan-card {
+  background: #fff;
+  border: 2px solid $b;
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  &:hover {
+    border-color: $p;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
+  }
+  &.selected {
+    background: $g;
+    border-color: $p;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+    .plan-name,
+    .plan-price,
+    .plan-credits,
+    .renewal-date {
+      color: #fff;
+    }
+    .renewal-date .renewal-label,
+    .renewal-date .renewal-value {
+      color: #fff;
+    }
+    .plan-features li,
+    .plan-features li i {
+      color: #fff;
+    }
+  }
+  .auto-renewal-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: #4caf50;
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .plan-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $t;
+    margin: 2rem 0 1rem;
+  }
+  .plan-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $p;
+    margin: 0 0 0.5rem;
+  }
+  .plan-credits {
+    font-size: 1rem;
+    color: $tl;
+    margin: 0 0 1.5rem;
+  }
+  .renewal-date {
+    margin: 0 0 1.5rem;
+    font-size: 0.9rem;
+    color: $tl;
+    .renewal-label {
+      color: $tl;
+    }
+    .renewal-value {
+      color: $t;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+  }
+  .subscribe-button {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background: $g;
+    border: 1px solid $p;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 1.5rem;
+    &:hover {
+      background: #fff;
+      color: $p;
+    }
+    &.selected-button {
+      background: #fff;
+      color: $p;
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      color: $tl;
+      font-size: 0.9rem;
+      i {
+        color: $p;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
