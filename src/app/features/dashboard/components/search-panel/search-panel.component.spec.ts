@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormsModule } from '@angular/forms';
 import { SearchPanelComponent } from './search-panel.component';
+import { SearchService } from '../../services/search.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SearchPanelComponent', () => {
   let component: SearchPanelComponent;
@@ -8,7 +10,9 @@ describe('SearchPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchPanelComponent],
+      declarations: [SearchPanelComponent],
+      imports: [FormsModule, NoopAnimationsModule],
+      providers: [{ provide: SearchService, useValue: {} }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchPanelComponent);
