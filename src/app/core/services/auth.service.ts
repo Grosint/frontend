@@ -21,11 +21,16 @@ import {
   ChangePasswordRequest,
   ChangePasswordResponse,
   BaseUserProfileData,
+  OtpVerificationResponse,
 } from '../models/user.model';
 
 export interface ResendOtpResponse {
   success: boolean;
   message?: string;
+  data?: {
+    message?: string;
+    expires_in?: number;
+  };
 }
 
 @Injectable({
@@ -97,6 +102,17 @@ export class AuthService extends ApiBaseService {
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
         this.logger.error('OTP verification failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Verify OTP without logging in (pre-signup email verification)
+  verifyEmailOtp(data: OtpVerificationRequest): Observable<OtpVerificationResponse> {
+    return this.post<OtpVerificationResponse>('/auth/verify-otp', data, 'verify-email-otp').pipe(
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Email OTP verification failed', err);
         return throwError(() => error);
       })
     );
@@ -304,6 +320,16 @@ export class AuthService extends ApiBaseService {
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
         this.logger.error('Resend OTP failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  sendOtp(email: string): Observable<ResendOtpResponse> {
+    return this.post<ResendOtpResponse>('/auth/send-otp', { email }, 'send-otp').pipe(
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Send OTP failed', err);
         return throwError(() => error);
       })
     );

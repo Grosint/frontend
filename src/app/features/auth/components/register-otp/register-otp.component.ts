@@ -6,18 +6,18 @@ import { AuthService } from '@core/services/auth.service';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-verify-otp',
+  selector: 'app-register-otp',
   standalone: false,
-  templateUrl: './verify-otp.component.html',
-  styleUrls: ['./verify-otp.component.scss'],
+  templateUrl: './register-otp.component.html',
+  styleUrls: ['./register-otp.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerifyOtpComponent implements OnInit {
+export class RegisterOtpComponent implements OnInit {
   otpForm: FormGroup;
   isLoading = false;
+  isResending = false;
   errorMessage = '';
   email = '';
-  isResending = false;
 
   constructor(
     private fb: FormBuilder,
@@ -32,10 +32,9 @@ export class VerifyOtpComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.email = localStorage.getItem('pending_verification_phone') || '';
-
+    this.email = localStorage.getItem('pre_signup_email') || '';
     if (!this.email) {
-      this.router.navigate(['/auth/register']);
+      this.router.navigate(['/auth/register/email']);
     }
   }
 
@@ -48,34 +47,25 @@ export class VerifyOtpComponent implements OnInit {
     this.errorMessage = '';
     this.cdr.markForCheck();
 
-    const otp = this.otpForm.get('otp')?.value;
+    const otp = this.otpForm.get('otp')?.value as string;
 
     this.auth
-      .verifyOtp({ email: this.email, otp })
+      .verifyEmailOtp({ email: this.email, otp })
       .pipe(take(1))
       .subscribe({
         next: () => {
           this.isLoading = false;
-          this.errorMessage = '';
           this.cdr.markForCheck();
 
-          // Show success toast
-          this.snackBar.open('User created successfully!', 'OK', {
+          localStorage.setItem('pre_signup_email_verified', 'true');
+
+          this.snackBar.open('Email verified successfully!', 'OK', {
             duration: 4000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
           });
 
-          // Set flag to autofill login fields
-          localStorage.setItem('from_otp_verification', 'true');
-
-          // Clear pending email
-          localStorage.removeItem('pending_verification_phone');
-
-          // Navigate to dashboard
-          setTimeout(() => {
-            this.router.navigate(['/auth/login']);
-          }, 1000); // Small delay to show toast
+          this.router.navigate(['/auth/signup']);
         },
         error: error => {
           this.isLoading = false;
@@ -93,7 +83,6 @@ export class VerifyOtpComponent implements OnInit {
   }
 
   resendOtp(): void {
-    // Prevent multiple simultaneous resend requests
     if (this.isResending || !this.email) {
       return;
     }
@@ -130,5 +119,9 @@ export class VerifyOtpComponent implements OnInit {
           });
         },
       });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/auth/register/email']);
   }
 }

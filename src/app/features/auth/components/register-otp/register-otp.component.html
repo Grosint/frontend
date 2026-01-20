@@ -1,18 +1,18 @@
-<div class="otp-container">
-  <div class="otp-card">
-    <h1 class="otp-title">Verify Your Email</h1>
-    <p class="otp-subtitle">We've sent a 6-digit OTP to {{ email }}</p>
+<div class="register-otp-container">
+  <div class="register-card">
+    <h1 class="register-title">Verify Email</h1>
+    <p class="register-subtitle">We've sent a 6-digit OTP to {{ email }}</p>
 
-    <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="otp-form">
+    <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="register-form">
       <div class="form-group">
-        <label for="otp">Enter OTP *</label>
+        <label for="otp">Enter OTP</label>
         <input
           type="text"
           id="otp"
           formControlName="otp"
-          placeholder="Enter 6-digit OTP"
-          class="form-input otp-input"
+          placeholder="Enter OTP"
           maxlength="6"
+          class="form-input otp-input"
           [class.error]="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched"
         />
         <div
@@ -33,22 +33,19 @@
         variant="primary"
         size="lg"
         [loading]="isLoading"
-        [disabled]="otpForm.invalid"
+        [disabled]="otpForm.invalid || isLoading"
         [fullWidth]="true"
-        class="verify-button"
+        class="action-button"
       >
         Verify OTP
       </app-button>
 
-      <div class="otp-footer">
-        <p>
-          Didn't receive OTP?
-          <button type="button" (click)="resendOtp()" class="resend-link" [disabled]="isResending">
-            <span *ngIf="!isResending">Resend </span>
-            <span *ngIf="isResending">Sending...</span>
-          </button>
-        </p>
-        <p><a routerLink="/auth/register">Back to Sign Up</a></p>
+      <div class="register-footer">
+        <button type="button" class="link-button" (click)="resendOtp()" [disabled]="isResending">
+          <span *ngIf="!isResending">Resend OTP</span>
+          <span *ngIf="isResending">Sending...</span>
+        </button>
+        <button type="button" class="link-button" (click)="goBack()">Back</button>
       </div>
     </form>
   </div>

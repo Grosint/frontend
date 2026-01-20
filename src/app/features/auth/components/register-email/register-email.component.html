@@ -1,0 +1,54 @@
+<div class="register-email-container">
+  <div class="register-card">
+    <h1 class="register-title">Verify Email</h1>
+    <div class="manual-approval-box" *ngIf="!isGovernmentEmail">
+      You must email your serving ID for verification. Account created but login locked till manual
+      approval.
+    </div>
+
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-group">
+        <label for="email">{{ emailLabel }}</label>
+        <div class="helper-text">{{ helperText }}</div>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="form-input highlight-email"
+          [class.error]="emailForm.get('email')?.invalid && emailForm.get('email')?.touched"
+        />
+        <div
+          class="error-message"
+          *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched"
+        >
+          <span *ngIf="emailForm.get('email')?.errors?.['required']">Email is required</span>
+          <span *ngIf="emailForm.get('email')?.errors?.['email']">Invalid email format</span>
+          <span *ngIf="emailForm.get('email')?.errors?.['govEmailRequired']">
+            Email must end with &#64;gov.in
+          </span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <app-button
+        type="submit"
+        variant="primary"
+        size="lg"
+        [loading]="isLoading"
+        [disabled]="emailForm.invalid || isLoading"
+        [fullWidth]="true"
+        class="action-button"
+      >
+        Send OTP
+      </app-button>
+
+      <div class="register-footer">
+        <button type="button" class="link-button" (click)="goBack()">Back</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -44,7 +44,7 @@
 
   // Variant styles - inline button variant logic
   &--primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #1955b0;
     color: white;
     border: none;
     transition:
@@ -114,7 +114,7 @@
     color: #fff;
 
     &:hover:not(:disabled) {
-      color: #764ba2;
+      color: #1955b0;
       background-color: #fff;
     }
 

@@ -47,6 +47,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+      countryCode: ['+91', [Validators.required, Validators.pattern(/^\+\d{1,4}$/)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,12}$/)]],
       verifyByGovId: [false],
       password: [
@@ -59,8 +60,8 @@ export class SignupComponent implements OnInit, OnDestroy {
       ],
       confirmPassword: ['', [Validators.required, passwordMatchValidator]],
       userType: ['user', Validators.required],
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      firstName: [''],
+      lastName: [''],
       address: [''],
       city: [''],
       pinCode: ['', [Validators.pattern(/^[0-9]{6}$/)]],
@@ -68,6 +69,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       organizationId: [null],
       orgName: [null],
       termsAccepted: [false, [Validators.requiredTrue]],
+      privacyAccepted: [false, [Validators.requiredTrue]],
     });
 
     this.addEmailValidator();
@@ -84,6 +86,26 @@ export class SignupComponent implements OnInit, OnDestroy {
     // Check if already authenticated
     if (this.auth.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
+      return;
+    }
+
+    const preVerified = localStorage.getItem('pre_signup_email_verified') === 'true';
+    if (!preVerified) {
+      this.router.navigate(['/auth/register']);
+      return;
+    }
+
+    const preEmail = localStorage.getItem('pre_signup_email');
+    const preType = localStorage.getItem('pre_signup_email_type');
+
+    if (preEmail) {
+      this.signupForm.patchValue({ email: preEmail });
+    }
+
+    if (preType) {
+      const verifyByGovId = preType === 'government';
+      this.signupForm.patchValue({ verifyByGovId });
+      this.signupForm.get('email')?.updateValueAndValidity();
     }
   }
 
@@ -103,8 +125,8 @@ export class SignupComponent implements OnInit, OnDestroy {
     const email = control.value;
 
     if (verifyByGovId && email) {
-      // If verifyByGovId is checked, email must end with .gov.in
-      if (!email.toLowerCase().endsWith('.gov.in')) {
+      // If verifyByGovId is checked, email must end with @gov.in
+      if (!email.toLowerCase().endsWith('@gov.in')) {
         return { govEmailRequired: true };
       }
     }
@@ -151,13 +173,25 @@ export class SignupComponent implements OnInit, OnDestroy {
     const formValue = this.signupForm.value;
 
     // Remove confirmPassword from form value before sending
-    const { confirmPassword, termsAccepted, ...restFormValue } = formValue;
+    const {
+      confirmPassword,
+      termsAccepted,
+      privacyAccepted,
+      countryCode,
+      phone,
+      ...restFormValue
+    } = formValue;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     void confirmPassword; // Explicitly mark as intentionally unused
     void termsAccepted; // Explicitly mark as intentionally unused
+    void privacyAccepted; // Explicitly mark as intentionally unused
 
+    const fullPhone = `${countryCode}${phone}`;
     const signupData = {
       ...restFormValue,
+      firstName: restFormValue.firstName || 'User',
+      lastName: restFormValue.lastName || 'User',
+      phone: fullPhone,
       organizationId: formValue.organizationId || null,
       orgName: formValue.orgName || null,
     };
@@ -172,7 +206,11 @@ export class SignupComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
 
           // Store email and form data for autofill after OTP verification
-          localStorage.setItem('pending_verification_phone', formValue.phone);
+          localStorage.removeItem('pre_signup_email_verified');
+          localStorage.removeItem('pre_signup_email');
+          localStorage.removeItem('pre_signup_email_type');
+
+          localStorage.setItem('pending_verification_phone', fullPhone);
           localStorage.setItem('from_signup', 'true'); // Flag to indicate coming from signup
 
           this.router.navigate(['/auth/verify-otp']);
@@ -203,5 +241,23 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  onPhoneKeyPress(event: KeyboardEvent): void {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onPhonePaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (!/^\d+$/.test(pasted)) {
+      event.preventDefault();
+    }
   }
 }
