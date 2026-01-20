@@ -27,13 +27,8 @@ export class LoginComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
-      phone: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/),
-        ],
-      ],
+      countryCode: ['+91', [Validators.required, Validators.pattern(/^\+\d{1,4}$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,12}$/)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
@@ -52,9 +47,21 @@ export class LoginComponent implements OnInit {
     if (fromOtp === 'true' || fromSignup === 'true') {
       const phone = localStorage.getItem('pending_verification_phone');
       if (phone) {
+        let countryCode = this.loginForm.get('countryCode')?.value || '+91';
+        let phoneNumber = phone;
+
+        if (phone.startsWith('+')) {
+          const match = phone.match(/^(\+\d{1,4})(\d{10,12})$/);
+          if (match) {
+            countryCode = match[1];
+            phoneNumber = match[2];
+          }
+        }
+
         // Only autofill phone, NOT password
         this.loginForm.patchValue({
-          phone: phone,
+          countryCode,
+          phone: phoneNumber,
           // Password field left empty for security
         });
 
@@ -78,10 +85,11 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.cdr.markForCheck();
 
-    const { phone, password } = this.loginForm.value;
+    const { countryCode, phone, password } = this.loginForm.value;
+    const fullPhone = `${countryCode}${phone}`;
 
     this.auth
-      .login({ phone, password })
+      .login({ phone: fullPhone, password })
       .pipe(take(1))
       .subscribe({
         next: () => {
@@ -109,5 +117,23 @@ export class LoginComponent implements OnInit {
   private redirectToDashboard(): void {
     const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
     this.router.navigate([returnUrl]);
+  }
+
+  onPhoneKeyPress(event: KeyboardEvent): void {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onPhonePaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (!/^\d+$/.test(pasted)) {
+      event.preventDefault();
+    }
   }
 }

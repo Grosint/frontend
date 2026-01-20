@@ -35,7 +35,7 @@ export class VerifyOtpComponent implements OnInit {
     this.email = localStorage.getItem('pending_verification_phone') || '';
 
     if (!this.email) {
-      this.router.navigate(['/auth/signup']);
+      this.router.navigate(['/auth/register']);
     }
   }
 

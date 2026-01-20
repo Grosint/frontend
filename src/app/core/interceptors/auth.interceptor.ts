@@ -18,6 +18,8 @@ const publicEndpointPatterns = [
   /\/auth\/verify-otp$/,
   /\/user$/, // Exact match for signup only
   /\/auth\/resend$/,
+  /\/auth\/resend-otp$/,
+  /\/auth\/send-otp$/,
 ];
 
 @Injectable()
