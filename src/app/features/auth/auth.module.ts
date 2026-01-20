@@ -8,6 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component';
 import { RegisterChoiceComponent } from './components/register-choice/register-choice.component';
+import { RegisterEmailComponent } from './components/register-email/register-email.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +36,10 @@ const routes: Routes = [
     component: RegisterChoiceComponent,
   },
   {
+    path: 'register/email',
+    component: RegisterEmailComponent,
+  },
+  {
     path: 'signup',
     component: SignupComponent,
   },
@@ -50,6 +55,7 @@ const routes: Routes = [
     SignupComponent,
     VerifyOtpComponent,
     RegisterChoiceComponent,
+    RegisterEmailComponent,
     TermsConditionsDialogComponent,
   ],
   imports: [
