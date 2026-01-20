@@ -1,0 +1,21 @@
+<div class="register-choice-container">
+  <div class="register-card">
+    <h1 class="register-title">Create Account</h1>
+    <p class="register-subtitle">Which email do you want to register with?</p>
+
+    <div class="option-list">
+      <button type="button" class="option-card" (click)="selectEmailType('government')">
+        <div class="option-title">Government Email ID</div>
+        <div class="option-text">Quick verification with OTP</div>
+      </button>
+      <button type="button" class="option-card" (click)="selectEmailType('personal')">
+        <div class="option-title">Personal Email ID</div>
+        <div class="option-text">Manual verification required</div>
+      </button>
+    </div>
+
+    <div class="register-footer">
+      <button type="button" class="link-button" (click)="goToLogin()">Back to Login</button>
+    </div>
+  </div>
+</div>

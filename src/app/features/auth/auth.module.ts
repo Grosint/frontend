@@ -7,6 +7,7 @@ import { UiModule } from '@ui/ui.module';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component';
+import { RegisterChoiceComponent } from './components/register-choice/register-choice.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +31,10 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
+    path: 'register',
+    component: RegisterChoiceComponent,
+  },
+  {
     path: 'signup',
     component: SignupComponent,
   },
@@ -44,6 +49,7 @@ const routes: Routes = [
     LoginComponent,
     SignupComponent,
     VerifyOtpComponent,
+    RegisterChoiceComponent,
     TermsConditionsDialogComponent,
   ],
   imports: [
