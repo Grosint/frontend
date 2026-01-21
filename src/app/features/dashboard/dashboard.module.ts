@@ -12,10 +12,12 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { DashboardLayoutComponent } from './components/dashboard-layout/dashboard-layout.component';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { BuyCreditsComponent } from './components/buy-credits/buy-credits.component';
 import { MonthlyRechargePlansComponent } from './components/monthly-recharge-plans/monthly-recharge-plans.component';
+import { SearchHistoryModalComponent } from './components/search-history-modal/search-history-modal.component';
 
 const routes: Routes = [
   {
@@ -51,6 +53,7 @@ const routes: Routes = [
     EditProfileComponent,
     BuyCreditsComponent,
     MonthlyRechargePlansComponent,
+    SearchHistoryModalComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +62,7 @@ const routes: Routes = [
     SharedModule,
     UiModule,
     MatSnackBarModule,
+    MatDialogModule,
     ReactiveFormsModule,
   ],
 })

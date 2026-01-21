@@ -1,0 +1,42 @@
+<div class="history-modal">
+  <div class="modal-header">
+    <div class="header-left">
+      <h3>Search History</h3>
+    </div>
+    <button type="button" class="close-btn" (click)="close()">
+      <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="search-input">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input
+        type="text"
+        placeholder="Search history..."
+        [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+    <div class="total-records-inline" *ngIf="totalRecords > 0">Total: {{ totalRecords }}</div>
+
+    <div class="loading" *ngIf="isLoading">Loading history...</div>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="history-list" *ngIf="!isLoading && !errorMessage" (scroll)="onScroll($event)">
+      <div class="history-card" *ngFor="let item of filteredItems; trackBy: trackById">
+        <div class="history-main">
+          <div class="history-title">{{ item.queryInput }}</div>
+          <div class="history-meta">
+            <span class="badge">{{ item.queryType }}</span>
+            <span class="meta-text">{{ formatDate(item.createdAt) }}</span>
+            <span class="meta-status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="filteredItems.length === 0">No history found.</div>
+      <div class="loading" *ngIf="isLoadingMore">Loading more...</div>
+    </div>
+  </div>
+</div>
