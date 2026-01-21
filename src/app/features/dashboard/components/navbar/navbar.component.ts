@@ -1,6 +1,7 @@
 import {
   Component,
   Output,
+  Input,
   EventEmitter,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,6 +18,8 @@ import menuItemsData from '../../../../../assets/data/menu-items.json';
 })
 export class NavbarComponent {
   @Output() selectionChange = new EventEmitter<NavbarSelection>();
+  @Output() toggleNavbar = new EventEmitter<void>();
+  @Input() collapsed = false;
 
   menuItems: MenuItem[] = menuItemsData as MenuItem[];
   selectedParent: MenuItem | null = null;
@@ -25,6 +28,10 @@ export class NavbarComponent {
   isLoading = true;
 
   constructor(private cdr: ChangeDetectorRef) {}
+
+  onToggleNavbar(): void {
+    this.toggleNavbar.emit();
+  }
 
   toggleExpand(item: MenuItem): void {
     if (item.children && item.children.length > 0) {

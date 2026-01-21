@@ -1,6 +1,11 @@
 <div class="dashboard-container">
   <div class="dashboard-layout">
-    <app-navbar class="dashboard-navbar" (selectionChange)="onSelectionChange($event)"></app-navbar>
+    <app-navbar
+      class="dashboard-navbar"
+      [collapsed]="isNavbarCollapsed"
+      (toggleNavbar)="toggleNavbar()"
+      (selectionChange)="onSelectionChange($event)"
+    ></app-navbar>
     <app-search-panel
       class="dashboard-search-panel"
       [selectedOption]="selectedOption"

@@ -11,6 +11,7 @@ import { NavbarSelection } from '@features/dashboard/models/menu-item.model';
 })
 export class DashboardComponent {
   selectedOption: NavbarSelection | null = null;
+  isNavbarCollapsed = false;
 
   constructor(
     public appState: AppStateStore,
@@ -19,6 +20,11 @@ export class DashboardComponent {
 
   onSelectionChange(selection: NavbarSelection): void {
     this.selectedOption = selection;
+    this.cdr.markForCheck();
+  }
+
+  toggleNavbar(): void {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
     this.cdr.markForCheck();
   }
 }

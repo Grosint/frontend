@@ -7,10 +7,12 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NavbarSelection } from '../../models/menu-item.model';
 import { SearchService } from '../../services/search.service';
 import { SearchResponse, SearchResultItem } from '../../models/search.model';
 import { take } from 'rxjs/operators';
+import { SearchHistoryModalComponent } from '../search-history-modal/search-history-modal.component';
 
 @Component({
   selector: 'app-search-panel',
@@ -31,7 +33,8 @@ export class SearchPanelComponent implements OnInit, OnChanges {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +92,17 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     }
   }
 
+  openHistory(): void {
+    this.dialog.open(SearchHistoryModalComponent, {
+      panelClass: 'search-history-dialog',
+      backdropClass: 'search-history-backdrop',
+      autoFocus: false,
+      width: '45%',
+      minWidth: '40vw',
+      height: '85%',
+    });
+  }
+
   getDisplayText(): string {
     if (!this.selectedOption) {
       return 'Please select an option from the menu';
@@ -104,7 +118,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   private updatePlaceholder(): void {
     if (this.selectedOption?.child) {
       const childLabel = this.selectedOption.child.label.toLowerCase();
-      if (childLabel === 'mobile') {
+      if (childLabel === 'mobile' || childLabel === 'phone') {
         this.searchPlaceholder = 'Enter phone number (e.g., 9997260627 or +91 9997260627)';
       } else {
         this.searchPlaceholder = `Enter ${childLabel} to search...`;

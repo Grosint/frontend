@@ -1,6 +1,9 @@
-<nav class="navbar">
+<nav class="navbar" [class.collapsed]="collapsed">
   <div class="navbar-header">
     <h3>Menu</h3>
+    <button type="button" class="navbar-toggle" (click)="onToggleNavbar()" aria-label="Toggle menu">
+      <i class="fas fa-bars" aria-hidden="true"></i>
+    </button>
   </div>
   <ul class="navbar-menu">
     <li
