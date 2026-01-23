@@ -1,4 +1,9 @@
-<nav class="navbar" [class.collapsed]="collapsed">
+<nav
+  class="navbar"
+  [class.collapsed]="collapsed"
+  [class.slide-open]="!collapsed"
+  [class.slide-closed]="collapsed"
+>
   <div class="navbar-header">
     <h3>Menu</h3>
     <button type="button" class="navbar-toggle" (click)="onToggleNavbar()" aria-label="Toggle menu">

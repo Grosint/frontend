@@ -340,8 +340,6 @@
       padding: 0.5rem 0.5rem 0rem 0rem;
     }
   }
-
-  // ... rest of existing styles ...
 }
 
 app-result-card {
@@ -392,6 +390,63 @@ app-result-card {
   background: #fdf7ff;
 }
 
+@media (max-width: 992px) {
+  .search-panel {
+    border-radius: 0;
+  }
+
+  .search-panel-header {
+    padding: 1.5rem 1.25rem 0;
+  }
+
+  .search-panel-content {
+    padding: 1.25rem;
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  .search-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .group-content {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .search-panel-header .search-title {
+    font-size: 1.25rem;
+  }
+
+  .search-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .history-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .info-banner.inline {
+    width: 100%;
+  }
+
+  .group-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-panel-header .search-title {
+    font-size: 1.1rem;
+  }
+}
+
 ::ng-deep .search-history-dialog .mat-mdc-dialog-container {
   padding: 0;
   border-radius: 12px;
@@ -401,4 +456,11 @@ app-result-card {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   background-color: rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .search-history-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+  }
 }

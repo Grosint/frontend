@@ -24,7 +24,11 @@
       <div class="info-item">
         <span class="info-label">Verification Status</span>
         <div class="status-badge">
-          <span class="status-dot verified"></span>
+          <span
+            class="status-dot"
+            [class.verified]="user?.isVerified"
+            [class.unverified]="!user?.isVerified"
+          ></span>
           <span
             class="status-text"
             [class.verified]="user?.isVerified"

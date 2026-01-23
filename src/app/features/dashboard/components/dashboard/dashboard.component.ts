@@ -20,6 +20,9 @@ export class DashboardComponent {
 
   onSelectionChange(selection: NavbarSelection): void {
     this.selectedOption = selection;
+    if (window.matchMedia('(max-width: 992px)').matches) {
+      this.isNavbarCollapsed = true;
+    }
     this.cdr.markForCheck();
   }
 

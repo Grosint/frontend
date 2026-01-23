@@ -92,7 +92,7 @@ export class SearchHistoryModalComponent implements OnInit {
           } else {
             const newItems = response.data || [];
             this.items = append ? [...this.items, ...newItems] : newItems;
-            this.hasMore = newItems.length >= this.pageSize;
+            this.hasMore = response.pagination?.has_next ?? false;
             if (this.hasMore) {
               this.page += 1;
             }
