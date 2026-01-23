@@ -84,3 +84,24 @@
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .dashboard-header {
+    padding: 0.5rem 1.25rem;
+
+    .header-center {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-header {
+    padding: 0.5rem 0.75rem;
+
+    .header-left .dashboard-logo {
+      width: 140px;
+      height: 45px;
+    }
+  }
+}

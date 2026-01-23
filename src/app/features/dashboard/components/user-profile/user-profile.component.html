@@ -24,7 +24,11 @@
       <div class="info-item">
         <span class="info-label">Verification Status</span>
         <div class="status-badge">
-          <span class="status-dot verified"></span>
+          <span
+            class="status-dot"
+            [class.verified]="user?.isVerified"
+            [class.unverified]="!user?.isVerified"
+          ></span>
           <span
             class="status-text"
             [class.verified]="user?.isVerified"
@@ -38,10 +42,15 @@
 
     <!-- Personal Information -->
     <div class="info-section">
-      <h2 class="section-title">Personal Information</h2>
+      <div class="section-header">
+        <h2 class="section-title">Personal Information</h2>
+        <button type="button" class="toggle-details-button" (click)="togglePersonalInfo()">
+          {{ showPersonalInfo ? 'Hide details' : 'View details' }}
+        </button>
+      </div>
 
       <!-- View Mode -->
-      <div *ngIf="!isEditMode">
+      <div *ngIf="showPersonalInfo && !isEditMode">
         <div class="info-item">
           <span class="info-label">First Name</span>
           <span class="info-value">{{ user?.firstName || 'Not set' }}</span>
@@ -71,7 +80,7 @@
 
       <!-- Edit Profile Component -->
       <app-edit-profile
-        *ngIf="isEditMode"
+        *ngIf="showPersonalInfo && isEditMode"
         [user]="user"
         (closeForm)="onCloseEditProfile()"
       ></app-edit-profile>

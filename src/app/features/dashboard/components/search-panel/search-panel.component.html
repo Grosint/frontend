@@ -1,11 +1,19 @@
 <div class="search-panel">
   <div class="search-panel-header">
-    <h3>Search</h3>
-    <div class="selected-option" *ngIf="selectedOption">
-      <span class="option-label">{{ getDisplayText() }}</span>
-    </div>
-    <div class="no-selection" *ngIf="!selectedOption">
-      <span>{{ getDisplayText() }}</span>
+    <h3 class="search-title">{{ getDisplayText() }}</h3>
+    <p class="search-subtitle">Search and discover detailed information</p>
+    <div class="search-actions">
+      <button type="button" class="history-button" (click)="openHistory()">
+        <i class="fas fa-history" aria-hidden="true"></i>
+        History
+      </button>
+      <div class="info-banner inline">
+        <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+        <span>
+          <strong>Important:</strong> User is responsible for obtaining consent/permissions before
+          using any data obtained through this search.
+        </span>
+      </div>
     </div>
   </div>
 
@@ -27,10 +35,13 @@
         [disabled]="!selectedOption || !searchQuery.trim() || isLoading"
         (click)="onSearch()"
       >
+        <i class="fas fa-search" aria-hidden="true"></i>
         <span *ngIf="!isLoading">Search</span>
         <span *ngIf="isLoading">Searching...</span>
       </button>
     </div>
+
+    <p class="search-help">Searching will deduct 5 credits from your account</p>
 
     <!-- Error Message -->
     <div class="error-message" *ngIf="errorMessage">
@@ -43,12 +54,12 @@
         <div class="search-icon-animation">
           <i class="fas fa-search search-icon"></i>
         </div>
-        <p class="search-animation-caption">Start searching to see results!</p>
+        <p class="search-animation-caption">Searching for results...</p>
       </div>
     </div>
 
     <!-- Search Results -->
-    <div class="search-results" *ngIf="searchResults.length > 0">
+    <div class="search-results" *ngIf="groupedResults.length > 0">
       <div class="results-header">
         <h4>Search Results</h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
@@ -56,16 +67,24 @@
         </div>
       </div>
       <div class="results-list">
-        <app-result-card
-          *ngFor="let result of searchResults; let i = index"
-          [result]="result"
-          [index]="i"
-        ></app-result-card>
+        <div class="result-group" *ngFor="let group of groupedResults">
+          <div class="group-header">
+            <h5>{{ group.label }}</h5>
+            <span class="group-count">{{ group.items.length }}</span>
+          </div>
+          <div class="group-content">
+            <app-result-card
+              *ngFor="let result of group.items; let i = index"
+              [result]="result"
+              [index]="i"
+            ></app-result-card>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- No Results Message -->
-    <div class="no-results" *ngIf="searchResponse && searchResults.length === 0">
+    <div class="no-results" *ngIf="searchResponse && groupedResults.length === 0">
       <p>No results found for this search.</p>
     </div>
   </div>

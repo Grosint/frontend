@@ -5,7 +5,7 @@ export interface SearchRequest {
   ip?: string;
   imei?: string;
   query?: string;
-  // Add other search types as needed
+  is_advance?: boolean;
 }
 
 export interface SearchResultItem {
@@ -18,6 +18,8 @@ export interface SearchResultItem {
   data?: string | null;
   confidence?: number;
   breach_source?: string;
+  groupBy?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SearchResponse {
