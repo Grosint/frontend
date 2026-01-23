@@ -13,6 +13,19 @@ import { SearchService } from '../../services/search.service';
 import { SearchResponse, SearchResultItem } from '../../models/search.model';
 import { take } from 'rxjs/operators';
 import { SearchHistoryModalComponent } from '../search-history-modal/search-history-modal.component';
+import groupConfigData from '../../../../../assets/data/search-result-groups.json';
+
+interface GroupConfig {
+  key: string;
+  label: string;
+  order: number;
+}
+
+interface GroupedResults {
+  key: string;
+  label: string;
+  items: SearchResultItem[];
+}
 
 @Component({
   selector: 'app-search-panel',
@@ -30,6 +43,8 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   searchResults: SearchResultItem[] = [];
   searchResponse: SearchResponse | null = null;
   errorMessage: string = '';
+  groupedResults: GroupedResults[] = [];
+  private groupConfigs: GroupConfig[] = (groupConfigData as GroupConfig[]) || [];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -47,6 +62,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       // Clear results when option changes
       this.searchQuery = '';
       this.searchResults = [];
+      this.groupedResults = [];
       this.searchResponse = null;
       this.errorMessage = '';
       this.cdr.markForCheck();
@@ -72,6 +88,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
           this.isLoading = false;
           this.searchResponse = response;
           this.searchResults = response.data?.results || [];
+          this.groupedResults = this.buildGroupedResults(this.searchResults);
           this.cdr.markForCheck();
 
           // Emit search event for parent component
@@ -81,6 +98,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
           this.errorMessage =
             error?.error?.message || error?.message || 'Search failed. Please try again.';
           this.searchResults = [];
+          this.groupedResults = [];
           this.cdr.markForCheck();
         },
       });
@@ -129,5 +147,32 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       this.searchPlaceholder = 'Select an option to search...';
     }
     this.cdr.markForCheck();
+  }
+
+  private buildGroupedResults(results: SearchResultItem[]): GroupedResults[] {
+    const groups = new Map<string, SearchResultItem[]>();
+    results.forEach(item => {
+      const key = item.groupBy || item.type || 'default';
+      const existing = groups.get(key) || [];
+      existing.push(item);
+      groups.set(key, existing);
+    });
+
+    const configByKey = new Map(this.groupConfigs.map(config => [config.key, config]));
+
+    const grouped = Array.from(groups.entries()).map(([key, items]) => {
+      const config = configByKey.get(key) || configByKey.get('default');
+      return {
+        key,
+        label: config?.label || key.replace(/_/g, ' '),
+        items,
+      };
+    });
+
+    return grouped.sort((a, b) => {
+      const orderA = configByKey.get(a.key)?.order ?? configByKey.get('default')?.order ?? 999;
+      const orderB = configByKey.get(b.key)?.order ?? configByKey.get('default')?.order ?? 999;
+      return orderA - orderB;
+    });
   }
 }

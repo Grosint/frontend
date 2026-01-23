@@ -21,7 +21,7 @@ $e: #f44336;
       display: flex;
       align-items: center;
       gap: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       padding-bottom: 1.5rem;
       border-bottom: 1px solid $b;
       .profile-icon {
@@ -55,11 +55,26 @@ $e: #f44336;
     }
     .info-section {
       margin-bottom: 2rem;
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
       .section-title {
         font-size: 1.3rem;
         font-weight: 600;
         color: $t;
-        margin: 0 0 1.5rem;
+        margin: 0;
+      }
+      .toggle-details-button {
+        background: transparent;
+        border: none;
+        color: #1955b0;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
       }
       .info-item {
         display: flex;

@@ -18,6 +18,7 @@ export class UserProfileComponent {
   searchHistoryEnabled = true;
   isEditMode = false;
   isChangePasswordMode = false;
+  showPersonalInfo = false;
 
   constructor(
     public appState: AppStateStore,
@@ -33,6 +34,14 @@ export class UserProfileComponent {
 
   onCloseEditProfile(): void {
     this.isEditMode = false;
+    this.cdr.markForCheck();
+  }
+
+  togglePersonalInfo(): void {
+    this.showPersonalInfo = !this.showPersonalInfo;
+    if (!this.showPersonalInfo) {
+      this.isEditMode = false;
+    }
     this.cdr.markForCheck();
   }
 

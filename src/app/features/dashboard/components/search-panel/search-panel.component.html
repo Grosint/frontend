@@ -59,7 +59,7 @@
     </div>
 
     <!-- Search Results -->
-    <div class="search-results" *ngIf="searchResults.length > 0">
+    <div class="search-results" *ngIf="groupedResults.length > 0">
       <div class="results-header">
         <h4>Search Results</h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
@@ -67,16 +67,24 @@
         </div>
       </div>
       <div class="results-list">
-        <app-result-card
-          *ngFor="let result of searchResults; let i = index"
-          [result]="result"
-          [index]="i"
-        ></app-result-card>
+        <div class="result-group" *ngFor="let group of groupedResults">
+          <div class="group-header">
+            <h5>{{ group.label }}</h5>
+            <span class="group-count">{{ group.items.length }}</span>
+          </div>
+          <div class="group-content">
+            <app-result-card
+              *ngFor="let result of group.items; let i = index"
+              [result]="result"
+              [index]="i"
+            ></app-result-card>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- No Results Message -->
-    <div class="no-results" *ngIf="searchResponse && searchResults.length === 0">
+    <div class="no-results" *ngIf="searchResponse && groupedResults.length === 0">
       <p>No results found for this search.</p>
     </div>
   </div>

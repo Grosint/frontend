@@ -59,6 +59,7 @@ export class SearchService extends ApiBaseService {
       return {
         phone: trimmedQuery,
         country_code: '+91',
+        is_advance: true,
       };
     }
 

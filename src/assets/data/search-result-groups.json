@@ -1,0 +1,14 @@
+[
+  { "key": "personal_details", "label": "Associated Names", "order": 1 },
+  { "key": "contact_details", "label": "Contact Details", "order": 2 },
+  { "key": "address_details", "label": "Address Information", "order": 3 },
+  { "key": "identity_details", "label": "Identity Details", "order": 4 },
+  { "key": "bank_details", "label": "Bank Details", "order": 5 },
+  { "key": "platforms", "label": "Platforms", "order": 6 },
+  { "key": "hlr", "label": "HLR Details", "order": 7 },
+  { "key": "email", "label": "Email Addresses", "order": 8 },
+  { "key": "phone", "label": "Phone Numbers", "order": 9 },
+  { "key": "name", "label": "Names", "order": 10 },
+  { "key": "location", "label": "Locations", "order": 11 },
+  { "key": "default", "label": "Other Details", "order": 99 }
+]
