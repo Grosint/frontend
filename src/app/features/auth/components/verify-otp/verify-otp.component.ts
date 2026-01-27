@@ -32,7 +32,7 @@ export class VerifyOtpComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.email = localStorage.getItem('pending_verification_phone') || '';
+    this.email = localStorage.getItem('pending_verification_email') || '';
 
     if (!this.email) {
       this.router.navigate(['/auth/register']);
@@ -70,7 +70,7 @@ export class VerifyOtpComponent implements OnInit {
           localStorage.setItem('from_otp_verification', 'true');
 
           // Clear pending email
-          localStorage.removeItem('pending_verification_phone');
+          localStorage.removeItem('pending_verification_email');
 
           // Navigate to dashboard
           setTimeout(() => {

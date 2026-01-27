@@ -10,13 +10,16 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { LoggerService } from '../services/logger.service';
+import { environment } from '@environments/environment';
 
 const publicEndpointPatterns = [
   /\/auth\/login$/,
   /\/auth\/register$/,
   /\/auth\/signup$/,
   /\/auth\/verify-otp$/,
-  /\/user$/, // Exact match for signup only
+  /\/user$/, // Exact match for signup init alias
+  /\/user\/signup\/init$/,
+  /\/user\/signup\/complete$/,
   /\/auth\/resend$/,
   /\/auth\/resend-otp$/,
   /\/auth\/send-otp$/,
@@ -32,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Skip auth for login/register endpoints
 
-    const urlPath = new URL(req.url, 'http://dummy').pathname;
+    const urlPath = new URL(req.url, environment.apiUrl).pathname;
     const isPublicEndpoint = publicEndpointPatterns.some(pattern => pattern.test(urlPath));
 
     if (isPublicEndpoint) return next.handle(req);

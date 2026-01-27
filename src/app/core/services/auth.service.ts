@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError, map, take } from 'rxjs/operators';
+import { tap, catchError, map, take, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ApiBaseService } from './api-base.service';
 import { AppStateStore } from './app-state.store';
@@ -17,9 +17,11 @@ import {
   UpdateProfileRequest,
   UpdateProfileResponse,
   SignupResponse,
+  SignupInitResponse,
   GetUserProfileResponse,
   ChangePasswordRequest,
   ChangePasswordResponse,
+  LogoutResponse,
   BaseUserProfileData,
   OtpVerificationResponse,
 } from '../models/user.model';
@@ -54,7 +56,7 @@ export class AuthService extends ApiBaseService {
   // Login user
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.post<LoginApiResponse>('/auth/login', credentials, 'login').pipe(
-      map(apiResponse => this.mapAuthResponse(apiResponse)),
+      map(apiResponse => this.mapAuthResponse(apiResponse, credentials.email)),
       tap(response => {
         this.setAuthData(response);
         this.appState.setUser(response.user);
@@ -82,10 +84,21 @@ export class AuthService extends ApiBaseService {
 
   // Signup new user
   signup(data: SignupRequest): Observable<SignupResponse> {
-    return this.post<SignupResponse>('/user', data, 'signup').pipe(
+    return this.put<SignupResponse>('/user/signup/complete', data, 'signup-complete').pipe(
       catchError((error: unknown) => {
         const err = error instanceof Error ? error : new Error(String(error));
         this.logger.error('Signup failed', err);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Signup init (email-only) for pre-signup flow
+  signupInit(email: string): Observable<SignupInitResponse> {
+    return this.post<SignupInitResponse>('/user/signup/init', { email }, 'signup-init').pipe(
+      catchError((error: unknown) => {
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.logger.error('Signup init failed', err);
         return throwError(() => error);
       })
     );
@@ -120,9 +133,24 @@ export class AuthService extends ApiBaseService {
 
   // Logout user and redirect to login page
   logout(): void {
-    this.clearAuthData();
-    this.appState.reset();
-    this.router.navigate(['/auth/login']);
+    const refreshToken = this.getRefreshToken();
+    const payload = refreshToken ? { refresh_token: refreshToken } : {};
+
+    this.post<LogoutResponse>('/auth/logout', payload, 'logout')
+      .pipe(
+        take(1),
+        catchError((error: unknown) => {
+          const err = error instanceof Error ? error : new Error(String(error));
+          this.logger.error('Logout failed', err);
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this.clearAuthData();
+          this.appState.reset();
+          this.router.navigate(['/auth/login']);
+        })
+      )
+      .subscribe();
   }
 
   // Get current token
@@ -363,15 +391,18 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  private mapAuthResponse(apiResponse: LoginApiResponse): AuthResponse {
+  private mapAuthResponse(apiResponse: LoginApiResponse, emailHint?: string): AuthResponse {
+    const storedUser = this.getStoredUser();
+    const email = apiResponse.data.email || storedUser?.email || emailHint || '';
+    const userId = apiResponse.data.user_id || storedUser?.id || email || 'unknown';
     return {
       token: apiResponse.data.access_token,
       refreshToken: apiResponse.data.refresh_token,
       expiresIn: apiResponse.data.expires_in,
       user: {
-        id: apiResponse.data.user_id,
-        email: apiResponse.data.email,
-        name: apiResponse.data.email.split('@')[0],
+        id: userId,
+        email,
+        name: email ? email.split('@')[0] : storedUser?.name,
       },
     };
   }

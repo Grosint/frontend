@@ -33,7 +33,6 @@
           class="error-message"
           *ngIf="signupForm.get('phone')?.invalid && signupForm.get('phone')?.touched"
         >
-          <span *ngIf="signupForm.get('phone')?.errors?.['required']">Phone is required</span>
           <span *ngIf="signupForm.get('phone')?.errors?.['pattern']"
             >Invalid phone number (10-12 digits)</span
           >

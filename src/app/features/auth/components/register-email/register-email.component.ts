@@ -9,7 +9,8 @@ import {
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@core/services/auth.service';
-import { take } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 type EmailType = 'government' | 'personal';
 
@@ -73,8 +74,17 @@ export class RegisterEmailComponent implements OnInit {
     const email = this.emailForm.get('email')?.value as string;
 
     this.auth
-      .sendOtp(email)
-      .pipe(take(1))
+      .signupInit(email)
+      .pipe(
+        switchMap(response => {
+          if (!response?.success) {
+            const message = response?.message || 'Failed to initiate signup. Please try again.';
+            return throwError(() => new Error(message));
+          }
+          return this.auth.sendOtp(email);
+        }),
+        take(1)
+      )
       .subscribe({
         next: response => {
           this.isLoading = false;
