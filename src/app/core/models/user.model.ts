@@ -79,7 +79,7 @@ export interface AuthResponse {
 
 // Login Request
 export interface LoginRequest {
-  email: string;
+  phone: string;
   password: string;
 }
 

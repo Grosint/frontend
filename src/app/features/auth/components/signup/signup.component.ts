@@ -213,6 +213,9 @@ export class SignupComponent implements OnInit, OnDestroy {
           localStorage.removeItem('pre_signup_email_type');
 
           localStorage.setItem('pending_verification_email', formValue.email);
+          if (fullPhone) {
+            localStorage.setItem('pending_verification_phone', fullPhone);
+          }
           localStorage.setItem('from_signup', 'true'); // Flag to indicate coming from signup
 
           this.router.navigate(['/auth/verify-otp']);

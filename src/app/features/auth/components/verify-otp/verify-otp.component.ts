@@ -71,6 +71,7 @@ export class VerifyOtpComponent implements OnInit {
 
           // Clear pending email
           localStorage.removeItem('pending_verification_email');
+          localStorage.removeItem('pending_verification_phone');
 
           // Navigate to dashboard
           setTimeout(() => {

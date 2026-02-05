@@ -12,21 +12,41 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          placeholder="Enter your email"
-          class="form-input"
-          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-        />
+        <label for="phone">Mobile Number</label>
+        <div class="phone-input-group">
+          <select
+            id="countryCode"
+            formControlName="countryCode"
+            class="form-input country-code-select"
+            aria-label="Country code"
+          >
+            <option value="+91">+91</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+            <option value="+971">+971</option>
+          </select>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            placeholder="Enter your mobile number"
+            class="form-input phone-number-input"
+            inputmode="numeric"
+            (keypress)="onPhoneKeyPress($event)"
+            (paste)="onPhonePaste($event)"
+            [class.error]="loginForm.get('phone')?.invalid && loginForm.get('phone')?.touched"
+          />
+        </div>
         <div
           class="error-message"
-          *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          *ngIf="loginForm.get('phone')?.invalid && loginForm.get('phone')?.touched"
         >
-          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
-          <span *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email</span>
+          <span *ngIf="loginForm.get('phone')?.errors?.['required']">
+            Mobile number is required
+          </span>
+          <span *ngIf="loginForm.get('phone')?.errors?.['pattern']">
+            Invalid mobile number format
+          </span>
         </div>
       </div>
 

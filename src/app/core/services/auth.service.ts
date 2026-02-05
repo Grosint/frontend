@@ -56,7 +56,7 @@ export class AuthService extends ApiBaseService {
   // Login user
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.post<LoginApiResponse>('/auth/login', credentials, 'login').pipe(
-      map(apiResponse => this.mapAuthResponse(apiResponse, credentials.email)),
+      map(apiResponse => this.mapAuthResponse(apiResponse)),
       tap(response => {
         this.setAuthData(response);
         this.appState.setUser(response.user);
@@ -391,9 +391,9 @@ export class AuthService extends ApiBaseService {
     );
   }
 
-  private mapAuthResponse(apiResponse: LoginApiResponse, emailHint?: string): AuthResponse {
+  private mapAuthResponse(apiResponse: LoginApiResponse): AuthResponse {
     const storedUser = this.getStoredUser();
-    const email = apiResponse.data.email || storedUser?.email || emailHint || '';
+    const email = apiResponse.data.email || storedUser?.email || '';
     const userId = apiResponse.data.user_id || storedUser?.id || email || 'unknown';
     return {
       token: apiResponse.data.access_token,
