@@ -65,8 +65,8 @@ export interface LoginApiResponse extends BaseApiResponse<{
   refresh_token: string;
   token_type: string;
   expires_in: number;
-  user_id: string;
-  email: string;
+  user_id?: string;
+  email?: string;
 }> {}
 
 // Auth Response
@@ -86,22 +86,33 @@ export interface LoginRequest {
 // Signup Request
 export interface SignupRequest extends BaseProfileFields {
   email: string;
-  phone: string;
-  verifyByGovId: boolean;
-  password: string;
-  userType: string;
-  firstName: string;
-  lastName: string;
+  phone?: string;
+  password?: string;
+  userType?: 'user' | 'org_user';
+  firstName?: string;
+  lastName?: string;
   address?: string;
   city?: string;
   pinCode?: string;
   state?: string;
-  organizationId: string | null;
-  orgName: string | null;
+  organizationId?: string | null;
+  orgName?: string | null;
 }
 
 // Signup Response
 export interface SignupResponse extends BaseApiResponse<BaseUserProfileData> {}
+
+// Signup Init Response
+export interface SignupInitResponse extends BaseApiResponse<{
+  id: string;
+  email: string;
+  phone: string | null;
+  isActive: boolean;
+  isVerified: boolean;
+  isGovId: boolean;
+  isEmailOtpVerified: boolean;
+  createdAt: string;
+}> {}
 
 // OTP Verification Request
 export interface OtpVerificationRequest {
@@ -143,4 +154,9 @@ export interface ChangePasswordRequest {
 export interface ChangePasswordResponse extends BaseApiResponse<{
   message: string;
   changed_at: string;
+}> {}
+
+// Logout Response
+export interface LogoutResponse extends BaseApiResponse<{
+  message: string;
 }> {}

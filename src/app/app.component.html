@@ -1,1 +1,14 @@
+<div class="version-notice-backdrop" *ngIf="showVersionNotice">
+  <div class="version-notice">
+    <h2>Testing Notice</h2>
+    <p>This is the new version for testing purposes. Please move to the older version.</p>
+    <div class="version-actions">
+      <button type="button" class="btn-secondary" (click)="goBack()">Go Back</button>
+      <button type="button" class="btn-primary" (click)="goToOldVersion()">
+        Move to Older Version
+      </button>
+    </div>
+  </div>
+</div>
+
 <router-outlet></router-outlet>

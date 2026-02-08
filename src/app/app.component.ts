@@ -12,6 +12,7 @@ import { WebVitalsService } from './core/services/web-vitals.service';
 })
 export class AppComponent implements OnInit {
   title = 'GrosInt';
+  showVersionNotice = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
+      this.showVersionNotice = true;
       // Enforce HTTPS in production
       if (location.protocol !== 'https:' && environment.production) {
         location.replace(
@@ -43,5 +45,19 @@ export class AppComponent implements OnInit {
         this.appState.setLanguage(savedLang);
       }
     }
+  }
+
+  goBack(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    window.history.back();
+  }
+
+  goToOldVersion(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    window.location.href = 'https://grosint.com/signin';
   }
 }

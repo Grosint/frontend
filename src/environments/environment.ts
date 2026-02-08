@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://grosint.org/api', // production uri
+  apiUrl: 'https://grosint.org/api',
   version: '1.0.0',
   enableServiceWorker: false,
   enableAnalytics: false,

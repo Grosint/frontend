@@ -48,7 +48,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       countryCode: ['+91', [Validators.required, Validators.pattern(/^\+\d{1,4}$/)]],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,12}$/)]],
+      phone: ['', [Validators.pattern(/^[0-9]{10,12}$/)]],
       verifyByGovId: [false],
       password: [
         '',
@@ -179,19 +179,21 @@ export class SignupComponent implements OnInit, OnDestroy {
       privacyAccepted,
       countryCode,
       phone,
+      verifyByGovId,
       ...restFormValue
     } = formValue;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     void confirmPassword; // Explicitly mark as intentionally unused
     void termsAccepted; // Explicitly mark as intentionally unused
     void privacyAccepted; // Explicitly mark as intentionally unused
+    void verifyByGovId; // Explicitly mark as intentionally unused
 
-    const fullPhone = `${countryCode}${phone}`;
+    const fullPhone = phone ? `${countryCode}${phone}` : undefined;
     const signupData = {
       ...restFormValue,
       firstName: restFormValue.firstName || 'User',
       lastName: restFormValue.lastName || 'User',
-      phone: fullPhone,
+      ...(fullPhone ? { phone: fullPhone } : {}),
       organizationId: formValue.organizationId || null,
       orgName: formValue.orgName || null,
     };
@@ -210,7 +212,10 @@ export class SignupComponent implements OnInit, OnDestroy {
           localStorage.removeItem('pre_signup_email');
           localStorage.removeItem('pre_signup_email_type');
 
-          localStorage.setItem('pending_verification_phone', fullPhone);
+          localStorage.setItem('pending_verification_email', formValue.email);
+          if (fullPhone) {
+            localStorage.setItem('pending_verification_phone', fullPhone);
+          }
           localStorage.setItem('from_signup', 'true'); // Flag to indicate coming from signup
 
           this.router.navigate(['/auth/verify-otp']);

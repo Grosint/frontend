@@ -9,11 +9,12 @@
 
 .signup-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 450px;
   background: white;
   border-radius: 8px;
   padding: 1.75rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: scroll;
 }
 
 .signup-header {
@@ -102,7 +103,7 @@ label {
 }
 
 .country-code-select {
-  flex: 1 1 50%;
+  flex: 1 1 20%;
   min-width: 90px;
 }
 

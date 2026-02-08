@@ -38,6 +38,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   @Input() selectedOption: NavbarSelection | null = null;
 
   searchQuery: string = '';
+  searchCountryCode: string = '+91';
   searchPlaceholder: string = 'Enter search query...';
   isLoading: boolean = false;
   searchResults: SearchResultItem[] = [];
@@ -80,8 +81,10 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     this.searchResponse = null;
     this.cdr.markForCheck();
 
+    const normalizedQuery = this.getSearchQuery();
+
     this.searchService
-      .search(this.selectedOption.parent, this.selectedOption.child, this.searchQuery.trim())
+      .search(this.selectedOption.parent, this.selectedOption.child, normalizedQuery)
       .pipe(take(1))
       .subscribe({
         next: response => {
@@ -107,6 +110,32 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   onKeyPress(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.onSearch();
+    }
+  }
+
+  onPhoneKeyPress(event: KeyboardEvent): void {
+    if (!this.isMobileSearch) {
+      return;
+    }
+
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onPhonePaste(event: ClipboardEvent): void {
+    if (!this.isMobileSearch) {
+      return;
+    }
+
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    if (!/^\d+$/.test(pasted.replace(/\s+/g, ''))) {
+      event.preventDefault();
     }
   }
 
@@ -137,7 +166,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     if (this.selectedOption?.child) {
       const childLabel = this.selectedOption.child.label.toLowerCase();
       if (childLabel === 'mobile' || childLabel === 'phone') {
-        this.searchPlaceholder = 'Enter phone number (e.g., 9997260627 or +91 9997260627)';
+        this.searchPlaceholder = 'Enter phone number (e.g., 9997260627)';
       } else {
         this.searchPlaceholder = `Enter ${childLabel} to search...`;
       }
@@ -147,6 +176,34 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       this.searchPlaceholder = 'Select an option to search...';
     }
     this.cdr.markForCheck();
+  }
+
+  get isMobileSearch(): boolean {
+    const parts = [
+      this.selectedOption?.child?.value,
+      this.selectedOption?.child?.label,
+      this.selectedOption?.parent?.value,
+      this.selectedOption?.parent?.label,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    return parts.includes('mobile') || parts.includes('phone');
+  }
+
+  private getSearchQuery(): string {
+    const rawQuery = this.searchQuery.trim();
+    if (!this.isMobileSearch) {
+      return rawQuery;
+    }
+
+    const normalized = rawQuery.replace(/\s+/g, '');
+    if (normalized.startsWith('+')) {
+      return normalized;
+    }
+
+    return `${this.searchCountryCode}${normalized}`;
   }
 
   private buildGroupedResults(results: SearchResultItem[]): GroupedResults[] {

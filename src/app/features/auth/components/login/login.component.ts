@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
         // Clear the flags
         localStorage.removeItem('from_otp_verification');
         localStorage.removeItem('from_signup');
-        // Keep email in case user navigates away and comes back
+        // Keep phone in case user navigates away and comes back
         // Or clear it: localStorage.removeItem('pending_verification_phone');
 
         this.cdr.markForCheck();
