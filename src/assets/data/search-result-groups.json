@@ -6,9 +6,10 @@
   { "key": "bank_details", "label": "Bank Details", "order": 5 },
   { "key": "platforms", "label": "Platforms", "order": 6 },
   { "key": "hlr", "label": "HLR Details", "order": 7 },
-  { "key": "email", "label": "Email Addresses", "order": 8 },
-  { "key": "phone", "label": "Phone Numbers", "order": 9 },
-  { "key": "name", "label": "Names", "order": 10 },
-  { "key": "location", "label": "Locations", "order": 11 },
+  { "key": "vehicle_info", "label": "Vehicle Info", "order": 8 },
+  { "key": "email", "label": "Email Addresses", "order": 9 },
+  { "key": "phone", "label": "Phone Numbers", "order": 10 },
+  { "key": "name", "label": "Names", "order": 11 },
+  { "key": "location", "label": "Locations", "order": 12 },
   { "key": "default", "label": "Other Details", "order": 99 }
 ]

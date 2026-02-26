@@ -4,7 +4,15 @@
     <span class="result-type" *ngIf="result.type">{{ result.type }}</span>
   </div>
   <div class="result-card-body">
-    <div class="result-value">{{ displayValue }}</div>
+    <ng-container *ngIf="isImageResult && imageSrc; else textValue">
+      <div class="image-block">
+        <div class="image-block-title">Photos</div>
+        <img class="result-image" [src]="imageSrc" alt="Result" />
+      </div>
+    </ng-container>
+    <ng-template #textValue>
+      <div class="result-value">{{ displayValue }}</div>
+    </ng-template>
     <div class="result-category" *ngIf="result.category" [class]="categoryClass">
       {{ result.category }}
     </div>

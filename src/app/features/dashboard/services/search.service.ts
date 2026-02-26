@@ -6,11 +6,15 @@ import { AppStateStore } from '@core/services/app-state.store';
 import { LoggerService } from '@core/services/logger.service';
 import { SearchRequest, SearchResponse } from '../models/search.model';
 import { MenuItem } from '../models/menu-item.model';
+import menuItemConfigData from '../../../../assets/data/menu-item-ids.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService extends ApiBaseService {
+  private menuItemConfigs: Record<string, { route?: string }> =
+    (menuItemConfigData as Record<string, { route?: string }>) || {};
+
   constructor(http: HttpClient, appState: AppStateStore, logger: LoggerService) {
     super(http, appState, logger);
   }
@@ -19,13 +23,17 @@ export class SearchService extends ApiBaseService {
   search(
     option: MenuItem | undefined,
     child: MenuItem | undefined,
-    query: string
+    query: string,
+    overrideBody?: SearchRequest
   ): Observable<SearchResponse> {
+    const configId = child?.id || option?.id || '';
+    const configRoute = configId ? this.menuItemConfigs[configId]?.route : undefined;
     const searchType = this.getSearchType(option, child);
     const menuValue = child?.value || option?.value || '';
-    const requestBody = this.buildSearchRequest(menuValue, query);
+    const requestBody = overrideBody ?? this.buildSearchRequest(menuValue, query);
+    const endpoint = configRoute ? `/search${configRoute}` : `/search/${searchType}`;
 
-    return this.post<SearchResponse>(`/search/${searchType}`, requestBody, 'search');
+    return this.post<SearchResponse>(endpoint, requestBody, 'search');
   }
 
   // Determine search type endpoint from menu selection
@@ -44,6 +52,18 @@ export class SearchService extends ApiBaseService {
       email: 'email-lookup',
       'ip-search': 'ip-lookup',
       'imei-search': 'imei-lookup',
+      'bank-account': 'bank-lookup',
+      'bank-account-search': 'bank-lookup',
+      'virtual-no-email-mobile': 'virtual-number',
+      'virtual-no-email-email': 'virtual-email',
+      'vehicle-search': 'vehicle-lookup',
+      'rc-search': 'vehicle-lookup',
+      'chassis-rc': 'vehicle-lookup',
+      'fasttag-history': 'vehicle-lookup',
+      pan: 'verify-id',
+      'driving-license': 'verify-id',
+      'voter-id': 'verify-id',
+      passport: 'verify-id',
       // Add more mappings as needed
     };
 
@@ -82,6 +102,52 @@ export class SearchService extends ApiBaseService {
       return {
         imei: trimmedQuery,
       };
+    }
+
+    // Handle virtual number/email lookups
+    if (menuValue === 'virtual-no-email-mobile') {
+      return {
+        phone_number: trimmedQuery,
+      } as SearchRequest;
+    }
+
+    if (menuValue === 'virtual-no-email-email') {
+      return {
+        email: trimmedQuery,
+      };
+    }
+
+    // Handle vehicle lookups
+    if (
+      menuValue === 'rc-search' ||
+      menuValue === 'vehicle-search' ||
+      menuValue === 'fasttag-history'
+    ) {
+      return {
+        vehicle_number: trimmedQuery,
+        lookup_type: 'all',
+      } as SearchRequest;
+    }
+
+    if (menuValue === 'chassis-rc') {
+      return {
+        chassis_number: trimmedQuery,
+        lookup_type: 'all',
+      } as SearchRequest;
+    }
+
+    // Handle verify-id
+    if (
+      menuValue === 'pan' ||
+      menuValue === 'driving-license' ||
+      menuValue === 'voter-id' ||
+      menuValue === 'passport'
+    ) {
+      return {
+        id_type: menuValue,
+        value: trimmedQuery,
+        dob: null,
+      } as SearchRequest;
     }
 
     // For other types, return generic query

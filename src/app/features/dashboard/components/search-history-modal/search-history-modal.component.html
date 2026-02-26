@@ -24,9 +24,18 @@
     <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
     <div class="history-list" *ngIf="!isLoading && !errorMessage" (scroll)="onScroll($event)">
-      <div class="history-card" *ngFor="let item of filteredItems; trackBy: trackById">
+      <div
+        class="history-card"
+        *ngFor="let item of filteredItems; trackBy: trackById"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="'View history for ' + formatQueryInputDisplay(item)"
+        (click)="onSelectHistory(item)"
+        (keyup.enter)="onSelectHistory(item)"
+        (keyup.space)="onSelectHistory(item)"
+      >
         <div class="history-main">
-          <div class="history-title">{{ item.queryInput }}</div>
+          <div class="history-title">{{ formatQueryInputDisplay(item) }}</div>
           <div class="history-meta">
             <span class="badge">{{ item.queryType }}</span>
             <span class="meta-text">{{ formatDate(item.createdAt) }}</span>

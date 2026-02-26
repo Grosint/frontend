@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.showVersionNotice = true;
+      this.showVersionNotice = false;
       // Enforce HTTPS in production
       if (location.protocol !== 'https:' && environment.production) {
         location.replace(

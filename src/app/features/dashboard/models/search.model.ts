@@ -4,6 +4,15 @@ export interface SearchRequest {
   email?: string;
   ip?: string;
   imei?: string;
+  vehicle_number?: string;
+  chassis_number?: string;
+  lookup_type?: string;
+  account_no?: string;
+  ifsc_code?: string;
+  id_type?: string;
+  value?: string;
+  dob?: string | null;
+  phone_number?: string;
   query?: string;
   is_advance?: boolean;
 }

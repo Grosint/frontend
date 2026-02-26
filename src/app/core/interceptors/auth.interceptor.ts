@@ -37,6 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const urlPath = new URL(req.url, environment.apiUrl).pathname;
     const isPublicEndpoint = publicEndpointPatterns.some(pattern => pattern.test(urlPath));
+    const isLogoutEndpoint = /\/auth\/logout$/.test(urlPath);
 
     if (isPublicEndpoint) return next.handle(req);
 
@@ -54,6 +55,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
+        if (isLogoutEndpoint) {
+          return throwError(() => error);
+        }
+
         // Handle 401 Unauthorized
         if (error.status === 401) {
           if (req.url.includes('/auth/change-password'))

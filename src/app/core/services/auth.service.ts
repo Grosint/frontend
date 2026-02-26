@@ -42,6 +42,7 @@ export class AuthService extends ApiBaseService {
   private readonly tokenKey = 'auth_token';
   private readonly refreshTokenKey = 'refresh_token';
   private readonly userKey = 'user_data';
+  private isLoggingOut = false;
 
   constructor(
     http: HttpClient,
@@ -133,6 +134,10 @@ export class AuthService extends ApiBaseService {
 
   // Logout user and redirect to login page
   logout(): void {
+    if (this.isLoggingOut) {
+      return;
+    }
+    this.isLoggingOut = true;
     const refreshToken = this.getRefreshToken();
     const payload = refreshToken ? { refresh_token: refreshToken } : {};
 
@@ -145,6 +150,7 @@ export class AuthService extends ApiBaseService {
           return throwError(() => error);
         }),
         finalize(() => {
+          this.isLoggingOut = false;
           this.clearAuthData();
           this.appState.reset();
           this.router.navigate(['/auth/login']);

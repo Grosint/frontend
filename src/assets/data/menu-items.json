@@ -4,21 +4,18 @@
     "label": "OSINT Search",
     "value": "osint-search",
     "icon": "fas fa-search",
-    "url": "/search/osint",
     "children": [
       {
         "id": "osint-search-mobile",
         "label": "Mobile",
         "value": "mobile",
-        "icon": "fas fa-mobile-alt",
-        "url": "/search/osint/mobile"
+        "icon": "fas fa-mobile-alt"
       },
       {
         "id": "osint-search-email",
         "label": "Email",
         "value": "email",
-        "icon": "fas fa-envelope",
-        "url": "/search/osint/email"
+        "icon": "fas fa-envelope"
       }
     ]
   },
@@ -26,36 +23,31 @@
     "id": "mobile-verify-search",
     "label": "Mobile Verify Search",
     "value": "mobile-verify-search",
-    "icon": "fas fa-mobile-alt",
-    "url": "/search/mobile-verify"
+    "icon": "fas fa-mobile-alt"
   },
   {
     "id": "vehicle-search",
     "label": "Vehicle Search",
     "value": "vehicle-search",
     "icon": "fas fa-car",
-    "url": "/search/vehicle",
     "children": [
       {
         "id": "vehicle-search-rc-search",
         "label": "RC Search",
         "value": "rc-search",
-        "icon": "fas fa-file-alt",
-        "url": "/search/vehicle/rc"
+        "icon": "fas fa-file-alt"
       },
       {
         "id": "vehicle-search-chassis-rc",
         "label": "Chassis → RC",
         "value": "chassis-rc",
-        "icon": "fas fa-link",
-        "url": "/search/vehicle/chassis-rc"
+        "icon": "fas fa-link"
       },
       {
         "id": "vehicle-search-fasttag-history",
         "label": "FastTag History",
         "value": "fasttag-history",
-        "icon": "fas fa-history",
-        "url": "/search/vehicle/fasttag"
+        "icon": "fas fa-history"
       }
     ]
   },
@@ -64,35 +56,30 @@
     "label": "Leaked Data",
     "value": "leaked-data",
     "icon": "fas fa-database",
-    "url": "/search/leaked-data",
     "children": [
       {
         "id": "leaked-data-email",
         "label": "Email",
         "value": "email",
-        "icon": "fas fa-envelope",
-        "url": "/search/leaked-data/email"
+        "icon": "fas fa-envelope"
       },
       {
         "id": "leaked-data-mobile",
         "label": "Mobile",
         "value": "mobile",
-        "icon": "fas fa-mobile-alt",
-        "url": "/search/leaked-data/mobile"
+        "icon": "fas fa-mobile-alt"
       },
       {
         "id": "leaked-data-username",
         "label": "Username",
         "value": "username",
-        "icon": "fas fa-user",
-        "url": "/search/leaked-data/username"
+        "icon": "fas fa-user"
       },
       {
         "id": "leaked-data-keyword",
         "label": "Keyword",
         "value": "keyword",
-        "icon": "fas fa-key",
-        "url": "/search/leaked-data/keyword"
+        "icon": "fas fa-key"
       }
     ]
   },
@@ -100,29 +87,25 @@
     "id": "ip-search",
     "label": "IP Search",
     "value": "ip-search",
-    "icon": "fas fa-network-wired",
-    "url": "/search/ip"
+    "icon": "fas fa-network-wired"
   },
   {
     "id": "virtual-no-email",
     "label": "Virtual No / Email",
     "value": "virtual-no-email",
     "icon": "fas fa-envelope",
-    "url": "/search/virtual",
     "children": [
       {
         "id": "virtual-no-email-mobile",
         "label": "Mobile",
         "value": "mobile",
-        "icon": "fas fa-mobile-alt",
-        "url": "/search/virtual/mobile"
+        "icon": "fas fa-mobile-alt"
       },
       {
         "id": "virtual-no-email-email",
         "label": "Email",
         "value": "email",
-        "icon": "fas fa-envelope",
-        "url": "/search/virtual/email"
+        "icon": "fas fa-envelope"
       }
     ]
   },
@@ -130,57 +113,49 @@
     "id": "imei-search",
     "label": "IMEI Search",
     "value": "imei-search",
-    "icon": "fas fa-mobile-screen-button",
-    "url": "/search/imei"
+    "icon": "fas fa-mobile-screen-button"
   },
   {
     "id": "bank-account",
     "label": "Bank Account",
     "value": "bank-account",
     "icon": "fas fa-university",
-    "url": "/search/bank-account",
     "children": [
       {
         "id": "bank-account-search",
         "label": "Bank Account Search",
         "value": "bank-account-search",
-        "icon": "fas fa-search",
-        "url": "/search/bank-account/search"
+        "icon": "fas fa-search"
       },
       {
         "id": "bank-account-mobile-upi",
         "label": "Mobile → UPI",
         "value": "mobile-upi",
-        "icon": "fas fa-mobile-alt",
-        "url": "/search/bank-account/mobile-upi"
+        "icon": "fas fa-mobile-alt"
       },
       {
         "id": "bank-account-upi-id-details",
         "label": "UPI ID → Details",
         "value": "upi-id-details",
-        "icon": "fas fa-wallet",
-        "url": "/search/bank-account/upi-id"
+        "icon": "fas fa-wallet"
       },
       {
         "id": "bank-account-ucn-search",
         "label": "UCN Search",
         "value": "ucn-search",
-        "icon": "fas fa-search",
-        "url": "/search/bank-account/ucn"
+        "icon": "fas fa-search"
       },
       {
         "id": "bank-account-atm-id-search",
         "label": "ATM ID Search",
         "value": "atm-id-search",
-        "icon": "fas fa-map-marker-alt",
-        "url": "/search/bank-account/atm-id"
+        "icon": "fas fa-map-marker-alt"
       },
       {
         "id": "bank-account-ifsc-search",
         "label": "IFSC Search",
         "value": "ifsc-search",
-        "icon": "fas fa-code-branch",
-        "url": "/search/bank-account/ifsc"
+        "icon": "fas fa-code-branch"
       }
     ]
   },
@@ -189,35 +164,30 @@
     "label": "Verify Gov. ID",
     "value": "verify-government-id",
     "icon": "fas fa-id-card",
-    "url": "/search/verify-id",
     "children": [
       {
         "id": "verify-government-id-pan",
         "label": "PAN",
         "value": "pan",
-        "icon": "fas fa-id-card",
-        "url": "/search/verify-id/pan"
+        "icon": "fas fa-id-card"
       },
       {
         "id": "verify-government-id-driving-license",
         "label": "Driving License",
         "value": "driving-license",
-        "icon": "fas fa-id-badge",
-        "url": "/search/verify-id/driving-license"
+        "icon": "fas fa-id-badge"
       },
       {
         "id": "verify-government-id-voter-id",
         "label": "Voter ID",
         "value": "voter-id",
-        "icon": "fas fa-vote-yea",
-        "url": "/search/verify-id/voter-id"
+        "icon": "fas fa-vote-yea"
       },
       {
         "id": "verify-government-id-passport",
         "label": "Passport",
         "value": "passport",
-        "icon": "fas fa-passport",
-        "url": "/search/verify-id/passport"
+        "icon": "fas fa-passport"
       }
     ]
   }

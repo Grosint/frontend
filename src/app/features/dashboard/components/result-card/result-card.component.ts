@@ -19,6 +19,21 @@ export class ResultCardComponent {
     return this.result.value || 'N/A';
   }
 
+  get isImageResult(): boolean {
+    return this.result.category?.toLowerCase() === 'image';
+  }
+
+  get imageSrc(): string | null {
+    if (!this.isImageResult) {
+      return null;
+    }
+    const value = this.result.value;
+    if (!value || value.toLowerCase() === 'not available') {
+      return null;
+    }
+    return value;
+  }
+
   get showSource(): boolean {
     return this.result.showSource !== false && !!this.result.source;
   }
