@@ -12,7 +12,8 @@
         "icon": "fas fa-mobile-alt",
         "route": "/phone-lookup",
         "inputType": "number",
-        "historySearchType": "phone-lookup"
+        "historySearchType": "phone-lookup",
+        "searchType": "phone-lookup"
       },
       {
         "id": "osint-search-email",
@@ -22,7 +23,8 @@
         "route": "/email-lookup",
         "inputType": "email",
         "validations": ["email"],
-        "historySearchType": "email-lookup"
+        "historySearchType": "email-lookup",
+        "searchType": "email-lookup"
       }
     ]
   },
@@ -33,7 +35,8 @@
     "icon": "fas fa-mobile-alt",
     "route": "/phone-lookup",
     "inputType": "number",
-    "historySearchType": "phone-lookup"
+    "historySearchType": "phone-lookup",
+    "searchType": "phone-lookup"
   },
   {
     "id": "vehicle-search",
@@ -43,6 +46,7 @@
     "route": "/vehicle-lookup",
     "inputType": "text",
     "historySearchType": "vehicle-all",
+    "searchType": "vehicle-lookup",
     "children": [
       {
         "id": "vehicle-search-rc-search",
@@ -51,7 +55,8 @@
         "icon": "fas fa-file-alt",
         "route": "/vehicle-lookup",
         "inputType": "text",
-        "historySearchType": "vehicle-rc"
+        "historySearchType": "vehicle-rc",
+        "searchType": "vehicle-lookup"
       },
       {
         "id": "vehicle-search-chassis-rc",
@@ -60,7 +65,8 @@
         "icon": "fas fa-link",
         "route": "/vehicle-lookup",
         "inputType": "text",
-        "historySearchType": "vehicle-chasis"
+        "historySearchType": "vehicle-chasis",
+        "searchType": "vehicle-lookup"
       },
       {
         "id": "vehicle-search-fasttag-history",
@@ -69,7 +75,8 @@
         "icon": "fas fa-history",
         "route": "/vehicle-lookup",
         "inputType": "text",
-        "historySearchType": "vehicle-fast-tag"
+        "historySearchType": "vehicle-fast-tag",
+        "searchType": "vehicle-lookup"
       }
     ]
   },
@@ -87,7 +94,8 @@
         "route": "/dark-web-leak",
         "inputType": "email",
         "validations": ["email"],
-        "historySearchType": "dark-web-leak"
+        "historySearchType": "dark-web-leak",
+        "searchType": "dark-web-leak"
       },
       {
         "id": "leaked-data-mobile",
@@ -96,7 +104,8 @@
         "icon": "fas fa-mobile-alt",
         "route": "/dark-web-leak",
         "inputType": "number",
-        "historySearchType": "dark-web-leak"
+        "historySearchType": "dark-web-leak",
+        "searchType": "dark-web-leak"
       },
       {
         "id": "leaked-data-username",
@@ -105,7 +114,8 @@
         "icon": "fas fa-user",
         "route": "/dark-web-leak",
         "inputType": "text",
-        "historySearchType": "dark-web-leak"
+        "historySearchType": "dark-web-leak",
+        "searchType": "dark-web-leak"
       },
       {
         "id": "leaked-data-keyword",
@@ -114,7 +124,8 @@
         "icon": "fas fa-key",
         "route": "/dark-web-leak",
         "inputType": "text",
-        "historySearchType": "dark-web-leak"
+        "historySearchType": "dark-web-leak",
+        "searchType": "dark-web-leak"
       }
     ]
   },
@@ -126,7 +137,8 @@
     "route": "/ip-lookup",
     "inputType": "ip",
     "validations": ["ip"],
-    "historySearchType": "ip-lookup"
+    "historySearchType": "ip-lookup",
+    "searchType": "ip-lookup"
   },
   {
     "id": "virtual-no-email",
@@ -134,6 +146,7 @@
     "value": "virtual-no-email",
     "icon": "fas fa-envelope",
     "historySearchType": "virtual-number",
+    "searchType": "virtual-number",
     "children": [
       {
         "id": "virtual-no-email-mobile",
@@ -142,7 +155,8 @@
         "icon": "fas fa-mobile-alt",
         "route": "/virtual-number",
         "inputType": "number",
-        "historySearchType": "virtual-number"
+        "historySearchType": "virtual-number",
+        "searchType": "virtual-number"
       },
       {
         "id": "virtual-no-email-email",
@@ -152,7 +166,8 @@
         "route": "/virtual-email",
         "inputType": "email",
         "validations": ["email"],
-        "historySearchType": "virtual-email"
+        "historySearchType": "virtual-email",
+        "searchType": "virtual-email"
       }
     ]
   },
@@ -164,7 +179,8 @@
     "route": "/imei-lookup",
     "inputType": "imei",
     "validations": ["imei"],
-    "historySearchType": "imei-lookup"
+    "historySearchType": "imei-lookup",
+    "searchType": "imei-lookup"
   },
   {
     "id": "bank-account",
@@ -174,6 +190,7 @@
     "route": "/bank-lookup",
     "inputType": "bank",
     "historySearchType": "bank-account",
+    "searchType": "bank-lookup",
     "children": [
       {
         "id": "bank-account-search",
@@ -182,7 +199,8 @@
         "icon": "fas fa-search",
         "route": "/bank-lookup",
         "inputType": "bank",
-        "historySearchType": "bank-account"
+        "historySearchType": "bank-account",
+        "searchType": "bank-lookup"
       },
       {
         "id": "bank-account-mobile-upi",
@@ -222,6 +240,7 @@
     "value": "verify-government-id",
     "icon": "fas fa-id-card",
     "historySearchType": "verify-id",
+    "searchType": "verify-id",
     "children": [
       {
         "id": "verify-government-id-pan",
@@ -230,7 +249,8 @@
         "icon": "fas fa-id-card",
         "route": "/verify-id",
         "inputType": "text",
-        "historySearchType": "verify-id"
+        "historySearchType": "verify-id",
+        "searchType": "verify-id"
       },
       {
         "id": "verify-government-id-driving-license",
@@ -240,7 +260,8 @@
         "route": "/verify-id",
         "inputType": "text",
         "validations": ["dob_required"],
-        "historySearchType": "verify-id"
+        "historySearchType": "verify-id",
+        "searchType": "verify-id"
       },
       {
         "id": "verify-government-id-voter-id",
@@ -249,7 +270,8 @@
         "icon": "fas fa-vote-yea",
         "route": "/verify-id",
         "inputType": "text",
-        "historySearchType": "verify-id"
+        "historySearchType": "verify-id",
+        "searchType": "verify-id"
       },
       {
         "id": "verify-government-id-passport",
@@ -259,7 +281,7 @@
         "route": "/verify-id",
         "inputType": "text",
         "historySearchType": "verify-id",
-        "validations": ["dob_required"]
+        "searchType": "verify-id"
       }
     ]
   }

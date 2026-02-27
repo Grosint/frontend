@@ -611,13 +611,14 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     }
 
     const rawQuery = this.searchQuery.trim();
+    const mobileQuery = rawQuery.replace(/\s+/g, '');
     if (childValue === 'email') {
       return { query_type: 'email', query_data: rawQuery };
     }
     if (childValue === 'mobile') {
       return {
         query_type: 'mobile',
-        query_data: rawQuery,
+        query_data: mobileQuery,
         country_code: this.searchCountryCode,
       };
     }
