@@ -9,13 +9,18 @@
         "id": "osint-search-mobile",
         "label": "Mobile",
         "value": "mobile",
-        "icon": "fas fa-mobile-alt"
+        "icon": "fas fa-mobile-alt",
+        "route": "/phone-lookup",
+        "inputType": "number"
       },
       {
         "id": "osint-search-email",
         "label": "Email",
         "value": "email",
-        "icon": "fas fa-envelope"
+        "icon": "fas fa-envelope",
+        "route": "/email-lookup",
+        "inputType": "email",
+        "validations": ["email"]
       }
     ]
   },
@@ -23,7 +28,9 @@
     "id": "mobile-verify-search",
     "label": "Mobile Verify Search",
     "value": "mobile-verify-search",
-    "icon": "fas fa-mobile-alt"
+    "icon": "fas fa-mobile-alt",
+    "route": "/phone-lookup",
+    "inputType": "number"
   },
   {
     "id": "vehicle-search",
@@ -87,7 +94,10 @@
     "id": "ip-search",
     "label": "IP Search",
     "value": "ip-search",
-    "icon": "fas fa-network-wired"
+    "icon": "fas fa-network-wired",
+    "route": "/ip-lookup",
+    "inputType": "ip",
+    "validations": ["ip"]
   },
   {
     "id": "virtual-no-email",
@@ -99,13 +109,18 @@
         "id": "virtual-no-email-mobile",
         "label": "Mobile",
         "value": "mobile",
-        "icon": "fas fa-mobile-alt"
+        "icon": "fas fa-mobile-alt",
+        "route": "/virtual-number",
+        "inputType": "number"
       },
       {
         "id": "virtual-no-email-email",
         "label": "Email",
         "value": "email",
-        "icon": "fas fa-envelope"
+        "icon": "fas fa-envelope",
+        "route": "/virtual-email",
+        "inputType": "email",
+        "validations": ["email"]
       }
     ]
   },
@@ -113,19 +128,26 @@
     "id": "imei-search",
     "label": "IMEI Search",
     "value": "imei-search",
-    "icon": "fas fa-mobile-screen-button"
+    "icon": "fas fa-mobile-screen-button",
+    "route": "/imei-lookup",
+    "inputType": "imei",
+    "validations": ["imei"]
   },
   {
     "id": "bank-account",
     "label": "Bank Account",
     "value": "bank-account",
     "icon": "fas fa-university",
+    "route": "/bank-lookup",
+    "inputType": "bank",
     "children": [
       {
         "id": "bank-account-search",
         "label": "Bank Account Search",
         "value": "bank-account-search",
-        "icon": "fas fa-search"
+        "icon": "fas fa-search",
+        "route": "/bank-lookup",
+        "inputType": "bank"
       },
       {
         "id": "bank-account-mobile-upi",

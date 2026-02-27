@@ -13,14 +13,14 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NavbarSelection } from '../../models/menu-item.model';
+import { MenuItem, NavbarSelection } from '../../models/menu-item.model';
 import { SearchService } from '../../services/search.service';
 import { SearchResponse, SearchResultItem } from '../../models/search.model';
 import { take } from 'rxjs/operators';
 import { SearchHistoryModalComponent } from '../search-history-modal/search-history-modal.component';
 import groupConfigData from '../../../../../assets/data/search-result-groups.json';
 import { AppStateStore } from '@core/services/app-state.store';
-import menuItemConfigData from '../../../../../assets/data/menu-item-ids.json';
+import menuItemsData from '../../../../../assets/data/menu-items.json';
 
 interface GroupConfig {
   key: string;
@@ -39,6 +39,26 @@ interface MenuItemConfig {
   inputType?: 'text' | 'number' | 'email' | 'bank' | 'ip' | 'imei';
   validations?: string[];
 }
+
+const buildMenuConfigMap = (items: MenuItem[]): Record<string, MenuItemConfig> => {
+  const map: Record<string, MenuItemConfig> = {};
+  const walk = (nodes: MenuItem[]) => {
+    nodes.forEach(node => {
+      if (node.id) {
+        map[node.id] = {
+          route: node.route,
+          inputType: node.inputType,
+          validations: node.validations,
+        };
+      }
+      if (node.children?.length) {
+        walk(node.children);
+      }
+    });
+  };
+  walk(items);
+  return map;
+};
 
 @Component({
   selector: 'app-search-panel',
@@ -65,8 +85,9 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   historyQueryLabel: string | null = null;
   historyQueryType: string | null = null;
   private groupConfigs: GroupConfig[] = (groupConfigData as GroupConfig[]) || [];
-  private menuItemConfigs: Record<string, MenuItemConfig> =
-    (menuItemConfigData as Record<string, MenuItemConfig>) || {};
+  private menuItemConfigs: Record<string, MenuItemConfig> = buildMenuConfigMap(
+    menuItemsData as MenuItem[]
+  );
   currentInputType: 'text' | 'number' | 'email' | 'bank' | 'ip' | 'imei' = 'text';
   bankAccountNumber = '';
   bankIfscCode = '';
@@ -104,7 +125,8 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   }
 
   onSearch(): void {
-    if (!this.selectedOption || !this.searchQuery.trim()) {
+    const isBankSearch = this.currentInputType === 'bank';
+    if (!this.selectedOption || (!isBankSearch && !this.searchQuery.trim())) {
       return;
     }
 
@@ -117,15 +139,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     this.showBankErrors = false;
     this.cdr.markForCheck();
 
-    const normalizedQuery = this.getSearchQuery();
-    if (!this.isValidInput(normalizedQuery)) {
-      this.errorMessage = this.getValidationMessage();
-      this.isLoading = false;
-      this.cdr.markForCheck();
-      return;
-    }
-
-    if (this.currentInputType === 'bank') {
+    if (isBankSearch) {
       if (!this.isValidBankInput()) {
         this.errorMessage = this.getBankValidationMessage();
         this.showBankErrors = true;
@@ -133,14 +147,23 @@ export class SearchPanelComponent implements OnInit, OnChanges {
         this.cdr.markForCheck();
         return;
       }
+    } else {
+      const normalizedQuery = this.getSearchQuery();
+      if (!this.isValidInput(normalizedQuery)) {
+        this.errorMessage = this.getValidationMessage();
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        return;
+      }
     }
 
+    const normalizedQuery = this.getSearchQuery();
     this.searchService
       .search(
         this.selectedOption.parent,
         this.selectedOption.child,
         normalizedQuery,
-        this.currentInputType === 'bank'
+        isBankSearch
           ? {
               account_no: this.bankAccountNumber.trim(),
               ifsc_code: this.bankIfscCode.trim(),

@@ -6,14 +6,31 @@ import { AppStateStore } from '@core/services/app-state.store';
 import { LoggerService } from '@core/services/logger.service';
 import { SearchRequest, SearchResponse } from '../models/search.model';
 import { MenuItem } from '../models/menu-item.model';
-import menuItemConfigData from '../../../../assets/data/menu-item-ids.json';
+import menuItemsData from '../../../../assets/data/menu-items.json';
+
+const buildMenuRouteMap = (items: MenuItem[]): Record<string, string | undefined> => {
+  const map: Record<string, string | undefined> = {};
+  const walk = (nodes: MenuItem[]) => {
+    nodes.forEach(node => {
+      if (node.id) {
+        map[node.id] = node.route;
+      }
+      if (node.children?.length) {
+        walk(node.children);
+      }
+    });
+  };
+  walk(items);
+  return map;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService extends ApiBaseService {
-  private menuItemConfigs: Record<string, { route?: string }> =
-    (menuItemConfigData as Record<string, { route?: string }>) || {};
+  private menuItemRoutes: Record<string, string | undefined> = buildMenuRouteMap(
+    menuItemsData as MenuItem[]
+  );
 
   constructor(http: HttpClient, appState: AppStateStore, logger: LoggerService) {
     super(http, appState, logger);
@@ -27,7 +44,7 @@ export class SearchService extends ApiBaseService {
     overrideBody?: SearchRequest
   ): Observable<SearchResponse> {
     const configId = child?.id || option?.id || '';
-    const configRoute = configId ? this.menuItemConfigs[configId]?.route : undefined;
+    const configRoute = configId ? this.menuItemRoutes[configId] : undefined;
     const searchType = this.getSearchType(option, child);
     const menuValue = child?.value || option?.value || '';
     const requestBody = overrideBody ?? this.buildSearchRequest(menuValue, query);
@@ -74,6 +91,19 @@ export class SearchService extends ApiBaseService {
   private buildSearchRequest(menuValue: string, query: string): SearchRequest {
     const trimmedQuery = query.trim();
 
+    // Handle virtual number/email lookups
+    if (menuValue === 'virtual-no-email-mobile') {
+      return {
+        phone_number: trimmedQuery,
+      } as SearchRequest;
+    }
+
+    if (menuValue === 'virtual-no-email-email') {
+      return {
+        email: trimmedQuery,
+      };
+    }
+
     // Handle mobile - use query as-is, default country code to +91
     if (menuValue.includes('mobile')) {
       return {
@@ -101,19 +131,6 @@ export class SearchService extends ApiBaseService {
     if (menuValue === 'imei-search') {
       return {
         imei: trimmedQuery,
-      };
-    }
-
-    // Handle virtual number/email lookups
-    if (menuValue === 'virtual-no-email-mobile') {
-      return {
-        phone_number: trimmedQuery,
-      } as SearchRequest;
-    }
-
-    if (menuValue === 'virtual-no-email-email') {
-      return {
-        email: trimmedQuery,
       };
     }
 

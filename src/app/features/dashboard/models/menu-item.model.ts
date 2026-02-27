@@ -5,6 +5,9 @@ export interface MenuItem {
   children?: MenuItem[];
   icon?: string;
   url?: string;
+  route?: string;
+  inputType?: 'text' | 'number' | 'email' | 'bank' | 'ip' | 'imei';
+  validations?: string[];
 }
 
 export interface NavbarSelection {
