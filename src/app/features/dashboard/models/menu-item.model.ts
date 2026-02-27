@@ -8,6 +8,7 @@ export interface MenuItem {
   route?: string;
   inputType?: 'text' | 'number' | 'email' | 'bank' | 'ip' | 'imei';
   validations?: string[];
+  historySearchType?: string;
 }
 
 export interface NavbarSelection {

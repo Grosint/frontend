@@ -38,6 +38,7 @@ interface MenuItemConfig {
   route?: string;
   inputType?: 'text' | 'number' | 'email' | 'bank' | 'ip' | 'imei';
   validations?: string[];
+  historySearchType?: string;
 }
 
 const buildMenuConfigMap = (items: MenuItem[]): Record<string, MenuItemConfig> => {
@@ -49,6 +50,7 @@ const buildMenuConfigMap = (items: MenuItem[]): Record<string, MenuItemConfig> =
           route: node.route,
           inputType: node.inputType,
           validations: node.validations,
+          historySearchType: node.historySearchType,
         };
       }
       if (node.children?.length) {
@@ -262,50 +264,16 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   }
 
   private getHistorySearchType(): string | undefined {
-    const parentValue = this.selectedOption?.parent?.value;
-    const childValue = this.selectedOption?.child?.value;
-    if (!parentValue && !childValue) {
-      return undefined;
+    const childId = this.selectedOption?.child?.id;
+    const parentId = this.selectedOption?.parent?.id;
+    const childConfig = childId ? this.menuItemConfigs[childId] : null;
+    const parentConfig = parentId ? this.menuItemConfigs[parentId] : null;
+    const configType = childConfig?.historySearchType || parentConfig?.historySearchType;
+    if (configType) {
+      return configType;
     }
-    if (parentValue === 'leaked-data') {
-      return 'dark-web-leak';
-    }
-    const value = childValue || parentValue;
-    if (!value) {
-      return undefined;
-    }
-    const typeMap: Record<string, string> = {
-      mobile: 'phone-lookup',
-      'mobile-verify-search': 'phone-lookup',
-      email: 'email-lookup',
-      'ip-search': 'ip-lookup',
-      'imei-search': 'imei-lookup',
-      'bank-account': 'bank-account',
-      'bank-account-search': 'bank-account',
-      'virtual-no-email-mobile': 'virtual-number',
-      'virtual-no-email-email': 'virtual-email',
-      'vehicle-search': 'vehicle-all',
-      'rc-search': 'vehicle-rc',
-      'fasttag-history': 'vehicle-fast-tag',
-      'chassis-rc': 'vehicle-chasis',
-      pan: 'verify-id',
-      'driving-license': 'verify-id',
-      'voter-id': 'verify-id',
-      passport: 'verify-id',
-      'leaked-data-username': 'dark-web-leak',
-      'leaked-data-email': 'dark-web-leak',
-      'leaked-data-mobile': 'dark-web-leak',
-      'leaked-data-keyword': 'dark-web-leak',
-      'leaked-data': 'dark-web-leak',
-      'osint-search-mobile': 'phone-lookup',
-      'osint-search-email': 'email-lookup',
-      'virtual-no-email': 'virtual-number',
-      'verify-government-id': 'verify-id',
-      'vehicle-search-rc-search': 'vehicle-rc',
-      'vehicle-search-fasttag-history': 'vehicle-fast-tag',
-      'vehicle-search-chassis-rc': 'vehicle-chasis',
-    };
-    return typeMap[value] || value;
+
+    return undefined;
   }
 
   async downloadPdf(): Promise<void> {
@@ -446,7 +414,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     if (this.selectedOption?.child) {
       const childLabel = this.selectedOption.child.label.toLowerCase();
       if (childLabel === 'mobile' || childLabel === 'phone') {
-        this.searchPlaceholder = 'Enter phone number (e.g., 9997260627)';
+        this.searchPlaceholder = 'Enter phone number (e.g., 99...263...)';
       } else {
         this.searchPlaceholder = `Enter ${childLabel} to search...`;
       }
@@ -663,7 +631,15 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   }
 
   requiresDob(): boolean {
-    return this.selectedOption?.child?.value === 'driving-license';
+    const childId = this.selectedOption?.child?.id;
+    const parentId = this.selectedOption?.parent?.id;
+    const childConfig = childId ? this.menuItemConfigs[childId] : null;
+    const parentConfig = parentId ? this.menuItemConfigs[parentId] : null;
+    return (
+      childConfig?.validations?.includes('dob_required') ||
+      parentConfig?.validations?.includes('dob_required') ||
+      false
+    );
   }
 
   private isValidBankInput(): boolean {

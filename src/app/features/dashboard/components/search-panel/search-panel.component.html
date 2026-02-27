@@ -126,7 +126,6 @@
           <span class="history-id" *ngIf="historyQueryLabel">({{ historyQueryLabel }})</span>
         </h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
-          <span>Total: {{ searchResponse?.data?.results?.length }}</span>
           <button
             type="button"
             class="pdf-button"
@@ -144,9 +143,10 @@
             (click)="shareReportText()"
           >
             <i class="fas fa-share-alt" aria-hidden="true"></i>
-            <span *ngIf="!isShareLoading">Share Report Text</span>
-            <span *ngIf="isShareLoading">Sharing Report...</span>
+            <span *ngIf="!isShareLoading">Share</span>
+            <span *ngIf="isShareLoading">Sharing...</span>
           </button>
+          <span>Total: {{ searchResponse?.data?.results?.length }}</span>
         </div>
       </div>
       <div class="results-list">
