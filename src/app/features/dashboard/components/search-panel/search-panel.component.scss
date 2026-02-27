@@ -80,6 +80,23 @@
     width: 100%;
   }
 
+  .bank-inputs {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    align-items: flex-start;
+
+    .search-input {
+      flex: 1;
+    }
+  }
+
+  .field-error {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: -0.25rem;
+  }
+
   .search-country-code {
     width: 110px;
     padding: 0.875rem 0.75rem;
@@ -347,13 +364,23 @@
         font-size: 1.25rem;
         font-weight: 600;
         color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .history-id {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #64748b;
       }
 
       .results-meta {
         display: flex;
-        gap: 1rem;
+        gap: 0.75rem;
         font-size: 0.9rem;
         color: #666;
+        align-items: center;
 
         span {
           padding: 0.25rem 0.75rem;
@@ -375,6 +402,101 @@
   }
 }
 
+.pdf-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+
+  &:disabled {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
+}
+
+.share-button {
+  border-color: #cbd5f5;
+  background: #f1f5ff;
+}
+
+.pdf-container {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 800px;
+  background: #fff;
+  padding: 1.5rem;
+  color: #0f172a;
+}
+
+.pdf-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.pdf-logo {
+  height: 70px;
+  width: auto;
+}
+
+.pdf-title-bar {
+  width: 100%;
+  padding: 0.55rem 1.25rem;
+  background: #1955b0;
+  color: #fff;
+  border-radius: 12px 12px 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.pdf-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0 0 12px 12px;
+  padding: 0.95rem 1.15rem;
+  box-shadow: none;
+  margin-bottom: 0.85rem;
+}
+
+.meta-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.meta-label {
+  min-width: 120px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.meta-value {
+  color: #0f172a;
+}
+
+.pdf-warning {
+  background: #f97316;
+  color: #fff;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
 app-result-card {
   flex: 0 0 calc(33.333% - 0.67rem);
 }
@@ -385,6 +507,7 @@ app-result-card {
   border: 1px solid #e6eef7;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
   overflow: hidden;
+  margin-bottom: 1rem;
 }
 
 .group-header {
@@ -420,7 +543,7 @@ app-result-card {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
   padding: 1rem;
-  background: #fdf7ff;
+  background: #f3f7ff;
 }
 
 @media (max-width: 992px) {
@@ -437,6 +560,10 @@ app-result-card {
   }
 
   .search-container {
+    flex-direction: column;
+  }
+
+  .bank-inputs {
     flex-direction: column;
   }
 

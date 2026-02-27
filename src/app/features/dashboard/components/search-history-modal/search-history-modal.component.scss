@@ -116,6 +116,18 @@
   border-radius: 10px;
   padding: 0.85rem 1rem;
   background: #f8fafc;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.history-card:hover,
+.history-card:focus {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
 }
 
 .history-title {

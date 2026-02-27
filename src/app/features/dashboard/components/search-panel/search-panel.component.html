@@ -33,22 +33,57 @@
             <option value="+44">+44</option>
             <option value="+971">+971</option>
           </select>
-          <input
-            type="text"
-            class="search-input"
-            [(ngModel)]="searchQuery"
-            [placeholder]="searchPlaceholder"
-            [disabled]="!selectedOption || isLoading"
-            [attr.inputmode]="isMobileSearch ? 'numeric' : null"
-            (keypress)="onKeyPress($event); onPhoneKeyPress($event)"
-            (paste)="onPhonePaste($event)"
-          />
+          <ng-container *ngIf="currentInputType !== 'bank'; else bankInputs">
+            <input
+              type="text"
+              class="search-input"
+              [(ngModel)]="searchQuery"
+              [placeholder]="searchPlaceholder"
+              [disabled]="!selectedOption || isLoading"
+              [type]="currentInputType === 'email' ? 'email' : 'text'"
+              [attr.inputmode]="isMobileSearch || currentInputType === 'number' ? 'numeric' : null"
+              (keypress)="onKeyPress($event); onPhoneKeyPress($event)"
+              (paste)="onPhonePaste($event)"
+            />
+          </ng-container>
+          <ng-template #bankInputs>
+            <div class="bank-inputs">
+              <input
+                type="text"
+                class="search-input"
+                [(ngModel)]="bankAccountNumber"
+                placeholder="Account number"
+                [disabled]="!selectedOption || isLoading"
+                inputmode="numeric"
+                (keypress)="onKeyPress($event); onPhoneKeyPress($event)"
+                (paste)="onPhonePaste($event)"
+              />
+              <div class="field-error" *ngIf="showAccountNumberError">
+                Bank Account Number must be 9 to 18 digits.
+              </div>
+              <input
+                type="text"
+                class="search-input"
+                [(ngModel)]="bankIfscCode"
+                placeholder="IFSC code"
+                [disabled]="!selectedOption || isLoading"
+                (keypress)="onKeyPress($event)"
+              />
+              <div class="field-error" *ngIf="showIfscError">Please enter a valid IFSC code.</div>
+            </div>
+          </ng-template>
         </div>
       </div>
       <button
         type="button"
         class="search-button"
-        [disabled]="!selectedOption || !searchQuery.trim() || isLoading"
+        [disabled]="
+          !selectedOption ||
+          (currentInputType === 'bank'
+            ? !(bankAccountNumber.trim() && bankIfscCode.trim())
+            : !searchQuery.trim()) ||
+          isLoading
+        "
         (click)="onSearch()"
       >
         <i class="fas fa-search" aria-hidden="true"></i>
@@ -77,9 +112,32 @@
     <!-- Search Results -->
     <div class="search-results" *ngIf="groupedResults.length > 0">
       <div class="results-header">
-        <h4>Search Results</h4>
+        <h4>
+          Search Results
+          <span class="history-id" *ngIf="historyQueryLabel">({{ historyQueryLabel }})</span>
+        </h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
           <span>Total: {{ searchResponse?.data?.results?.length }}</span>
+          <button
+            type="button"
+            class="pdf-button"
+            [disabled]="isPdfLoading"
+            (click)="downloadPdf()"
+          >
+            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+            <span *ngIf="!isPdfLoading">Download PDF</span>
+            <span *ngIf="isPdfLoading">Preparing...</span>
+          </button>
+          <button
+            type="button"
+            class="pdf-button share-button"
+            [disabled]="isShareLoading || !isShareSupported"
+            (click)="sharePdf()"
+          >
+            <i class="fas fa-share-alt" aria-hidden="true"></i>
+            <span *ngIf="!isShareLoading">Share</span>
+            <span *ngIf="isShareLoading">Sharing...</span>
+          </button>
         </div>
       </div>
       <div class="results-list">
@@ -102,6 +160,51 @@
     <!-- No Results Message -->
     <div class="no-results" *ngIf="searchResponse && groupedResults.length === 0">
       <p>No results found for this search.</p>
+    </div>
+  </div>
+</div>
+
+<div class="pdf-container" *ngIf="searchResponse" #pdfContent>
+  <div class="pdf-header">
+    <img src="assets/data/grossintLogo.png" alt="Grosint Logo" class="pdf-logo" />
+  </div>
+
+  <div class="pdf-title-bar">{{ reportTypeLabel }}</div>
+
+  <div class="pdf-meta pdf-card">
+    <div class="meta-row">
+      <span class="meta-label">Report For:</span>
+      <span class="meta-value">{{ reportForLabel }}</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-label">Reference Id:</span>
+      <span class="meta-value">{{ searchResponse?.data?.search_id }}</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-label">Date:</span>
+      <span class="meta-value">{{ formatReportDate(searchResponse?.data?.created_at) }}</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-label">Requested By:</span>
+      <span class="meta-value">{{ requestedByLabel }}</span>
+    </div>
+  </div>
+
+  <div class="pdf-warning">This report is not admissible in court of law</div>
+
+  <div class="pdf-results" *ngIf="groupedResults.length > 0">
+    <div class="result-group" *ngFor="let group of groupedResults">
+      <div class="group-header">
+        <h5>{{ group.label }}</h5>
+        <span class="group-count">{{ group.items.length }}</span>
+      </div>
+      <div class="group-content">
+        <app-result-card
+          *ngFor="let result of group.items; let i = index"
+          [result]="result"
+          [index]="i"
+        ></app-result-card>
+      </div>
     </div>
   </div>
 </div>
