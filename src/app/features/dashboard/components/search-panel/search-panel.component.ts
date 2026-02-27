@@ -15,7 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MenuItem, NavbarSelection } from '../../models/menu-item.model';
 import { SearchService } from '../../services/search.service';
-import { SearchResponse, SearchResultItem } from '../../models/search.model';
+import { SearchRequest, SearchResponse, SearchResultItem } from '../../models/search.model';
 import { take } from 'rxjs/operators';
 import { SearchHistoryModalComponent } from '../search-history-modal/search-history-modal.component';
 import groupConfigData from '../../../../../assets/data/search-result-groups.json';
@@ -38,6 +38,7 @@ interface MenuItemConfig {
   route?: string;
   inputType?: 'text' | 'number' | 'email' | 'bank' | 'ip' | 'imei';
   validations?: string[];
+  historySearchType?: string;
 }
 
 const buildMenuConfigMap = (items: MenuItem[]): Record<string, MenuItemConfig> => {
@@ -49,6 +50,7 @@ const buildMenuConfigMap = (items: MenuItem[]): Record<string, MenuItemConfig> =
           route: node.route,
           inputType: node.inputType,
           validations: node.validations,
+          historySearchType: node.historySearchType,
         };
       }
       if (node.children?.length) {
@@ -92,6 +94,8 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   bankAccountNumber = '';
   bankIfscCode = '';
   showBankErrors = false;
+  idDobValue = '';
+  showDobError = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -120,6 +124,8 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       this.bankAccountNumber = '';
       this.bankIfscCode = '';
       this.showBankErrors = false;
+      this.idDobValue = '';
+      this.showDobError = false;
       this.cdr.markForCheck();
     }
   }
@@ -137,12 +143,21 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     this.historyQueryLabel = null;
     this.historyQueryType = null;
     this.showBankErrors = false;
+    this.showDobError = false;
     this.cdr.markForCheck();
 
     if (isBankSearch) {
       if (!this.isValidBankInput()) {
         this.errorMessage = this.getBankValidationMessage();
         this.showBankErrors = true;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        return;
+      }
+    } else if (this.requiresDob()) {
+      if (!this.idDobValue.trim()) {
+        this.errorMessage = 'Date of birth is required.';
+        this.showDobError = true;
         this.isLoading = false;
         this.cdr.markForCheck();
         return;
@@ -158,18 +173,17 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     }
 
     const normalizedQuery = this.getSearchQuery();
+    const overrideBody = isBankSearch
+      ? {
+          account_no: this.bankAccountNumber.trim(),
+          ifsc_code: this.bankIfscCode.trim(),
+        }
+      : this.requiresDob()
+        ? { id_type: 'dl', value: normalizedQuery, dob: this.idDobValue.trim() }
+        : this.getLeakedDataBody();
+
     this.searchService
-      .search(
-        this.selectedOption.parent,
-        this.selectedOption.child,
-        normalizedQuery,
-        isBankSearch
-          ? {
-              account_no: this.bankAccountNumber.trim(),
-              ifsc_code: this.bankIfscCode.trim(),
-            }
-          : undefined
-      )
+      .search(this.selectedOption.parent, this.selectedOption.child, normalizedQuery, overrideBody)
       .pipe(take(1))
       .subscribe({
         next: response => {
@@ -227,6 +241,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   }
 
   openHistory(): void {
+    const selectedType = this.getHistorySearchType();
     const dialogRef = this.dialog.open(SearchHistoryModalComponent, {
       panelClass: 'search-history-dialog',
       backdropClass: 'search-history-backdrop',
@@ -234,6 +249,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       width: '45%',
       minWidth: '40vw',
       height: '85%',
+      data: { type: selectedType },
     });
 
     dialogRef
@@ -245,6 +261,19 @@ export class SearchPanelComponent implements OnInit, OnChanges {
         }
         this.applyHistoryResult(result);
       });
+  }
+
+  private getHistorySearchType(): string | undefined {
+    const childId = this.selectedOption?.child?.id;
+    const parentId = this.selectedOption?.parent?.id;
+    const childConfig = childId ? this.menuItemConfigs[childId] : null;
+    const parentConfig = parentId ? this.menuItemConfigs[parentId] : null;
+    const configType = childConfig?.historySearchType || parentConfig?.historySearchType;
+    if (configType) {
+      return configType;
+    }
+
+    return undefined;
   }
 
   async downloadPdf(): Promise<void> {
@@ -270,8 +299,8 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  async sharePdf(): Promise<void> {
-    if (!this.searchResponse || !this.searchResults.length || !this.pdfContent) {
+  async shareReportText(): Promise<void> {
+    if (!this.searchResponse || !this.searchResults.length) {
       return;
     }
 
@@ -288,22 +317,15 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     this.cdr.markForCheck();
 
     try {
-      const { pdf, fileName } = await this.buildPdfDocument();
-      const blob = pdf.output('blob');
-      const file = new File([blob], fileName, { type: 'application/pdf' });
+      const shareText = this.buildShareText();
       const shareData: ShareData = {
-        title: 'Grosint Report',
-        text: 'Sharing search report',
-        files: [file],
+        title: this.reportTypeLabel,
+        text: shareText,
       };
-
-      if (navigator.canShare && !navigator.canShare(shareData)) {
-        throw new Error('Share not supported for files.');
-      }
 
       await navigator.share(shareData);
     } catch (error) {
-      this.snackBar.open('Unable to share the report. Please download instead.', 'Dismiss', {
+      this.snackBar.open('Unable to share the report text.', 'Dismiss', {
         duration: 3500,
         horizontalPosition: 'center',
         verticalPosition: 'top',
@@ -351,6 +373,31 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     return { pdf, fileName };
   }
 
+  private buildShareText(): string {
+    const lines: string[] = [];
+    const reportTitle = this.reportTypeLabel || 'Search Report';
+    lines.push(reportTitle);
+    lines.push('-------------------------------------------------------------------');
+
+    this.groupedResults.forEach(group => {
+      lines.push(`${group.label}:`);
+      const values = group.items
+        .map(item => item.value)
+        .filter((value): value is string => Boolean(value && value.trim()));
+
+      if (!values.length || group.items.every(item => item.found === false)) {
+        lines.push(' Message: Data Not Found');
+      } else {
+        lines.push(` ${values.join(', ')}`);
+      }
+      lines.push('');
+    });
+
+    lines.push('--------------------------------------------------------------------');
+    lines.push(`Report Generated By Govt Official Using Mobile Number: ${this.requestedByLabel}`);
+    return lines.join('\n');
+  }
+
   getDisplayText(): string {
     if (!this.selectedOption) {
       return 'Please select an option from the menu';
@@ -367,7 +414,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     if (this.selectedOption?.child) {
       const childLabel = this.selectedOption.child.label.toLowerCase();
       if (childLabel === 'mobile' || childLabel === 'phone') {
-        this.searchPlaceholder = 'Enter phone number (e.g., 9997260627)';
+        this.searchPlaceholder = 'Enter phone number (e.g., 99...263...)';
       } else {
         this.searchPlaceholder = `Enter ${childLabel} to search...`;
       }
@@ -554,6 +601,45 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       return 'Please enter a valid 15-digit IMEI.';
     }
     return 'Please enter a valid value.';
+  }
+
+  private getLeakedDataBody(): SearchRequest | undefined {
+    const parentValue = this.selectedOption?.parent?.value;
+    const childValue = this.selectedOption?.child?.value;
+    if (parentValue !== 'leaked-data' || !childValue) {
+      return undefined;
+    }
+
+    const rawQuery = this.searchQuery.trim();
+    if (childValue === 'email') {
+      return { query_type: 'email', query_data: rawQuery };
+    }
+    if (childValue === 'mobile') {
+      return {
+        query_type: 'mobile',
+        query_data: rawQuery,
+        country_code: this.searchCountryCode,
+      };
+    }
+    if (childValue === 'username') {
+      return { query_type: 'username', query_data: rawQuery };
+    }
+    if (childValue === 'keyword') {
+      return { query_type: 'keyword', query_data: rawQuery };
+    }
+    return undefined;
+  }
+
+  requiresDob(): boolean {
+    const childId = this.selectedOption?.child?.id;
+    const parentId = this.selectedOption?.parent?.id;
+    const childConfig = childId ? this.menuItemConfigs[childId] : null;
+    const parentConfig = parentId ? this.menuItemConfigs[parentId] : null;
+    return (
+      childConfig?.validations?.includes('dob_required') ||
+      parentConfig?.validations?.includes('dob_required') ||
+      false
+    );
   }
 
   private isValidBankInput(): boolean {

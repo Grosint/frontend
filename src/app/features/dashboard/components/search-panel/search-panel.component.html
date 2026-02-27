@@ -73,6 +73,15 @@
             </div>
           </ng-template>
         </div>
+        <div class="dob-field" *ngIf="requiresDob()">
+          <input
+            type="date"
+            class="search-input"
+            [(ngModel)]="idDobValue"
+            [disabled]="!selectedOption || isLoading"
+          />
+          <div class="field-error" *ngIf="showDobError">Date of birth is required.</div>
+        </div>
       </div>
       <button
         type="button"
@@ -117,7 +126,6 @@
           <span class="history-id" *ngIf="historyQueryLabel">({{ historyQueryLabel }})</span>
         </h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
-          <span>Total: {{ searchResponse?.data?.results?.length }}</span>
           <button
             type="button"
             class="pdf-button"
@@ -132,12 +140,13 @@
             type="button"
             class="pdf-button share-button"
             [disabled]="isShareLoading || !isShareSupported"
-            (click)="sharePdf()"
+            (click)="shareReportText()"
           >
             <i class="fas fa-share-alt" aria-hidden="true"></i>
             <span *ngIf="!isShareLoading">Share</span>
             <span *ngIf="isShareLoading">Sharing...</span>
           </button>
+          <span>Total: {{ searchResponse?.data?.results?.length }}</span>
         </div>
       </div>
       <div class="results-list">

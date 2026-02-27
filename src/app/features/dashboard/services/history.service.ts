@@ -47,8 +47,20 @@ export interface SearchHistoryDetailResponse {
   providedIn: 'root',
 })
 export class HistoryService extends ApiBaseService {
-  getHistory(page = 1, size = 10): Observable<SearchHistoryResponse> {
-    return this.get<SearchHistoryResponse>('/history/', { page, size }, 'history').pipe(
+  getHistory(
+    page = 1,
+    size = 10,
+    searchType?: string,
+    userId?: string
+  ): Observable<SearchHistoryResponse> {
+    const params: Record<string, unknown> = { page, size };
+    if (searchType) {
+      params['searchType'] = searchType;
+    }
+    if (userId) {
+      params['user_id'] = userId;
+    }
+    return this.get<SearchHistoryResponse>('/history/', params, 'history').pipe(
       catchError(error => {
         this.logger.error('History fetch failed', error);
         return throwError(() => error);
