@@ -24,11 +24,30 @@ const buildMenuRouteMap = (items: MenuItem[]): Record<string, string | undefined
   return map;
 };
 
+const buildMenuSearchTypeMap = (items: MenuItem[]): Record<string, string | undefined> => {
+  const map: Record<string, string | undefined> = {};
+  const walk = (nodes: MenuItem[]) => {
+    nodes.forEach(node => {
+      if (node.id) {
+        map[node.id] = node.searchType;
+      }
+      if (node.children?.length) {
+        walk(node.children);
+      }
+    });
+  };
+  walk(items);
+  return map;
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService extends ApiBaseService {
   private menuItemRoutes: Record<string, string | undefined> = buildMenuRouteMap(
+    menuItemsData as MenuItem[]
+  );
+  private menuItemSearchTypes: Record<string, string | undefined> = buildMenuSearchTypeMap(
     menuItemsData as MenuItem[]
   );
 
@@ -47,7 +66,8 @@ export class SearchService extends ApiBaseService {
     const configRoute = configId ? this.menuItemRoutes[configId] : undefined;
     const searchType = this.getSearchType(option, child);
     const menuValue = child?.value || option?.value || '';
-    const requestBody = overrideBody ?? this.buildSearchRequest(menuValue, query);
+    const menuId = child?.id || option?.id || '';
+    const requestBody = overrideBody ?? this.buildSearchRequest(menuId, menuValue, query);
     const endpoint = configRoute ? `/search${configRoute}` : `/search/${searchType}`;
 
     return this.post<SearchResponse>(endpoint, requestBody, 'search');
@@ -59,46 +79,43 @@ export class SearchService extends ApiBaseService {
       throw new Error('No option selected');
     }
 
-    // If child is selected, use child value, otherwise use parent value
-    const type = child?.value || option.value;
+    const configId = child?.id || option.id;
+    const searchType = this.menuItemSearchTypes[configId];
+    const fallbackType = child?.value || option.value;
 
-    // Map menu values to API endpoints
-    const typeMap: Record<string, string> = {
-      mobile: 'phone-lookup',
-      'mobile-verify-search': 'phone-lookup',
-      email: 'email-lookup',
-      'ip-search': 'ip-lookup',
-      'imei-search': 'imei-lookup',
-      'bank-account': 'bank-lookup',
-      'bank-account-search': 'bank-lookup',
-      'virtual-no-email-mobile': 'virtual-number',
-      'virtual-no-email-email': 'virtual-email',
-      'vehicle-search': 'vehicle-lookup',
-      'rc-search': 'vehicle-lookup',
-      'chassis-rc': 'vehicle-lookup',
-      'fasttag-history': 'vehicle-lookup',
-      pan: 'verify-id',
-      'driving-license': 'verify-id',
-      'voter-id': 'verify-id',
-      passport: 'verify-id',
-      // Add more mappings as needed
-    };
-
-    return typeMap[type] || type;
+    return searchType || fallbackType;
   }
 
   // Build search request body based on menu value
-  private buildSearchRequest(menuValue: string, query: string): SearchRequest {
+  private buildSearchRequest(menuId: string, menuValue: string, query: string): SearchRequest {
     const trimmedQuery = query.trim();
 
+    // Handle dark web leak search (based on menu id)
+    if (menuId === 'leaked-data-email') {
+      return { query_type: 'email', query_data: trimmedQuery } as SearchRequest;
+    }
+    if (menuId === 'leaked-data-mobile') {
+      return {
+        query_type: 'mobile',
+        query_data: trimmedQuery,
+        country_code: '+91',
+      } as SearchRequest;
+    }
+    if (menuId === 'leaked-data-username') {
+      return { query_type: 'username', query_data: trimmedQuery } as SearchRequest;
+    }
+    if (menuId === 'leaked-data-keyword') {
+      return { query_type: 'keyword', query_data: trimmedQuery } as SearchRequest;
+    }
+
     // Handle virtual number/email lookups
-    if (menuValue === 'virtual-no-email-mobile') {
+    if (menuId === 'virtual-no-email-mobile') {
       return {
         phone_number: trimmedQuery,
       } as SearchRequest;
     }
 
-    if (menuValue === 'virtual-no-email-email') {
+    if (menuId === 'virtual-no-email-email') {
       return {
         email: trimmedQuery,
       };
@@ -132,36 +149,6 @@ export class SearchService extends ApiBaseService {
       return {
         imei: trimmedQuery,
       };
-    }
-
-    // Handle dark web leak search
-    if (menuValue === 'leaked-data-email') {
-      return {
-        query_type: 'email',
-        query_data: trimmedQuery,
-      } as SearchRequest;
-    }
-
-    if (menuValue === 'leaked-data-mobile') {
-      return {
-        query_type: 'mobile',
-        query_data: trimmedQuery,
-        country_code: '+91',
-      } as SearchRequest;
-    }
-
-    if (menuValue === 'leaked-data-username') {
-      return {
-        query_type: 'username',
-        query_data: trimmedQuery,
-      } as SearchRequest;
-    }
-
-    if (menuValue === 'leaked-data-keyword') {
-      return {
-        query_type: 'keyword',
-        query_data: trimmedQuery,
-      } as SearchRequest;
     }
 
     // Handle vehicle lookups
