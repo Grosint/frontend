@@ -134,22 +134,57 @@ export class SearchService extends ApiBaseService {
       };
     }
 
+    // Handle dark web leak search
+    if (menuValue === 'leaked-data-email') {
+      return {
+        query_type: 'email',
+        query_data: trimmedQuery,
+      } as SearchRequest;
+    }
+
+    if (menuValue === 'leaked-data-mobile') {
+      return {
+        query_type: 'mobile',
+        query_data: trimmedQuery,
+        country_code: '+91',
+      } as SearchRequest;
+    }
+
+    if (menuValue === 'leaked-data-username') {
+      return {
+        query_type: 'username',
+        query_data: trimmedQuery,
+      } as SearchRequest;
+    }
+
+    if (menuValue === 'leaked-data-keyword') {
+      return {
+        query_type: 'keyword',
+        query_data: trimmedQuery,
+      } as SearchRequest;
+    }
+
     // Handle vehicle lookups
     if (
       menuValue === 'rc-search' ||
       menuValue === 'vehicle-search' ||
       menuValue === 'fasttag-history'
     ) {
+      const lookupTypeMap: Record<string, string> = {
+        'vehicle-search': 'all',
+        'rc-search': 'rc',
+        'fasttag-history': 'fast-tag',
+      };
       return {
         vehicle_number: trimmedQuery,
-        lookup_type: 'all',
+        lookup_type: lookupTypeMap[menuValue],
       } as SearchRequest;
     }
 
     if (menuValue === 'chassis-rc') {
       return {
         chassis_number: trimmedQuery,
-        lookup_type: 'all',
+        lookup_type: 'chassis',
       } as SearchRequest;
     }
 
@@ -160,8 +195,14 @@ export class SearchService extends ApiBaseService {
       menuValue === 'voter-id' ||
       menuValue === 'passport'
     ) {
+      const idTypeMap: Record<string, string> = {
+        pan: 'pan',
+        'driving-license': 'dl',
+        'voter-id': 'voter',
+        passport: 'passport',
+      };
       return {
-        id_type: menuValue,
+        id_type: idTypeMap[menuValue],
         value: trimmedQuery,
         dob: null,
       } as SearchRequest;

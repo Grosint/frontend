@@ -37,24 +37,32 @@
     "label": "Vehicle Search",
     "value": "vehicle-search",
     "icon": "fas fa-car",
+    "route": "/vehicle-lookup",
+    "inputType": "text",
     "children": [
       {
         "id": "vehicle-search-rc-search",
         "label": "RC Search",
         "value": "rc-search",
-        "icon": "fas fa-file-alt"
+        "icon": "fas fa-file-alt",
+        "route": "/vehicle-lookup",
+        "inputType": "text"
       },
       {
         "id": "vehicle-search-chassis-rc",
         "label": "Chassis → RC",
         "value": "chassis-rc",
-        "icon": "fas fa-link"
+        "icon": "fas fa-link",
+        "route": "/vehicle-lookup",
+        "inputType": "text"
       },
       {
         "id": "vehicle-search-fasttag-history",
         "label": "FastTag History",
         "value": "fasttag-history",
-        "icon": "fas fa-history"
+        "icon": "fas fa-history",
+        "route": "/vehicle-lookup",
+        "inputType": "text"
       }
     ]
   },
@@ -68,25 +76,34 @@
         "id": "leaked-data-email",
         "label": "Email",
         "value": "email",
-        "icon": "fas fa-envelope"
+        "icon": "fas fa-envelope",
+        "route": "/dark-web-leak",
+        "inputType": "email",
+        "validations": ["email"]
       },
       {
         "id": "leaked-data-mobile",
         "label": "Mobile",
         "value": "mobile",
-        "icon": "fas fa-mobile-alt"
+        "icon": "fas fa-mobile-alt",
+        "route": "/dark-web-leak",
+        "inputType": "number"
       },
       {
         "id": "leaked-data-username",
         "label": "Username",
         "value": "username",
-        "icon": "fas fa-user"
+        "icon": "fas fa-user",
+        "route": "/dark-web-leak",
+        "inputType": "text"
       },
       {
         "id": "leaked-data-keyword",
         "label": "Keyword",
         "value": "keyword",
-        "icon": "fas fa-key"
+        "icon": "fas fa-key",
+        "route": "/dark-web-leak",
+        "inputType": "text"
       }
     ]
   },
@@ -191,25 +208,34 @@
         "id": "verify-government-id-pan",
         "label": "PAN",
         "value": "pan",
-        "icon": "fas fa-id-card"
+        "icon": "fas fa-id-card",
+        "route": "/verify-id",
+        "inputType": "text"
       },
       {
         "id": "verify-government-id-driving-license",
         "label": "Driving License",
         "value": "driving-license",
-        "icon": "fas fa-id-badge"
+        "icon": "fas fa-id-badge",
+        "route": "/verify-id",
+        "inputType": "text",
+        "validations": ["dob_required"]
       },
       {
         "id": "verify-government-id-voter-id",
         "label": "Voter ID",
         "value": "voter-id",
-        "icon": "fas fa-vote-yea"
+        "icon": "fas fa-vote-yea",
+        "route": "/verify-id",
+        "inputType": "text"
       },
       {
         "id": "verify-government-id-passport",
         "label": "Passport",
         "value": "passport",
-        "icon": "fas fa-passport"
+        "icon": "fas fa-passport",
+        "route": "/verify-id",
+        "inputType": "text"
       }
     ]
   }

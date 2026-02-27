@@ -1,5 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Inject,
+} from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   HistoryService,
   SearchHistoryItem,
@@ -33,7 +39,8 @@ export class SearchHistoryModalComponent implements OnInit {
     private historyService: HistoryService,
     private cdr: ChangeDetectorRef,
     private dialogRef: MatDialogRef<SearchHistoryModalComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) private data: { type?: string } | null
   ) {}
 
   ngOnInit(): void {
@@ -207,7 +214,7 @@ export class SearchHistoryModalComponent implements OnInit {
     this.cdr.markForCheck();
 
     this.historyService
-      .getHistory(this.page, this.pageSize)
+      .getHistory(this.page, this.pageSize, this.data?.type)
       .pipe(take(1))
       .subscribe({
         next: response => {

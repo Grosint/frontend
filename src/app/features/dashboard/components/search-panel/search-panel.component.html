@@ -73,6 +73,15 @@
             </div>
           </ng-template>
         </div>
+        <div class="dob-field" *ngIf="requiresDob()">
+          <input
+            type="date"
+            class="search-input"
+            [(ngModel)]="idDobValue"
+            [disabled]="!selectedOption || isLoading"
+          />
+          <div class="field-error" *ngIf="showDobError">Date of birth is required.</div>
+        </div>
       </div>
       <button
         type="button"
@@ -132,11 +141,11 @@
             type="button"
             class="pdf-button share-button"
             [disabled]="isShareLoading || !isShareSupported"
-            (click)="sharePdf()"
+            (click)="shareReportText()"
           >
             <i class="fas fa-share-alt" aria-hidden="true"></i>
-            <span *ngIf="!isShareLoading">Share</span>
-            <span *ngIf="isShareLoading">Sharing...</span>
+            <span *ngIf="!isShareLoading">Share Report Text</span>
+            <span *ngIf="isShareLoading">Sharing Report...</span>
           </button>
         </div>
       </div>

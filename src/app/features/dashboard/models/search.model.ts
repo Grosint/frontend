@@ -13,6 +13,8 @@ export interface SearchRequest {
   value?: string;
   dob?: string | null;
   phone_number?: string;
+  query_type?: string;
+  query_data?: string;
   query?: string;
   is_advance?: boolean;
 }
