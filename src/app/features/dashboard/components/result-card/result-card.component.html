@@ -1,9 +1,9 @@
 <div class="result-card" [class.not-found]="result.found === false">
-  <div class="result-card-header">
-    <span class="result-source" *ngIf="showSource">{{ result.source }}</span>
-    <span class="result-type" *ngIf="result.type">{{ result.type }}</span>
+  <div class="result-card-header" *ngIf="!showCompactValueOnly">
+    <span class="result-source chip" *ngIf="showSource">{{ result.source }}</span>
+    <span class="result-value-inline" *ngIf="!isImageResult">{{ displayValue }}</span>
   </div>
-  <div class="result-card-body">
+  <div>
     <ng-container *ngIf="isImageResult && imageSrc; else textValue">
       <div class="image-block">
         <div class="image-block-title">Photos</div>
@@ -11,13 +11,10 @@
       </div>
     </ng-container>
     <ng-template #textValue>
-      <div class="result-value">{{ displayValue }}</div>
+      <div class="result-value" *ngIf="showCompactValueOnly">{{ displayValue }}</div>
     </ng-template>
-    <div class="result-category" *ngIf="result.category" [class]="categoryClass">
-      {{ result.category }}
-    </div>
   </div>
-  <div class="result-card-footer" *ngIf="result.confidence !== undefined">
+  <div class="result-card-footer" *ngIf="result.confidence !== undefined && !showCompactValueOnly">
     <span class="confidence">Confidence: {{ result.confidence | number: '1.1-1' }}%</span>
   </div>
 </div>

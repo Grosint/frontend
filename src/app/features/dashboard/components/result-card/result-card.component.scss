@@ -2,8 +2,7 @@
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 0.5rem;
   transition:
     box-shadow 0.2s,
     transform 0.2s;
@@ -22,10 +21,11 @@
   .result-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #f0f0f0;
+    align-items: flex-start;
+    padding: 0.25rem;
+    border-bottom: none;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
   }
 
   .result-source {
@@ -34,24 +34,34 @@
     color: #1976d2;
   }
 
-  .result-type {
+  .chip {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
     font-size: 0.75rem;
-    color: #666;
-    background-color: #f5f5f5;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
     text-transform: uppercase;
-  }
-
-  .result-card-body {
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+    white-space: normal;
+    max-width: 50%;
+    line-height: 1.2;
+    text-align: center;
   }
 
   .result-value {
     font-size: 1rem;
     color: #333;
     word-break: break-word;
-    margin-bottom: 0.5rem;
+  }
+
+  .result-value-inline {
+    font-size: 0.95rem;
+    color: #333;
+    word-break: break-word;
+    flex: 1 1 50%;
+    text-align: right;
+    white-space: normal;
+    min-width: 0;
   }
 
   .result-category {

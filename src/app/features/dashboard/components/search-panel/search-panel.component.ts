@@ -455,16 +455,19 @@ export class SearchPanelComponent implements OnInit, OnChanges {
 
     const normalized = rawQuery.replace(/\s+/g, '');
     if (normalized.startsWith('+')) {
-      return normalized;
+      if (normalized.startsWith(this.searchCountryCode)) {
+        return normalized.slice(this.searchCountryCode.length);
+      }
+      return normalized.replace(/^\+/, '');
     }
 
-    return `${this.searchCountryCode}${normalized}`;
+    return normalized;
   }
 
   private buildGroupedResults(results: SearchResultItem[]): GroupedResults[] {
     const groups = new Map<string, SearchResultItem[]>();
     results.forEach(item => {
-      let key = item.groupBy || item.type || 'default';
+      let key = item.groupBy || item.type || item.source || 'default';
       if (key === 'default' && this.isVehicleSearch) {
         key = 'vehicle_info';
       }
@@ -476,7 +479,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     const configByKey = new Map(this.groupConfigs.map(config => [config.key, config]));
 
     const grouped = Array.from(groups.entries()).map(([key, items]) => {
-      const config = configByKey.get(key) || configByKey.get('default');
+      const config = configByKey.get(key);
       return {
         key,
         label: config?.label || key.replace(/_/g, ' '),

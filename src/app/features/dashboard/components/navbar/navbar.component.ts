@@ -5,6 +5,7 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import { MenuItem, NavbarSelection } from '../../models/menu-item.model';
 import menuItemsData from '../../../../../assets/data/menu-items.json';
@@ -16,7 +17,7 @@ import menuItemsData from '../../../../../assets/data/menu-items.json';
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   @Output() selectionChange = new EventEmitter<NavbarSelection>();
   @Output() toggleNavbar = new EventEmitter<void>();
   @Input() collapsed = false;
@@ -28,6 +29,27 @@ export class NavbarComponent {
   isLoading = true;
 
   constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    const defaultParent =
+      this.menuItems.find(item => item.id === 'osint-search') ||
+      this.menuItems.find(item => item.value === 'osint-search');
+    const defaultChild =
+      defaultParent?.children?.find(item => item.id === 'osint-search-mobile') ||
+      defaultParent?.children?.find(item => item.value === 'mobile');
+
+    if (defaultParent) {
+      this.selectedParent = defaultParent;
+      this.expandedItems.add(defaultParent.id);
+      if (defaultChild) {
+        this.selectedChild = defaultChild;
+        this.emitSelection(defaultParent, defaultChild);
+      } else if (!defaultParent.children?.length) {
+        this.emitSelection(defaultParent, null);
+      }
+      this.cdr.markForCheck();
+    }
+  }
 
   onToggleNavbar(): void {
     this.toggleNavbar.emit();
