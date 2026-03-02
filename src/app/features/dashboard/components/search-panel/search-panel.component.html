@@ -28,10 +28,10 @@
             [disabled]="!selectedOption || isLoading"
             aria-label="Country code"
           >
-            <option value="+91">+91</option>
-            <option value="+1">+1</option>
-            <option value="+44">+44</option>
-            <option value="+971">+971</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+971">🇦🇪 +971</option>
           </select>
           <ng-container *ngIf="currentInputType !== 'bank'; else bankInputs">
             <input
@@ -123,7 +123,7 @@
       <div class="results-header">
         <h4>
           Search Results
-          <span class="history-id" *ngIf="historyQueryLabel">({{ historyQueryLabel }})</span>
+          <!-- <span class="history-id" *ngIf="historyQueryLabel">({{ historyQueryLabel }})</span> -->
         </h4>
         <div class="results-meta" *ngIf="searchResponse?.data">
           <button
@@ -131,20 +131,18 @@
             class="pdf-button"
             [disabled]="isPdfLoading"
             (click)="downloadPdf()"
+            [attr.aria-label]="isPdfLoading ? 'Preparing PDF' : 'Download PDF'"
           >
             <i class="fas fa-file-pdf" aria-hidden="true"></i>
-            <span *ngIf="!isPdfLoading">Download PDF</span>
-            <span *ngIf="isPdfLoading">Preparing...</span>
           </button>
           <button
             type="button"
             class="pdf-button share-button"
             [disabled]="isShareLoading || !isShareSupported"
             (click)="shareReportText()"
+            [attr.aria-label]="isShareLoading ? 'Sharing report' : 'Share report'"
           >
             <i class="fas fa-share-alt" aria-hidden="true"></i>
-            <span *ngIf="!isShareLoading">Share</span>
-            <span *ngIf="isShareLoading">Sharing...</span>
           </button>
           <span>Total: {{ searchResponse?.data?.results?.length }}</span>
         </div>
@@ -160,6 +158,7 @@
               *ngFor="let result of group.items; let i = index"
               [result]="result"
               [index]="i"
+              [groupKey]="group.key"
             ></app-result-card>
           </div>
         </div>
@@ -212,6 +211,7 @@
           *ngFor="let result of group.items; let i = index"
           [result]="result"
           [index]="i"
+          [groupKey]="group.key"
         ></app-result-card>
       </div>
     </div>

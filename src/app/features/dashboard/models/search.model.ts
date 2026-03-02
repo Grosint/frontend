@@ -31,6 +31,7 @@ export interface SearchResultItem {
   breach_source?: string;
   groupBy?: string;
   metadata?: Record<string, unknown>;
+  sourceOrType?: string | unknown;
 }
 
 export interface SearchResponse {

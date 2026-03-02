@@ -7,6 +7,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { SearchRequest, SearchResponse } from '../models/search.model';
 import { MenuItem } from '../models/menu-item.model';
 import menuItemsData from '../../../../assets/data/menu-items.json';
+import { DEFAULT_COUNTRY_CODE } from '../../../core/constants/app.constants';
 
 const buildMenuRouteMap = (items: MenuItem[]): Record<string, string | undefined> => {
   const map: Record<string, string | undefined> = {};
@@ -98,7 +99,7 @@ export class SearchService extends ApiBaseService {
       return {
         query_type: 'mobile',
         query_data: trimmedQuery,
-        country_code: '+91',
+        country_code: DEFAULT_COUNTRY_CODE,
       } as SearchRequest;
     }
     if (menuId === 'leaked-data-username') {
@@ -125,7 +126,7 @@ export class SearchService extends ApiBaseService {
     if (menuValue.includes('mobile')) {
       return {
         phone: trimmedQuery,
-        country_code: '+91',
+        country_code: DEFAULT_COUNTRY_CODE,
         is_advance: true,
       };
     }

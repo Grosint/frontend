@@ -11,12 +11,23 @@ import { SearchResultItem } from '../../models/search.model';
 export class ResultCardComponent {
   @Input() result!: SearchResultItem;
   @Input() index: number = 0;
+  @Input() groupKey?: string;
 
   get displayValue(): string {
     if (this.result.found === false) {
       return 'Not Found';
     }
-    return this.result.value || 'N/A';
+    if (this.result.value === null || this.result.value === undefined) {
+      return '-';
+    }
+    if (this.result.value === '') {
+      return '-';
+    }
+    return this.result.value;
+  }
+
+  get showCompactValueOnly(): boolean {
+    return this.groupKey === 'name' || this.groupKey === 'email';
   }
 
   get isImageResult(): boolean {
@@ -31,7 +42,7 @@ export class ResultCardComponent {
     if (!value || value.toLowerCase() === 'not available') {
       return null;
     }
-    return value;
+    return value ?? '-';
   }
 
   get showSource(): boolean {
